@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useWorld, DOOR_SEQUENCE_MS } from '@/lib/world-context'
+import { NeonSign } from './NeonSign'
 
 /**
  * The intro room: an empty dark space with a single white door.
@@ -14,7 +15,7 @@ import { useWorld, DOOR_SEQUENCE_MS } from '@/lib/world-context'
 const OPEN_AT = 0.0 // fraction of the sequence when the swing starts
 
 export function DoorScene({ opacity }: { opacity: number }) {
-  const { doorState } = useWorld()
+  const { doorState, reducedMotion } = useWorld()
   const t = useRef(0)
 
   const doorPivot = useRef<THREE.Group>(null)
@@ -61,7 +62,24 @@ export function DoorScene({ opacity }: { opacity: number }) {
         <planeGeometry args={[1.35, 2.75]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.05} toneMapped={false} />
       </mesh>
-      <pointLight ref={spill} position={[0, -0.7, -5.5]} color="#ffffff" intensity={0} distance={13} />
+      <pointLight
+        ref={spill}
+        position={[0, -0.7, -5.5]}
+        color="#ffffff"
+        intensity={0}
+        distance={13}
+      />
+
+      {/* Pink neon over the door. The room has exactly two light sources now:
+          the sign, and whatever is on the other side of the door. */}
+      <NeonSign
+        text="welcome in"
+        color="#ff3ea5"
+        position={[0, 1.85, -5.98]}
+        width={3.6}
+        opacity={opacity}
+        reducedMotion={reducedMotion}
+      />
 
       {/* Door frame. */}
       <mesh position={[0, -0.55, -6.07]}>

@@ -9,9 +9,13 @@ import { useCrossfade } from './useCrossfade'
 import { HeroParticles } from './HeroParticles'
 import { GameScene } from './GameScene'
 import { EngineerScene } from './EngineerScene'
+import { ENGINEER_CAMERA } from './engineerCamera'
 import { ProceduralEnvironment } from './ProceduralEnvironment'
 import { DoorScene } from './DoorScene'
 import { useDoorCamera } from './useDoorCamera'
+
+/** Where the camera looks in every world but the Engineer room. */
+const ORIGIN = new THREE.Vector3(0, 0, 0)
 
 // The postprocessing library is ~50kB gzipped and low-tier devices never turn
 // it on, so it loads only once the high-quality path is actually taken.
@@ -157,7 +161,7 @@ function SceneBackdrop() {
  * under reduced motion.
  */
 function CameraRig() {
-  const { reducedMotion, stage } = useWorld()
+  const { reducedMotion, stage, world } = useWorld()
   const { arenaActive, playerPos } = useHub()
   const target = useRef(new THREE.Vector3(0, 0, 8))
   const look = useRef(new THREE.Vector3())
@@ -184,12 +188,39 @@ function CameraRig() {
       return
     }
 
-    if (reducedMotion) return
+    /*
+      The Engineer World is a room, not a backdrop, so it gets its own framing
+      (see ENGINEER_CAMERA). The look target is lerped rather than snapped so
+      arriving from the landing or from the Game World is a move, not a cut.
+    */
+    if (stage === 'world' && world === 'engineer') {
+      const drift = reducedMotion ? 0 : 1
+      const p = ENGINEER_CAMERA.position
+      target.current.set(
+        p.x + state.pointer.x * 0.45 * drift,
+        p.y + state.pointer.y * 0.22 * drift,
+        p.z,
+      )
+      state.camera.position.lerp(target.current, 1 - Math.pow(0.02, dt))
+      look.current.lerp(ENGINEER_CAMERA.target, 1 - Math.pow(0.002, dt))
+      state.camera.lookAt(look.current)
+      return
+    }
+
+    look.current.lerp(ORIGIN, 1 - Math.pow(0.002, dt))
+    if (reducedMotion) {
+      state.camera.lookAt(look.current)
+      return
+    }
     // Scroll pushes the camera back a little, adding depth as you read.
     const scrollDepth = Math.min(window.scrollY / Math.max(window.innerHeight, 1), 2)
-    target.current.set(state.pointer.x * 0.9, state.pointer.y * 0.5 + scrollDepth * 0.4, 8 + scrollDepth * 1.6)
+    target.current.set(
+      state.pointer.x * 0.9,
+      state.pointer.y * 0.5 + scrollDepth * 0.4,
+      8 + scrollDepth * 1.6,
+    )
     state.camera.position.lerp(target.current, 1 - Math.pow(0.02, dt))
-    state.camera.lookAt(0, 0, 0)
+    state.camera.lookAt(look.current)
   })
 
   return null

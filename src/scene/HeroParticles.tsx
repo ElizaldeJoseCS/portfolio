@@ -15,6 +15,9 @@ import {
 /** Upper bound on the allocation; the tier selects a draw range within it. */
 const MAX_PARTICLES = 4200
 
+/** Resting opacity in the Game World; the Engineer room fades this to zero. */
+const BASE_OPACITY = 0.62
+
 export function HeroParticles() {
   const { world, reducedMotion, quality } = useWorld()
   const colors = useThemeColors()
@@ -54,6 +57,18 @@ export function HeroParticles() {
     // Pointer parallax, damped so it trails the cursor instead of snapping.
     pointer.current.lerp(state.pointer, 1 - Math.pow(0.001, dt))
     u.uMouse.value.set(pointer.current.x * 0.6, pointer.current.y * 0.4)
+
+    /*
+      The Engineer World is a dark room now, and a field of drifting motes in
+      the middle of it breaks that premise — so the field fades out on the way
+      in rather than being unmounted, which would pop mid-crossfade.
+    */
+    u.uOpacity.value = THREE.MathUtils.damp(
+      u.uOpacity.value,
+      world === 'engineer' ? 0 : BASE_OPACITY,
+      5,
+      dt,
+    )
 
     // World blend + colour lerp: this is what makes the switch feel continuous.
     u.uBlend.value = THREE.MathUtils.damp(u.uBlend.value, targetBlend, 6, dt)
