@@ -44,7 +44,7 @@ export const projects: Project[] = [
       },
       {
         heading: 'What I would change',
-        body: 'The live deployment is still on a bare IP rather than a domain with TLS, and editorial generation is synchronous with the daily job — a queue would let a failed generation retry on its own instead of leaving a gap for the day.',
+        body: 'Editorial generation is synchronous with the daily job, so a failure leaves a gap for that day rather than retrying on its own — a queue would fix that. The difficulty tiers are also fixed bands rather than adapting to how the person is actually doing, which is the obvious next thing to build.',
       },
     ],
     worlds: ['swe'],
@@ -64,7 +64,7 @@ export const projects: Project[] = [
     role: 'Solo',
     year: '2026',
     links: [
-      { label: 'Live site', url: 'http://159.65.226.241' },
+      { label: 'Live site', url: 'https://codeforces-practice.com/' },
       { label: 'GitHub', url: 'https://github.com/ElizaldeJoseCS/DailyCodeforce' },
     ],
     media: [

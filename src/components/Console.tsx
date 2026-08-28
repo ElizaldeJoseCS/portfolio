@@ -205,6 +205,12 @@ export function Console() {
       if (effect === 'open-resume' && profile.resumeUrl) {
         window.open(profile.resumeUrl, '_blank', 'noopener,noreferrer')
       }
+      // A command can hand back any URL to open — `paper` does. The printed
+      // link is still a real anchor, so this is a convenience, not the only way
+      // through: a blocked popup leaves something clickable behind.
+      if (typeof effect === 'object' && effect.open) {
+        window.open(effect.open, '_blank', 'noopener,noreferrer')
+      }
     },
     [setWorld, reducedMotion],
   )

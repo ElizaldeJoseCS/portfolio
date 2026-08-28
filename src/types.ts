@@ -95,6 +95,29 @@ export interface ExperienceEntry {
   url?: string
 }
 
+/**
+ * A paper. `pdf` is a copy hosted here so a link never rots behind a paywall or
+ * a dead conference site; `doi` is the canonical record when there is one.
+ * Both open in a new tab, like the resume.
+ */
+export interface Publication {
+  id: string
+  title: string
+  /** In publication order, exactly as printed. */
+  authors: string[]
+  venue: string
+  year: string
+  abstract: string
+  /** Site-relative path to the hosted PDF. */
+  pdf: string
+  doi?: string
+  /** What I actually did on it — this is a portfolio, not a bibliography. */
+  contribution: string
+  /** Ties the paper back to the `ExperienceEntry` it came out of. */
+  experienceId?: string
+  worlds: WorldTag[]
+}
+
 export interface SkillGroup {
   category: string
   items: { name: string; level?: number; worlds?: WorldTag[] }[]

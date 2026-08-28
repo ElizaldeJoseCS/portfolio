@@ -1,5 +1,5 @@
-import { experience, profile, projects, skills } from '@/data'
-import type { Project } from '@/types'
+import { experience, profile, projects, publications, skills } from '@/data'
+import type { Project, Publication } from '@/types'
 
 /**
  * The Engineer world is navigated by typing (spec §4 is overridden here by the
@@ -21,8 +21,13 @@ export type ConsoleLine =
   | { kind: 'projects'; items: { index: number; project: Project }[] }
   | { kind: 'chips'; label: string; items: string[] }
 
-/** Side effects the Console component performs after printing. */
-export type ConsoleEffect = 'clear' | 'switch-to-game' | 'open-resume'
+/**
+ * Side effects the Console component performs after printing.
+ *
+ * `{ open }` is the general case of `open-resume`: a typed command can hand
+ * back a URL to open in a new tab, which is how `paper` works.
+ */
+export type ConsoleEffect = 'clear' | 'switch-to-game' | 'open-resume' | { open: string }
 
 export interface CommandResult {
   lines: ConsoleLine[]
@@ -45,6 +50,27 @@ const sweProjects = projects.filter((p) => p.worlds.includes('swe') || p.worlds.
 const sweExperience = experience.filter(
   (e) => e.worlds.includes('swe') || e.worlds.includes('both'),
 )
+
+const swePapers = publications.filter(
+  (p) => p.worlds.includes('swe') || p.worlds.includes('both'),
+)
+
+/** One paper, as console lines. Shared by `papers` and `open`-style output. */
+function paperLines(paper: Publication, index: number): ConsoleLine[] {
+  return [
+    { kind: 'blank' },
+    { kind: 'text', tone: 'accent', text: `${String(index).padStart(2, '0')}. ${paper.title}` },
+    { kind: 'text', tone: 'muted', text: paper.authors.join(', ') },
+    { kind: 'text', tone: 'muted', text: `${paper.venue} · ${paper.year}` },
+    { kind: 'blank' },
+    { kind: 'text', text: paper.abstract },
+    { kind: 'bullet', text: `My part: ${paper.contribution}` },
+    { kind: 'link', label: 'Read the PDF', url: paper.pdf, external: true },
+    ...(paper.doi
+      ? ([{ kind: 'link', label: 'DOI (ACM Digital Library)', url: paper.doi, external: true }] as ConsoleLine[])
+      : []),
+  ]
+}
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const fmtDate = (v: string) => {
@@ -222,10 +248,71 @@ export const commands: Command[] = [
               text: `${fmtDate(e.start)} — ${fmtDate(e.end)}${e.location ? ` · ${e.location}` : ''}`,
             },
             ...e.description.map((d): ConsoleLine => ({ kind: 'bullet', text: d })),
+            // The paper that came out of this position, in context — someone
+            // reading `experience` should not have to know `papers` exists.
+            ...swePapers
+              .filter((paper) => paper.experienceId === e.id)
+              .map(
+                (paper): ConsoleLine => ({
+                  kind: 'link',
+                  label: `Paper — ${paper.title}`,
+                  url: paper.pdf,
+                  external: true,
+                }),
+              ),
             { kind: 'chips', label: 'Skills', items: e.skills },
           ]),
       ],
     }),
+  },
+  {
+    name: 'papers',
+    aliases: ['publications', 'pubs'],
+    help: 'Papers I have co-authored',
+    run: () => ({
+      lines: [
+        { kind: 'heading', text: 'Publications' },
+        {
+          kind: 'text',
+          tone: 'muted',
+          text: 'Every PDF is hosted here and opens in a new tab. `paper 1` opens one directly.',
+        },
+        ...swePapers.flatMap((paper, i) => paperLines(paper, i + 1)),
+      ],
+    }),
+  },
+  {
+    name: 'paper',
+    args: '<number|name>',
+    help: 'Open one paper as a PDF in a new tab',
+    hidden: true,
+    run: (args) => {
+      const key = (args[0] ?? '').toLowerCase()
+      if (!key) {
+        return {
+          lines: [
+            { kind: 'text', tone: 'muted', text: 'Usage: paper <number|name> — for example `paper 1`.' },
+            ...swePapers.flatMap((paper, i) => paperLines(paper, i + 1)),
+          ],
+        }
+      }
+      const byIndex = Number(key)
+      const paper = Number.isFinite(byIndex)
+        ? swePapers[byIndex - 1]
+        : swePapers.find((p) => p.id === key || p.title.toLowerCase().includes(key))
+
+      if (!paper) {
+        return notFound(`paper: no paper matching "${args.join(' ')}".`, 'Run `papers` for the list.')
+      }
+
+      return {
+        lines: [
+          { kind: 'text', text: `Opening “${paper.title}” in a new tab…` },
+          { kind: 'link', label: paper.pdf.replace('/assets/', ''), url: paper.pdf, external: true },
+        ],
+        effect: { open: paper.pdf },
+      }
+    },
   },
   {
     name: 'education',

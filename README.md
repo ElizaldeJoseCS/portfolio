@@ -207,6 +207,40 @@ Return `ConsoleLine` records rather than raw strings so the output stays real
 DOM (headings, lists, links) for screen readers. Side effects like clearing the
 screen go in `effect`, not in `run`.
 
+### How to add a paper
+
+Append to `src/data/publications.ts` and drop the PDF in `public/assets/`:
+
+```ts
+{
+  id: 'chi26-beyond-riding',
+  title: '…',
+  authors: ['Jane Hsieh', 'Jose Elizalde', /* … in printed order */],
+  venue: 'CHI 2026 — ACM Conference on Human Factors in Computing Systems',
+  year: '2026',
+  abstract: 'A readable paragraph, not the paper's own abstract verbatim.',
+  pdf: '/assets/paper-chi26-beyond-riding.pdf',   // hosted here, not hotlinked
+  doi: 'https://doi.org/10.1145/…',               // optional
+  contribution: 'What I actually did — this is a portfolio, not a bibliography.',
+  experienceId: 'cmu-reuse',   // optional; prints the link inside `experience`
+  worlds: ['swe'],
+}
+```
+
+It then appears in three places automatically: the landing's "Published
+research" block (world-neutral, like the Resume button), the console's `papers`
+command, and — if `experienceId` matches — inside `experience` under the
+position it came out of. `paper <n>` opens one in a new tab the way `resume`
+does.
+
+Host the PDF rather than linking a conference site, so the link survives that
+site being reorganised. Compress a large one first:
+
+```bash
+gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.5 -dPDFSETTINGS=/ebook \
+   -dNOPAUSE -dQUIET -dBATCH -sOutputFile=public/assets/paper-x.pdf raw.pdf
+```
+
 ### Other content touch points
 
 Three places intentionally duplicate a little copy and must be updated by hand

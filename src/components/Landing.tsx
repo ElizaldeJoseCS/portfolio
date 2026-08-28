@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { profile } from '@/data'
+import { profile, publications } from '@/data'
 import { useWorld } from '@/lib/world-context'
 import { cn } from '@/lib/cn'
 import { Chip, LinkButton } from './ui'
@@ -124,7 +124,53 @@ export function Landing() {
             </ul>
           )}
 
-          <div className="mt-7 flex flex-wrap gap-3">
+          {/* Papers sit on the landing rather than inside a world: they are a
+              credential like the resume, so they should be reachable before
+              anyone commits to the console or the arena. The console has a
+              `papers` command as well. */}
+          {publications.length > 0 && (
+            <div className="mt-8">
+              <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-accent">
+                Published research
+              </h3>
+              <ul className="mt-4 space-y-5">
+                {publications.map((paper) => (
+                  <li key={paper.id} className="border-l-2 border-line pl-4">
+                    <p className="font-display text-base font-semibold leading-snug text-fg">
+                      {paper.title}
+                    </p>
+                    <p className="mt-1 text-sm leading-relaxed text-muted">
+                      {/* The author's own name is marked so a reader can see the
+                          co-authorship without reading the whole list. */}
+                      {paper.authors.map((author, i) => (
+                        <span key={author}>
+                          {i > 0 && ', '}
+                          <span className={author === profile.name ? 'text-fg/90' : undefined}>
+                            {author}
+                          </span>
+                        </span>
+                      ))}
+                    </p>
+                    <p className="mt-1 font-mono text-xs text-muted">
+                      {paper.venue} · {paper.year}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-3">
+                      <LinkButton href={paper.pdf} size="sm" variant="outline" external>
+                        Read the PDF
+                      </LinkButton>
+                      {paper.doi && (
+                        <LinkButton href={paper.doi} size="sm" variant="ghost" external>
+                          DOI
+                        </LinkButton>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div className="mt-8 flex flex-wrap gap-3">
             {profile.resumeUrl && (
               <LinkButton href={profile.resumeUrl} size="sm" variant="outline" external>
                 Resume
