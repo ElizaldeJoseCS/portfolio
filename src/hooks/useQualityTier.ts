@@ -26,14 +26,31 @@ function detectTier(reducedMotion: boolean): QualityTier {
 
 export interface QualityState {
   tier: QualityTier
+  /** True once auto-tuning has been locked off (manual override or fallback). */
+  locked: boolean
+  /** Stops all further automatic tier changes. */
+  lock: () => void
   /** True when the user picked the tier by hand; auto-degrade then stops. */
   isManual: boolean
   setTier: (tier: QualityTier) => void
-  /** Called by drei's PerformanceMonitor when sustained FPS drops. */
+  /**
+   * Called by drei's PerformanceMonitor on a sustained FPS drop.
+   *
+   * Degradation is deliberately **one-way**. Spec §5.2 asks for the tier to
+   * rise again on recovery, but restoring turns the monitor into an
+   * oscillator: the scene drops to low, recovers *because* it dropped, climbs
+   * back, drops again. Every crossing mounts or unmounts the post-processing
+   * stack and changes the particle count, which is far more distracting than
+   * simply staying on low.
+   */
   degrade: () => void
-  restore: () => void
   /** Derived budgets consumed by the scenes. */
   particleCount: number
+  /**
+   * Fixed for the life of the session. Changing dpr resizes the drawing
+   * buffer, which is visible as a jolt every time — not worth the frame it
+   * might buy back.
+   */
   dpr: [number, number]
   postProcessing: boolean
   shadows: boolean
@@ -42,7 +59,15 @@ export interface QualityState {
 export function useQualityTier(): QualityState {
   const reducedMotion = usePrefersReducedMotion()
   const [isManual, setIsManual] = useState(false)
+  const [locked, setLocked] = useState(false)
   const [tier, setTierState] = useState<QualityTier>('high')
+
+  // Resolved once, on mount, and never again.
+  const [dpr] = useState<[number, number]>(() => {
+    if (typeof window === 'undefined') return [1, 2]
+    const coarse = window.matchMedia('(pointer: coarse)').matches
+    return coarse || window.innerWidth < 768 ? [1, 1.5] : [1, 2]
+  })
 
   // Detect after mount so the first paint isn't blocked on media queries.
   useEffect(() => {
@@ -65,26 +90,25 @@ export function useQualityTier(): QualityState {
     }
   }, [])
 
-  const degrade = useCallback(() => {
-    setTierState((prev) => (isManual ? prev : 'low'))
-  }, [isManual])
+  const lock = useCallback(() => setLocked(true), [])
 
-  const restore = useCallback(() => {
-    setTierState((prev) => (isManual ? prev : detectTier(reducedMotion) === 'high' ? 'high' : prev))
-  }, [isManual, reducedMotion])
+  const degrade = useCallback(() => {
+    setTierState((prev) => (isManual || locked ? prev : 'low'))
+  }, [isManual, locked])
 
   return useMemo<QualityState>(
     () => ({
       tier,
+      locked,
+      lock,
       isManual,
       setTier,
       degrade,
-      restore,
       particleCount: tier === 'high' ? 4200 : 1400,
-      dpr: tier === 'high' ? [1, 2] : [1, 1.4],
+      dpr,
       postProcessing: tier === 'high' && !reducedMotion,
       shadows: tier === 'high',
     }),
-    [tier, isManual, setTier, degrade, restore, reducedMotion],
+    [tier, locked, lock, isManual, setTier, degrade, reducedMotion, dpr],
   )
 }

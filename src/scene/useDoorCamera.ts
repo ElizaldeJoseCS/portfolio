@@ -8,10 +8,17 @@ const WALK_AT = 0.34
 
 /** Camera path for the intro: hold, then walk through the opening. */
 export function useDoorCamera() {
-  const { doorState } = useWorld()
+  const { doorState, stage } = useWorld()
   const progress = useRef(0)
 
   useFrame((state, delta) => {
+    // Hard bail outside the intro. Without this the hook keeps writing the
+    // camera every frame after the door is done, fighting CameraRig's own
+    // write on the same frame — the camera then alternates between two
+    // transforms at 60Hz, which reads as violent shaking and inverted
+    // controls in both worlds.
+    if (stage !== 'door') return
+
     if (doorState === 'opening') {
       progress.current = Math.min(1, progress.current + delta / (DOOR_SEQUENCE_MS / 1000))
     } else if (doorState === 'closed') {

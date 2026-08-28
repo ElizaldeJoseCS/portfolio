@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { AdaptiveDpr, PerformanceMonitor, Preload } from '@react-three/drei'
+import { PerformanceMonitor, Preload } from '@react-three/drei'
 import * as THREE from 'three'
 import { useWorld } from '@/lib/world-context'
 import { useHub } from '@/lib/hub-context'
@@ -44,12 +44,23 @@ export function SceneContainer() {
         // Nothing here needs a persistent framebuffer between frames.
         frameloop={reducedMotion ? 'demand' : 'always'}
       >
+        {/*
+          No <AdaptiveDpr />: it changes dpr behind our back and fought the
+          tier's own dpr, and any dpr change resizes the drawing buffer, which
+          reads as the whole scene jolting. `dpr` is now fixed for the session.
+
+          There is no `onIncline` either — see `degrade()` in useQualityTier.
+          Letting the tier climb back made the monitor oscillate, mounting and
+          unmounting the bloom pass every second or so.
+        */}
         <PerformanceMonitor
           onDecline={() => quality.degrade()}
-          onIncline={() => quality.restore()}
-          flipflops={3}
+          onFallback={() => {
+            quality.degrade()
+            quality.lock()
+          }}
+          flipflops={2}
         />
-        <AdaptiveDpr pixelated={false} />
 
         <Suspense fallback={null}>
           <DemandFrameSync />

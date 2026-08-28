@@ -11,6 +11,8 @@ import { PossessionHub } from './PossessionHub'
 
 const TRAIL_LENGTH = 42
 const ARENA_RADIUS = 13
+/** Units per second. Kept below the chase camera's follow rate (see Rover). */
+const MAX_SPEED = 11
 
 /**
  * Game World scene (spec §5.4): neon grid floor, floating low-poly props, and
@@ -164,6 +166,16 @@ function Rover({ opacity }: { opacity: number }) {
     }
 
     v.multiplyScalar(Math.pow(0.06, dt)) // exponential damping, frame-rate independent
+
+    // Cap the speed. A fast pointer drag injects velocity directly, and a big
+    // enough flick could out-run the chase camera — once the rover passes the
+    // camera, lookAt swings 180° and the controls appear to invert.
+    const speed = Math.hypot(v.x, v.z)
+    if (speed > MAX_SPEED) {
+      v.x = (v.x / speed) * MAX_SPEED
+      v.z = (v.z / speed) * MAX_SPEED
+    }
+
     p.addScaledVector(v, dt)
 
     // Soft arena bounds: bounce rather than clamp so momentum survives.

@@ -12,15 +12,24 @@ import {
  * The signature hero effect (spec §5.3). Lives outside both worlds so it
  * survives the crossfade and simply re-shapes/recolours as `uBlend` lerps.
  */
+/** Upper bound on the allocation; the tier selects a draw range within it. */
+const MAX_PARTICLES = 4200
+
 export function HeroParticles() {
   const { world, reducedMotion, quality } = useWorld()
   const colors = useThemeColors()
   const viewport = useThree((s) => s.viewport)
 
-  const geometry = useMemo(
-    () => createHeroParticleGeometry(quality.particleCount),
-    [quality.particleCount],
-  )
+  /**
+   * Allocated once at the high-tier count. Rebuilding the buffers whenever the
+   * quality tier changed thrashed the GPU and made the field visibly pop; the
+   * tier now just narrows the draw range over the same allocation.
+   */
+  const geometry = useMemo(() => createHeroParticleGeometry(MAX_PARTICLES), [])
+
+  useEffect(() => {
+    geometry.setDrawRange(0, Math.min(quality.particleCount, MAX_PARTICLES))
+  }, [geometry, quality.particleCount])
   const material = useMemo(() => createHeroParticleMaterial(), [])
 
   // Dispose GPU buffers when the count changes or the scene unmounts.
