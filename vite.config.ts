@@ -23,13 +23,16 @@ export default defineConfig({
     cssCodeSplit: true,
     rollupOptions: {
       output: {
-        // Keep the heavy WebGL stack out of the critical path so the DOM
-        // fallback + hero text paint before three.js is parsed.
+        // Only the always-needed vendors get forced groups. three/drei/
+        // postprocessing are deliberately left alone so Rollup keeps them in
+        // the lazy chunks their dynamic imports create — forcing them into a
+        // named chunk pulls the whole WebGL stack onto the critical path.
         manualChunks(id) {
           if (!id.includes('node_modules')) return
-          if (id.includes('three') || id.includes('postprocessing')) return 'three'
-          if (id.includes('react-dom') || id.includes('/react/')) return 'react'
-          if (id.includes('framer-motion')) return 'motion'
+          if (id.includes('/react-dom/') || id.includes('/react/') || id.includes('/scheduler/'))
+            return 'react'
+          if (id.includes('framer-motion') || id.includes('/motion-dom/') || id.includes('/motion-utils/'))
+            return 'motion'
         },
       },
     },

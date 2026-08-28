@@ -1,0 +1,83 @@
+import type { ExperienceEntry } from '@/types'
+
+/** TODO(owner): replace with the real timeline (work + internships + education). */
+export const experience: ExperienceEntry[] = [
+  {
+    id: 'exp-gameplay-eng',
+    role: 'Gameplay Engineer',
+    company: 'Vector Foundry',
+    location: 'Remote',
+    start: '2024-03',
+    end: 'Present',
+    kind: 'work',
+    description: [
+      'Own the multiplayer simulation layer: deterministic fixed-step sim, rollback, and the replay format that reuses the same input log.',
+      'Cut p99 input-to-render latency from 96ms to 41ms by moving prediction off the render thread and pre-allocating the per-frame state pool.',
+      'Built the designer-facing tuning console so balance changes ship without an engineer in the loop.',
+    ],
+    skills: ['Unity', 'C#', 'Netcode', 'Profiling'],
+    worlds: ['game'],
+    url: 'https://example.com/',
+  },
+  {
+    id: 'exp-swe',
+    role: 'Software Engineer, Platform',
+    company: 'Northline Systems',
+    location: 'Austin, TX',
+    start: '2022-07',
+    end: '2024-02',
+    kind: 'work',
+    description: [
+      'Built and operated the ingestion pipeline behind the internal service map — websocket span stream, worker-side layout, instanced WebGL render path.',
+      'Introduced lease-based ownership to the job runner, dropping stuck-queue incidents from roughly weekly to none over two quarters.',
+      'Ran the on-call rotation handbook rewrite; new engineers went from shadowing three rotations to one.',
+    ],
+    skills: ['Go', 'TypeScript', 'PostgreSQL', 'Kubernetes', 'OpenTelemetry'],
+    worlds: ['swe'],
+  },
+  {
+    id: 'exp-intern',
+    role: 'Software Engineering Intern',
+    company: 'Halcyon Labs',
+    location: 'Seattle, WA',
+    start: '2021-06',
+    end: '2021-09',
+    kind: 'internship',
+    description: [
+      'Shipped an internal search over 2.1M support tickets, replacing a spreadsheet workflow the team had used for four years.',
+      'Wrote the backfill job that reindexed history without taking the live index offline.',
+    ],
+    skills: ['Python', 'Elasticsearch', 'React'],
+    worlds: ['swe'],
+  },
+  {
+    id: 'exp-jam',
+    role: 'Technical Lead',
+    company: 'Indie collective / game jams',
+    location: 'Various',
+    start: '2020-01',
+    end: 'Present',
+    kind: 'work',
+    description: [
+      'Eleven shipped jam games, three of which grew into longer projects.',
+      'Usually the person who owns build pipeline, input, and whatever is on fire at hour 44.',
+    ],
+    skills: ['Unity', 'Godot', 'Three.js', 'Rapid prototyping'],
+    worlds: ['game'],
+  },
+  {
+    id: 'edu-bs',
+    role: 'B.S. Computer Science',
+    company: 'University of Texas at Austin',
+    location: 'Austin, TX',
+    start: '2018-08',
+    end: '2022-05',
+    kind: 'education',
+    description: [
+      'Focus in graphics and distributed systems; undergraduate TA for the real-time rendering course.',
+      'Capstone: a GPU-driven crowd simulation renderer sustaining 12k agents at 60fps.',
+    ],
+    skills: ['C++', 'OpenGL', 'Algorithms', 'Operating Systems'],
+    worlds: ['both'],
+  },
+]

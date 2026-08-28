@@ -9,3 +9,7 @@ dist-ssr
 .env.*
 !.env.example
 stats.html
+
+# Local AI assistant context
+CLAUDE.md
+.claude/

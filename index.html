@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#090614" />
+
+    <!--
+      TODO(owner): update the copy below and in src/data/site.ts together, and
+      swap https://example.com for the real domain before launch (spec §14.4).
+    -->
+    <title>Alex Rivera — Game Developer &amp; Software Engineer</title>
+    <meta
+      name="description"
+      content="Interactive WebGL portfolio of Alex Rivera: gameplay engineering, netcode, and the data platforms behind them. Two worlds, one set of work."
+    />
+    <link rel="canonical" href="https://example.com/" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="Alex Rivera" />
+    <meta property="og:title" content="Alex Rivera — Game Developer & Software Engineer" />
+    <meta
+      property="og:description"
+      content="An interactive 3D portfolio with two switchable worlds: game development and software engineering."
+    />
+    <meta property="og:url" content="https://example.com/" />
+    <meta property="og:image" content="https://example.com/assets/og-cover.svg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Alex Rivera — Game Developer & Software Engineer" />
+    <meta
+      name="twitter:description"
+      content="An interactive 3D portfolio with two switchable worlds: game development and software engineering."
+    />
+    <meta name="twitter:image" content="https://example.com/assets/og-cover.svg" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <!-- Structured data: Person + ProfilePage (spec §9). -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "mainEntity": {
+          "@type": "Person",
+          "name": "Alex Rivera",
+          "jobTitle": ["Game Developer", "Software Engineer"],
+          "url": "https://example.com/",
+          "email": "mailto:hello@example.com",
+          "address": { "@type": "PostalAddress", "addressLocality": "Austin", "addressRegion": "TX" },
+          "sameAs": ["https://github.com/", "https://www.linkedin.com/", "https://itch.io/"],
+          "knowsAbout": [
+            "Game development",
+            "Unity",
+            "Netcode",
+            "WebGL",
+            "TypeScript",
+            "Distributed systems"
+          ]
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="root">
+      <!--
+        Static, fully-readable fallback (spec §9). React replaces it on mount;
+        crawlers and no-JS visitors read this. Keep it in sync with src/data.
+      -->
+      <div id="static-fallback">
+        <h1>Alex Rivera</h1>
+        <p>Game Developer &amp; Software Engineer — Austin, TX</p>
+        <p>I build worlds you can play in and systems you can trust.</p>
+
+        <h2>Projects</h2>
+        <ul>
+          <li><strong>SWE Internship Tracker</strong> — one deduplicated board for ~1,170 roles scraped from five sources.</li>
+          <li><strong>Neon Drift</strong> — a rollback-netcode arcade racer built for four players on bad Wi-Fi.</li>
+          <li><strong>Atlas</strong> — trace-driven service map that renders 40k spans without dropping a frame.</li>
+          <li><strong>Tilewright</strong> — an in-editor level tool that cut designer iteration from minutes to seconds.</li>
+          <li><strong>Shaderbook</strong> — a live GLSL playground with hot-reload and shareable permalinks.</li>
+          <li><strong>Signal Mesh</strong> — self-healing job queue that survived a region outage without losing work.</li>
+        </ul>
+
+        <h2>Experience</h2>
+        <ul>
+          <li>Gameplay Engineer, Vector Foundry (2024 — present)</li>
+          <li>Software Engineer, Platform, Northline Systems (2022 — 2024)</li>
+          <li>Software Engineering Intern, Halcyon Labs (2021)</li>
+          <li>B.S. Computer Science, University of Texas at Austin (2018 — 2022)</li>
+        </ul>
+
+        <h2>Skills</h2>
+        <p>
+          TypeScript, C#, Go, Python, C++, GLSL, Unity, Three.js, React, WebGL2, PostgreSQL,
+          Kubernetes, OpenTelemetry.
+        </p>
+
+        <h2>Contact</h2>
+        <p><a href="mailto:hello@example.com">hello@example.com</a></p>
+      </div>
+    </div>
+
+    <noscript>
+      <p style="padding: 1.25rem; font-family: system-ui, sans-serif">
+        This portfolio uses JavaScript for its interactive 3D scenes. The full text of every
+        section is listed above and remains readable without it.
+      </p>
+    </noscript>
+
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
