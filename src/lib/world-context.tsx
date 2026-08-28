@@ -1,18 +1,53 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { QualityTier, Stage, Theme, World } from '@/types'
+import type { DoorState, QualityTier, Stage, Theme, World } from '@/types'
 import { applyThemeVars, otherWorld, themes } from './theme'
 import { useQualityTier, type QualityState } from '@/hooks/useQualityTier'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
 
 const WORLD_STORAGE_KEY = 'portfolio:world'
+const ENTERED_KEY = 'portfolio:entered'
+/** Door swing + walk-through. Kept short; it sits in front of the content. */
+export const DOOR_SEQUENCE_MS = 1700
+
+/**
+ * Whether to play the door intro at all. Checked synchronously in a state
+ * initialiser so the door never flashes for someone who should skip it.
+ */
+function shouldShowDoor(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    if (window.sessionStorage.getItem(ENTERED_KEY) === '1') return false
+  } catch {
+    // Storage blocked; fall through and decide on the other signals.
+  }
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false
+
+  // A dark room with a door is pointless without WebGL to draw it.
+  try {
+    const canvas = document.createElement('canvas')
+    const gl = (canvas.getContext('webgl2') || canvas.getContext('webgl')) as
+      | WebGLRenderingContext
+      | null
+    if (!gl) return false
+    gl.getExtension('WEBGL_lose_context')?.loseContext()
+  } catch {
+    return false
+  }
+  return true
+}
 /** Must stay in step with the crossfade duration in SceneContainer (spec §13). */
 export const WORLD_TRANSITION_MS = 400
 
 interface WorldContextValue {
-  /** 'landing' until the visitor picks a world. */
+  /** 'door' → 'landing' → 'world'. */
   stage: Stage
+  doorState: DoorState
+  /** Plays the door sequence, then lands. */
+  openDoor: () => void
+  /** Jumps straight to the landing, skipping the intro. */
+  skipDoor: () => void
   /** The world they are in, or would enter. Meaningless while on the landing. */
   world: World
   /** Landing theme while on the landing, otherwise the world's theme. */
@@ -38,9 +73,9 @@ export function WorldProvider({ children }: { children: ReactNode }) {
   const reducedMotion = usePrefersReducedMotion()
   const quality = useQualityTier()
   const [world, setWorldState] = useState<World>('game')
-  // Everyone starts on the landing, including returning visitors — the choice
-  // between worlds is the point of the front door.
-  const [stage, setStage] = useState<Stage>('landing')
+  // First visit of a session opens on the door room; everyone else lands.
+  const [stage, setStage] = useState<Stage>(() => (shouldShowDoor() ? 'door' : 'landing'))
+  const [doorState, setDoorState] = useState<DoorState>('closed')
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   // A stored world only pre-selects which door is highlighted; it never skips
@@ -87,9 +122,41 @@ export function WorldProvider({ children }: { children: ReactNode }) {
     setStage('landing')
   }, [])
 
+  const markEntered = useCallback(() => {
+    try {
+      window.sessionStorage.setItem(ENTERED_KEY, '1')
+    } catch {
+      // Nothing to do; the intro simply plays again next time.
+    }
+  }, [])
+
+  const skipDoor = useCallback(() => {
+    markEntered()
+    setDoorState('done')
+    setIsTransitioning(true)
+    setStage('landing')
+  }, [markEntered])
+
+  const openDoor = useCallback(() => {
+    setDoorState((prev) => (prev === 'closed' ? 'opening' : prev))
+  }, [])
+
+  // The scene animates the swing and the walk-through; this just lands the
+  // visitor when it is over.
+  useEffect(() => {
+    if (doorState !== 'opening') return
+    const t = window.setTimeout(() => {
+      markEntered()
+      setDoorState('done')
+      setIsTransitioning(true)
+      setStage('landing')
+    }, DOOR_SEQUENCE_MS)
+    return () => window.clearTimeout(t)
+  }, [doorState, markEntered])
+
   // Push tokens to :root, and clear the transition flag once the crossfade ends.
   useEffect(() => {
-    applyThemeVars(stage === 'landing' ? themes.landing : themes[world])
+    applyThemeVars(stage === 'world' ? themes[world] : themes.landing)
     if (!isTransitioning) return
     const t = window.setTimeout(() => setIsTransitioning(false), WORLD_TRANSITION_MS)
     return () => window.clearTimeout(t)
@@ -99,8 +166,11 @@ export function WorldProvider({ children }: { children: ReactNode }) {
     const next = otherWorld(world)
     return {
       stage,
+      doorState,
+      openDoor,
+      skipDoor,
       world,
-      theme: stage === 'landing' ? themes.landing : themes[world],
+      theme: stage === 'world' ? themes[world] : themes.landing,
       next,
       nextTheme: themes[next],
       setWorld,
@@ -113,6 +183,9 @@ export function WorldProvider({ children }: { children: ReactNode }) {
     }
   }, [
     stage,
+    doorState,
+    openDoor,
+    skipDoor,
     world,
     setWorld,
     toggleWorld,

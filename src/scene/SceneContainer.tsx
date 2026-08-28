@@ -10,6 +10,8 @@ import { HeroParticles } from './HeroParticles'
 import { GameScene } from './GameScene'
 import { EngineerScene } from './EngineerScene'
 import { ProceduralEnvironment } from './ProceduralEnvironment'
+import { DoorScene } from './DoorScene'
+import { useDoorCamera } from './useDoorCamera'
 
 // The postprocessing library is ~50kB gzipped and low-tier devices never turn
 // it on, so it loads only once the high-quality path is actually taken.
@@ -54,7 +56,16 @@ export function SceneContainer() {
           <SceneBackdrop />
           <CameraRig />
 
-          <HeroParticles />
+          {/*
+            Particles belong to the worlds only. On the landing they sat behind
+            a page of body copy and made it feel restless, and in the door room
+            they would break the "empty dark room" premise entirely.
+          */}
+          {stage === 'world' && <HeroParticles />}
+
+          <group visible={stage === 'door'}>
+            <DoorScene opacity={stage === 'door' ? 1 : 0} />
+          </group>
 
           {/*
             Both scenes stay mounted; only their visibility flips. Unmounting
@@ -62,10 +73,10 @@ export function SceneContainer() {
             every program on the next switch — a multi-second stall on slower
             GPUs. Invisible groups cost no draw calls.
           */}
-          <group visible={fade.showGame}>
+          <group visible={stage === 'world' && fade.showGame}>
             <GameScene opacity={fade.gameOpacity} />
           </group>
-          <group visible={fade.showEngineer}>
+          <group visible={stage === 'world' && fade.showEngineer}>
             <EngineerScene opacity={fade.engineerOpacity} />
           </group>
 
@@ -111,10 +122,15 @@ function DemandFrameSync() {
 /** Fog + clear colour tinted by the active world. */
 function SceneBackdrop() {
   const colors = useThemeColors()
+  const { stage } = useWorld()
   const scene = useThree((s) => s.scene)
 
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.1)
+    if (stage === 'door') {
+      scene.fog = null
+      return
+    }
     if (!scene.fog) scene.fog = new THREE.FogExp2(colors.bg.getHex(), 0.028)
     if (scene.fog instanceof THREE.FogExp2) {
       scene.fog.color.lerp(colors.bg, 1 - Math.pow(0.005, dt))
@@ -130,12 +146,16 @@ function SceneBackdrop() {
  * under reduced motion.
  */
 function CameraRig() {
-  const { reducedMotion } = useWorld()
+  const { reducedMotion, stage } = useWorld()
   const { arenaActive, playerPos } = useHub()
   const target = useRef(new THREE.Vector3(0, 0, 8))
   const look = useRef(new THREE.Vector3())
 
+  // The intro room drives the camera on a fixed path.
+  useDoorCamera()
+
   useFrame((state, delta) => {
+    if (stage === 'door') return
     const dt = Math.min(delta, 0.1)
 
     // In the arena the camera chases the rover, otherwise you drive straight

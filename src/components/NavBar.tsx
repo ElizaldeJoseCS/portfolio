@@ -27,6 +27,7 @@ export function NavBar() {
   const { theme, reducedMotion, world, stage, goToLanding } = useWorld()
   const { arenaActive } = useHub()
   const inWorld = stage === 'world'
+  const inDoor = stage === 'door'
   // Only the Game World's *list* view has scrollable sections; the landing, the
   // console and the arena would point the anchor list at elements that do not
   // exist.
@@ -81,6 +82,9 @@ export function NavBar() {
       window.removeEventListener('keydown', onKey)
     }
   }, [open])
+
+  // The intro room is a threshold, not a page: no chrome over it.
+  if (inDoor) return null
 
   return (
     <>

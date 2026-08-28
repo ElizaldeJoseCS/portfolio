@@ -3,7 +3,11 @@
 Jose Elizalde's portfolio: a landing page and two switchable "worlds", built to
 the spec in [`portfolio_website_spec.md`](./portfolio_website_spec.md).
 
-- **Landing** — where everyone arrives. Full About Me, then two doors.
+- **Intro** — a dark room with a single white door. Press **E** (or click) to
+  open it and walk through. Shows once per session; always skippable, and
+  skipped automatically with reduced motion or without WebGL.
+- **Landing** — where you arrive. Full About Me, then two doors. Deliberately
+  static: no 3D, no particles, so the reading is calm.
 - **Game World** — a possession arena. You drive a shell-less rover around a
   neon grid and press **E** to take over the shells holding each project, in a
   nod to Shellscape. A scrolling list view is always one click away, and is the

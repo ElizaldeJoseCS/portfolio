@@ -10,6 +10,7 @@ import { NoWebglNotice } from '@/components/NoWebglNotice'
 import { GameWorld } from '@/worlds/GameWorld'
 import { EngineerWorld } from '@/worlds/EngineerWorld'
 import { Landing } from '@/components/Landing'
+import { DoorRoom } from '@/components/DoorRoom'
 import { Footer } from '@/components/Footer'
 
 // three.js + drei are ~150kB gzipped on their own; keep them off the critical
@@ -28,7 +29,7 @@ const SceneContainer = lazy(() =>
  * `top`/`position` from `auto` leaves the exit animation permanently pending
  * and the layer never unmounts.
  */
-type Layer = World | 'landing'
+type Layer = World | 'landing' | 'door'
 
 function WorldLayer({ layer }: { layer: Layer }) {
   const { reducedMotion } = useWorld()
@@ -58,7 +59,9 @@ function WorldLayer({ layer }: { layer: Layer }) {
       }
       className={isPresent ? undefined : 'pointer-events-none'}
     >
-      {layer === 'landing' ? (
+      {layer === 'door' ? (
+        <DoorRoom />
+      ) : layer === 'landing' ? (
         <>
           <Landing />
           <Footer />
@@ -74,7 +77,7 @@ function WorldLayer({ layer }: { layer: Layer }) {
 
 function WorldStage() {
   const { world, stage } = useWorld()
-  const layer: Layer = stage === 'landing' ? 'landing' : world
+  const layer: Layer = stage === 'world' ? world : stage
 
   return (
     <main id="main" className="relative">
@@ -91,6 +94,7 @@ function WorldStage() {
 
 function Shell() {
   const webgl = useIsWebglSupported()
+  const { stage } = useWorld()
 
   // No background on the wrapper on purpose: an opaque background here would
   // paint over the fixed canvas, which sits at a negative z-index. The page
@@ -106,14 +110,18 @@ function Shell() {
       {webgl === false && <NoWebglNotice />}
 
       {/*
-        Readability scrim. The 3D scene is bright and busy by design, and all
-        body copy sits directly on top of it — without this the text drops well
-        under the 4.5:1 contrast floor (spec §8).
+        Readability scrim — worlds only. Inside a world the 3D scene is bright
+        and busy and all body copy sits on top of it, so without this the text
+        drops under the 4.5:1 contrast floor (spec §8).
+
+        It must NOT apply to the door room or the landing: the door room has no
+        body copy over the scene and the scrim was washing the white door out to
+        grey, and the landing draws no 3D at all, so the scrim only muted its
+        gradients.
       */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 -z-[4] bg-bg/60"
-      />
+      {stage === 'world' && (
+        <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-[4] bg-bg/60" />
+      )}
 
       <NavBar />
       <WorldStage />

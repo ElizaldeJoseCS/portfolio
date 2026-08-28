@@ -11,8 +11,14 @@ export type World = 'game' | 'engineer'
  */
 export type ThemeName = World | 'landing'
 
-/** Where the visitor currently is. */
-export type Stage = 'landing' | 'world'
+/**
+ * Where the visitor currently is. `door` is the one-shot intro room; it is
+ * skipped for repeat visits in the same session, reduced motion, and no-WebGL.
+ */
+export type Stage = 'door' | 'landing' | 'world'
+
+/** How far along the door-opening sequence is. */
+export type DoorState = 'closed' | 'opening' | 'done'
 
 /** Which world(s) a piece of content belongs to. `both` shows up everywhere. */
 export type WorldTag = 'game' | 'swe' | 'both'
