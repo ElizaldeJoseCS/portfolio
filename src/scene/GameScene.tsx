@@ -6,6 +6,8 @@ import { useIsTouch } from '@/hooks/useIsMobile'
 import { useThemeColors } from './useThemeColors'
 import { useKeyboardInput } from './useKeyboardInput'
 import { createGridMaterial } from './materials/gridShader'
+import { useHub } from '@/lib/hub-context'
+import { PossessionHub } from './PossessionHub'
 
 const TRAIL_LENGTH = 42
 const ARENA_RADIUS = 13
@@ -33,7 +35,8 @@ export function GameScene({ opacity }: { opacity: number }) {
 
       <GridFloor opacity={opacity} />
       <Rover opacity={opacity} />
-      <FloatingProps opacity={opacity} count={quality.tier === 'high' ? 9 : 5} />
+      <PossessionHub opacity={opacity} />
+      <FloatingProps opacity={opacity} count={quality.tier === 'high' ? 7 : 4} />
       {!reducedMotion && <Starfield opacity={opacity} count={quality.tier === 'high' ? 900 : 320} />}
     </group>
   )
@@ -74,6 +77,7 @@ function Rover({ opacity }: { opacity: number }) {
   const colors = useThemeColors()
   const { input, hasInput } = useKeyboardInput()
   const isTouch = useIsTouch()
+  const { playerPos, canMove, possessedId, shells, reportMoved, hasMoved } = useHub()
   const gl = useThree((s) => s.gl)
 
   const body = useRef<THREE.Group>(null)
@@ -128,6 +132,22 @@ function Rover({ opacity }: { opacity: number }) {
     const v = velocity.current
     const p = position.current
 
+    // While possessing a shell the visitor is reading, not driving. Bleed off
+    // momentum and drift toward the shell so releasing does not fling them.
+    if (!canMove) {
+      const target = shells.find((s) => s.id === possessedId)
+      v.multiplyScalar(Math.pow(0.001, dt))
+      if (target) {
+        p.x = THREE.MathUtils.damp(p.x, target.position.x, 4, dt)
+        p.z = THREE.MathUtils.damp(p.z, target.position.z, 4, dt)
+      }
+      playerPos.current.x = p.x
+      playerPos.current.y = p.y
+      playerPos.current.z = p.z
+      if (body.current) body.current.position.set(p.x, p.y, p.z)
+      return
+    }
+
     const { forward, right, boost } = input.current
     const accel = (boost ? 26 : 15) * dt
     v.x += right * accel
@@ -157,6 +177,12 @@ function Rover({ opacity }: { opacity: number }) {
       v.x -= 2 * dot * nx * 0.6
       v.z -= 2 * dot * nz * 0.6
     }
+
+    // Publish for the hub's proximity test.
+    playerPos.current.x = p.x
+    playerPos.current.y = p.y
+    playerPos.current.z = p.z
+    if (!hasMoved && (hasInput.current || drag.current.active)) reportMoved()
 
     if (body.current) {
       const hover = reducedMotion ? 0 : Math.sin(state.clock.elapsedTime * 2.2) * 0.12
@@ -242,7 +268,8 @@ function FloatingProps({ opacity, count }: { opacity: number; count: number }) {
     () =>
       Array.from({ length: count }, (_, i) => {
         const angle = (i / count) * Math.PI * 2
-        const radius = 7 + (i % 3) * 2.2
+        // Beyond the shell ring (8.5–10.1) so they never crowd an interactable.
+        const radius = 15 + (i % 3) * 2.4
         return {
           position: [Math.cos(angle) * radius, -0.4 + (i % 4) * 1.15, Math.sin(angle) * radius] as const,
           scale: 0.45 + ((i * 37) % 60) / 100,

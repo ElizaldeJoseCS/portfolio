@@ -1,14 +1,18 @@
 # Portfolio — two-world WebGL site
 
-Jose Elizalde's portfolio: one site, two switchable "worlds", built to the spec
-in [`portfolio_website_spec.md`](./portfolio_website_spec.md).
+Jose Elizalde's portfolio: a landing page and two switchable "worlds", built to
+the spec in [`portfolio_website_spec.md`](./portfolio_website_spec.md).
 
-- **Game World** — a scrolling 3D showcase. Neon grid, emissive low-poly props,
-  and a driveable centrepiece you can steer with WASD/arrows or by dragging.
-  Shows **game development** work.
+- **Landing** — where everyone arrives. Full About Me, then two doors.
+- **Game World** — a possession arena. You drive a shell-less rover around a
+  neon grid and press **E** to take over the shells holding each project, in a
+  nod to Shellscape. A scrolling list view is always one click away, and is the
+  default on touch, with reduced motion, or without WebGL. Shows **game
+  development** work.
 - **Engineer World** — an interactive console. You navigate it by typing
   commands (`help`, `projects`, `open 1`, `about`, `contact`…) or by clicking
-  the command buttons under the prompt. Shows **software engineering** work only.
+  the command buttons under the prompt (which fill the prompt — you still press
+  Enter). Shows **software engineering** work only.
 
 Both worlds read the same `src/data`, but they are genuinely different
 interfaces, and the `worlds` tag on each item decides which one it appears in.

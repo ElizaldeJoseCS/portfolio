@@ -176,6 +176,20 @@ export function Console() {
     [setWorld, reducedMotion],
   )
 
+  /** Loads a command into the prompt and hands focus back so Enter runs it. */
+  const insert = useCallback((name: string) => {
+    setValue(name)
+    setHistoryIndex(null)
+    const input = inputRef.current
+    if (!input) return
+    input.focus({ preventScroll: true })
+    // Caret to the end, so typing an argument continues the command.
+    window.requestAnimationFrame(() => {
+      const end = input.value.length
+      input.setSelectionRange(end, end)
+    })
+  }, [])
+
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
@@ -302,18 +316,23 @@ export function Console() {
           </div>
         </div>
 
-        {/* Quick commands: the console must be usable without typing. */}
+        {/*
+          Quick commands type the command into the prompt rather than running
+          it: the visitor still presses Enter, so clicking teaches the same
+          interaction as typing instead of bypassing it.
+        */}
         <div className="border-t border-line/60 bg-surface/60 px-4 py-3 sm:px-6">
           <p id="console-hint" className="mb-2 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-            Click to run
+            Click a command, then press <span className="text-accent">Enter</span> to run it
           </p>
           <ul className="flex flex-wrap gap-2">
             {quickCommands.map((name) => (
               <li key={name}>
                 <button
                   type="button"
-                  onClick={() => submit(name)}
-                  title={commandHelp.get(name)}
+                  onClick={() => insert(name)}
+                  title={`${commandHelp.get(name)} — inserts "${name}" at the prompt`}
+                  aria-label={`Insert command ${name} at the prompt`}
                   className="inline-flex min-h-[44px] items-center rounded-md border border-line/70 px-3 font-mono text-xs text-fg transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                 >
                   {name}

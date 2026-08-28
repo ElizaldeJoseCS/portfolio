@@ -1,4 +1,4 @@
-import type { Theme, World } from '@/types'
+import type { Theme, ThemeName, World } from '@/types'
 
 /**
  * Per-world design tokens (spec §4.2).
@@ -12,7 +12,27 @@ const FONT_DISPLAY_GAME = "'Chakra Petch', 'Rajdhani', system-ui, sans-serif"
 const FONT_DISPLAY_ENG = "'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif"
 const FONT_MONO = "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace"
 
-export const themes: Record<World, Theme> = {
+export const themes: Record<ThemeName, Theme> = {
+  landing: {
+    name: 'landing',
+    label: 'Landing',
+    // Neutral ground: a violet/cyan pair that belongs to neither world but
+    // rhymes with both, so entering either one reads as a shift, not a jolt.
+    accent: '167 139 250',
+    accentAlt: '103 232 249',
+    bg: '10 10 18',
+    fg: '240 240 250',
+    muted: '160 160 184',
+    surface: '20 20 32',
+    surfaceAlt: '28 28 44',
+    line: '64 64 92',
+    fontDisplay: FONT_DISPLAY_ENG,
+    fontBody: FONT_DISPLAY_ENG,
+    fontMono: FONT_MONO,
+    radius: '14px',
+    motionSpring: { type: 'spring', stiffness: 260, damping: 26, mass: 0.85 },
+    preserveDarkLight: false,
+  },
   game: {
     name: 'game',
     label: 'Game World',

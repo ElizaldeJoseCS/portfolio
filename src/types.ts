@@ -5,6 +5,15 @@
 
 export type World = 'game' | 'engineer'
 
+/**
+ * Visitors land on a neutral hub first and choose a world from there, so the
+ * theme set is one wider than the world set.
+ */
+export type ThemeName = World | 'landing'
+
+/** Where the visitor currently is. */
+export type Stage = 'landing' | 'world'
+
 /** Which world(s) a piece of content belongs to. `both` shows up everywhere. */
 export type WorldTag = 'game' | 'swe' | 'both'
 
@@ -80,7 +89,7 @@ export interface Profile {
 export type QualityTier = 'high' | 'low'
 
 export interface Theme {
-  name: World
+  name: ThemeName
   label: string
   accent: string
   accentAlt: string

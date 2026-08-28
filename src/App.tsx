@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef } from 'react'
 import { AnimatePresence, motion, useIsPresent } from 'framer-motion'
 import { WorldProvider, useWorld, WORLD_TRANSITION_MS } from '@/lib/world-context'
+import { HubProvider } from '@/lib/hub-context'
 import type { World } from '@/types'
 import { useIsWebglSupported } from '@/hooks/useIsWebglSupported'
 import { NavBar } from '@/components/NavBar'
@@ -8,6 +9,8 @@ import { FpsOverlay } from '@/components/FpsOverlay'
 import { NoWebglNotice } from '@/components/NoWebglNotice'
 import { GameWorld } from '@/worlds/GameWorld'
 import { EngineerWorld } from '@/worlds/EngineerWorld'
+import { Landing } from '@/components/Landing'
+import { Footer } from '@/components/Footer'
 
 // three.js + drei are ~150kB gzipped on their own; keep them off the critical
 // path so the DOM content paints first (spec §10).
@@ -25,7 +28,9 @@ const SceneContainer = lazy(() =>
  * `top`/`position` from `auto` leaves the exit animation permanently pending
  * and the layer never unmounts.
  */
-function WorldLayer({ world }: { world: World }) {
+type Layer = World | 'landing'
+
+function WorldLayer({ layer }: { layer: Layer }) {
   const { reducedMotion } = useWorld()
   const isPresent = useIsPresent()
   const ref = useRef<HTMLDivElement>(null)
@@ -53,22 +58,32 @@ function WorldLayer({ world }: { world: World }) {
       }
       className={isPresent ? undefined : 'pointer-events-none'}
     >
-      {world === 'game' ? <GameWorld /> : <EngineerWorld />}
+      {layer === 'landing' ? (
+        <>
+          <Landing />
+          <Footer />
+        </>
+      ) : layer === 'game' ? (
+        <GameWorld />
+      ) : (
+        <EngineerWorld />
+      )}
     </motion.div>
   )
 }
 
 function WorldStage() {
-  const { world } = useWorld()
+  const { world, stage } = useWorld()
+  const layer: Layer = stage === 'landing' ? 'landing' : world
 
   return (
     <main id="main" className="relative">
       {/*
-        `mode="wait"` would blank the page mid-switch; overlapping the two
-        layouts keeps the DOM crossfade in step with the 3D one (spec §4.2).
+        `mode="wait"` would blank the page mid-switch; overlapping the layers
+        keeps the DOM crossfade in step with the 3D one (spec §4.2).
       */}
       <AnimatePresence initial={false}>
-        <WorldLayer key={world} world={world} />
+        <WorldLayer key={layer} layer={layer} />
       </AnimatePresence>
     </main>
   )
@@ -110,7 +125,10 @@ function Shell() {
 export default function App() {
   return (
     <WorldProvider>
-      <Shell />
+      {/* Above <Canvas> so both the scene and the DOM overlay share hub state. */}
+      <HubProvider>
+        <Shell />
+      </HubProvider>
     </WorldProvider>
   )
 }

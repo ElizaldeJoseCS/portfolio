@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { profile } from '@/data'
 import { useWorld } from '@/lib/world-context'
+import { useHub } from '@/lib/hub-context'
 import { cn } from '@/lib/cn'
 import { WorldSwitcher } from './WorldSwitcher'
 import { LinkButton, Tooltip } from './ui'
@@ -23,10 +24,14 @@ const monogram = (name: string) =>
     .toUpperCase()
 
 export function NavBar() {
-  const { theme, reducedMotion, world } = useWorld()
-  // The Engineer World is a console: it has no scrollable sections, so the
-  // anchor list would point at elements that do not exist there.
-  const showSectionLinks = world === 'game'
+  const { theme, reducedMotion, world, stage, goToLanding } = useWorld()
+  const { arenaActive } = useHub()
+  const inWorld = stage === 'world'
+  // Only the Game World's *list* view has scrollable sections; the landing, the
+  // console and the arena would point the anchor list at elements that do not
+  // exist.
+  const showSectionLinks = inWorld && world === 'game' && !arenaActive
+  const showConsoleHint = inWorld && world === 'engineer'
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState<string>('')
@@ -56,7 +61,7 @@ export function NavBar() {
     )
     targets.forEach((t) => io.observe(t))
     return () => io.disconnect()
-  }, [showSectionLinks, world])
+  }, [showSectionLinks, world, stage, arenaActive])
 
   // Switching worlds from inside the mobile menu should reveal the world you
   // just picked, not leave the overlay covering it.
@@ -89,53 +94,67 @@ export function NavBar() {
       <header
         className={cn(
           'fixed inset-x-0 top-0 z-50 transition-colors duration-300',
-          scrolled ? 'border-b border-line/60 bg-bg/80 backdrop-blur-xl' : 'border-b border-transparent',
+          scrolled
+            ? 'border-b border-line/60 bg-bg/80 backdrop-blur-xl'
+            : 'border-b border-transparent',
         )}
       >
         <nav
           aria-label="Primary"
           className="mx-auto flex h-16 w-full max-w-6xl items-center gap-4 px-5 sm:px-8 md:h-20"
         >
-          <a
-            href="#hero"
-            className="inline-flex min-h-[44px] items-center rounded-world px-2 font-display text-lg font-bold tracking-[0.2em] text-fg transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-          >
-            {monogram(profile.name)}
-            <span className="sr-only">{profile.name} — back to top</span>
-          </a>
+          {/* In a world the monogram is the way back out to the landing hub. */}
+          {inWorld ? (
+            <button
+              type="button"
+              onClick={goToLanding}
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-world px-2 font-display text-lg font-bold tracking-[0.2em] text-fg transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              {monogram(profile.name)}
+              <span
+                aria-hidden="true"
+                className="font-mono text-[10px] font-normal tracking-normal text-muted"
+              >
+                ← home
+              </span>
+              <span className="sr-only">Back to the landing page</span>
+            </button>
+          ) : (
+            <span className="inline-flex min-h-[44px] items-center px-2 font-display text-lg font-bold tracking-[0.2em] text-fg">
+              {monogram(profile.name)}
+              <span className="sr-only">{profile.name}</span>
+            </span>
+          )}
 
-          {!showSectionLinks && (
+          {showConsoleHint && (
             <p className="ml-4 hidden flex-1 font-mono text-xs text-muted lg:block">
               <span className="text-accent">console:</span> type{' '}
               <code className="text-accentAlt">help</code> to navigate
             </p>
           )}
 
-          <ul
-            className={cn(
-              'ml-4 flex-1 items-center gap-1',
-              showSectionLinks ? 'hidden lg:flex' : 'hidden',
-            )}
-          >
-            {SECTIONS.map((s) => (
-              <li key={s.id}>
-                <a
-                  href={`#${s.id}`}
-                  aria-current={active === s.id ? 'true' : undefined}
-                  className={cn(
-                    'inline-flex min-h-[44px] items-center rounded-world px-3 font-display text-sm transition-colors',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-                    active === s.id ? 'text-accent' : 'text-muted hover:text-fg',
-                  )}
-                >
-                  {s.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+          {showSectionLinks && (
+            <ul className="ml-4 hidden flex-1 items-center gap-1 lg:flex">
+              {SECTIONS.map((s) => (
+                <li key={s.id}>
+                  <a
+                    href={`#${s.id}`}
+                    aria-current={active === s.id ? 'true' : undefined}
+                    className={cn(
+                      'inline-flex min-h-[44px] items-center rounded-world px-3 font-display text-sm transition-colors',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                      active === s.id ? 'text-accent' : 'text-muted hover:text-fg',
+                    )}
+                  >
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
 
           <div className="ml-auto flex items-center gap-3">
-            <WorldSwitcher className="hidden sm:flex" />
+            {inWorld && <WorldSwitcher className="hidden sm:flex" />}
             {profile.resumeUrl && (
               <Tooltip label="PDF, opens in a new tab" className="hidden md:inline-flex">
                 <LinkButton href={profile.resumeUrl} size="sm" variant="outline" external>
@@ -187,37 +206,57 @@ export function NavBar() {
             transition={{ duration: reducedMotion ? 0.001 : 0.2 }}
             className="fixed inset-0 z-40 flex flex-col bg-bg/95 px-5 pb-10 pt-24 backdrop-blur-xl lg:hidden"
           >
-            {!showSectionLinks && (
+            {showConsoleHint && (
               <p className="mb-6 font-mono text-sm leading-relaxed text-muted">
                 <span className="text-accent">You are in the console world.</span> Close this menu
-                and type <code className="text-accentAlt">help</code> at the prompt — or tap any of
-                the command buttons under it.
+                and type <code className="text-accentAlt">help</code> at the prompt — or tap a
+                command button and press Enter.
+              </p>
+            )}
+            {!inWorld && (
+              <p className="mb-6 font-mono text-sm leading-relaxed text-muted">
+                <span className="text-accent">Pick a world</span> from the two cards on the page to
+                get started.
               </p>
             )}
 
-            <ul className={cn('flex-col gap-1', showSectionLinks ? 'flex' : 'hidden')}>
-              {SECTIONS.map((s, i) => (
-                <motion.li
-                  key={s.id}
-                  initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={
-                    reducedMotion ? { duration: 0.1 } : { ...theme.motionSpring, delay: i * 0.04 }
-                  }
-                >
-                  <a
-                    href={`#${s.id}`}
-                    onClick={() => setOpen(false)}
-                    className="flex min-h-[56px] items-center border-b border-line/50 font-display text-2xl text-fg transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            {showSectionLinks && (
+              <ul className="flex flex-col gap-1">
+                {SECTIONS.map((s, i) => (
+                  <motion.li
+                    key={s.id}
+                    initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={
+                      reducedMotion ? { duration: 0.1 } : { ...theme.motionSpring, delay: i * 0.04 }
+                    }
                   >
-                    {s.label}
-                  </a>
-                </motion.li>
-              ))}
-            </ul>
+                    <a
+                      href={`#${s.id}`}
+                      onClick={() => setOpen(false)}
+                      className="flex min-h-[56px] items-center border-b border-line/50 font-display text-2xl text-fg transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    >
+                      {s.label}
+                    </a>
+                  </motion.li>
+                ))}
+              </ul>
+            )}
 
             <div className="mt-auto space-y-4 pt-8">
-              <WorldSwitcher layout="full" />
+              {inWorld && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false)
+                    goToLanding()
+                  }}
+                  className="inline-flex min-h-[48px] w-full items-center justify-center rounded-world border border-line/80 font-display text-base text-fg transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                >
+                  ← Back to landing
+                </button>
+              )}
+              {inWorld && <WorldSwitcher layout="full" />}
               {profile.resumeUrl && (
                 <LinkButton href={profile.resumeUrl} variant="outline" className="w-full" external>
                   Resume

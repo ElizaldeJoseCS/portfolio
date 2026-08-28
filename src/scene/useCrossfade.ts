@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { World } from '@/types'
+import type { Stage, World } from '@/types'
 import { WORLD_TRANSITION_MS } from '@/lib/world-context'
 
 interface Crossfade {
@@ -34,11 +34,14 @@ const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2,
  * renders per toggle — then settles to constant values so the idle scene costs
  * nothing on the React side.
  */
-export function useCrossfade(world: World, reducedMotion: boolean): Crossfade {
+export function useCrossfade(world: World, stage: Stage, reducedMotion: boolean): Crossfade {
   const [progress, setProgress] = useState(world === 'engineer' ? 1 : 0)
   const [warming, setWarming] = useState(true)
   const target = world === 'engineer' ? 1 : 0
   const raf = useRef(0)
+  // On the landing neither world scene is shown; only the hero particles are,
+  // recoloured by the landing theme.
+  const onLanding = stage === 'landing'
 
   useEffect(() => {
     const id = window.setTimeout(() => setWarming(false), WARMUP_MS)
@@ -78,8 +81,8 @@ export function useCrossfade(world: World, reducedMotion: boolean): Crossfade {
   return {
     gameOpacity: 1 - progress,
     engineerOpacity: progress,
-    showGame: warming || progress < 0.999,
-    showEngineer: warming || progress > 0.001,
+    showGame: warming || (!onLanding && progress < 0.999),
+    showEngineer: warming || (!onLanding && progress > 0.001),
     warming,
     progress,
   }

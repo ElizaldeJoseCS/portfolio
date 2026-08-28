@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { AdaptiveDpr, PerformanceMonitor, Preload } from '@react-three/drei'
 import * as THREE from 'three'
 import { useWorld } from '@/lib/world-context'
+import { useHub } from '@/lib/hub-context'
 import { useThemeColors } from './useThemeColors'
 import { useCrossfade } from './useCrossfade'
 import { HeroParticles } from './HeroParticles'
@@ -21,8 +22,8 @@ const Effects = lazy(() => import('./Effects').then((m) => ({ default: m.Effects
  * without swallowing clicks on the UI above it.
  */
 export function SceneContainer() {
-  const { world, reducedMotion, quality } = useWorld()
-  const fade = useCrossfade(world, reducedMotion)
+  const { world, stage, reducedMotion, quality } = useWorld()
+  const fade = useCrossfade(world, stage, reducedMotion)
 
   // 0 at rest, peaks at 1 halfway through a switch.
   const transitionAmount = 1 - Math.abs(fade.progress * 2 - 1)
@@ -89,7 +90,7 @@ export function SceneContainer() {
  * change lets the damped colour lerps settle.
  */
 function DemandFrameSync() {
-  const { world, quality, reducedMotion } = useWorld()
+  const { world, stage, quality, reducedMotion } = useWorld()
   const invalidate = useThree((s) => s.invalidate)
 
   useEffect(() => {
@@ -102,7 +103,7 @@ function DemandFrameSync() {
     }
     raf = requestAnimationFrame(pump)
     return () => cancelAnimationFrame(raf)
-  }, [world, quality.tier, reducedMotion, invalidate])
+  }, [world, stage, quality.tier, reducedMotion, invalidate])
 
   return null
 }
@@ -130,11 +131,29 @@ function SceneBackdrop() {
  */
 function CameraRig() {
   const { reducedMotion } = useWorld()
+  const { arenaActive, playerPos } = useHub()
   const target = useRef(new THREE.Vector3(0, 0, 8))
+  const look = useRef(new THREE.Vector3())
 
   useFrame((state, delta) => {
-    if (reducedMotion) return
     const dt = Math.min(delta, 0.1)
+
+    // In the arena the camera chases the rover, otherwise you drive straight
+    // off the edge of the frame and lose the thing you are steering.
+    if (arenaActive) {
+      const p = playerPos.current
+      target.current.set(p.x, p.y + 5.2, p.z + 9.5)
+      state.camera.position.lerp(target.current, 1 - Math.pow(0.015, dt))
+      // playerPos is a plain vector (see hub-context), so lerp component-wise.
+      const k = 1 - Math.pow(0.005, dt)
+      look.current.x += (p.x - look.current.x) * k
+      look.current.y += (p.y - look.current.y) * k
+      look.current.z += (p.z - look.current.z) * k
+      state.camera.lookAt(look.current)
+      return
+    }
+
+    if (reducedMotion) return
     // Scroll pushes the camera back a little, adding depth as you read.
     const scrollDepth = Math.min(window.scrollY / Math.max(window.innerHeight, 1), 2)
     target.current.set(state.pointer.x * 0.9, state.pointer.y * 0.5 + scrollDepth * 0.4, 8 + scrollDepth * 1.6)
