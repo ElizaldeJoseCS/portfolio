@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# TODO(owner): point this at the real domain (spec §14.4).
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://joseelizalde.dev/sitemap.xml

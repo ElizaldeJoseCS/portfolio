@@ -21,6 +21,19 @@ export default defineConfig({
   build: {
     target: 'es2020',
     cssCodeSplit: true,
+    /*
+      Vite's hashed output goes to /build, not /assets.
+
+      `public/assets` holds hand-authored files whose names never change —
+      resume.pdf, the papers, the OG card. Those used to land in the same
+      directory as the hashed bundles, so the one `Cache-Control: immutable`
+      rule the hosts apply to /assets covered both: replacing a resume in place
+      would have left the old one in browser caches for a year.
+
+      Split by directory and each gets the header it should have. Changing this
+      back means fixing netlify.toml and vercel.json at the same time.
+    */
+    assetsDir: 'build',
     rollupOptions: {
       output: {
         // Only the always-needed vendors get forced groups. three/drei/

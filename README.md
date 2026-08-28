@@ -305,16 +305,57 @@ never branch on `world` to pick a colour — call `useTheme()` instead.
 
 ## Deployment
 
-Static output in `dist/`. Configs for both hosts are committed:
+The site is a static SPA. `npm run build` writes `dist/`; there is no server
+and nothing to keep running, so "up 24/7" is a property of the CDN it sits on
+rather than of anything in this repo.
 
-- **Vercel** — `vercel.json` (framework preset `vite`, immutable asset caching).
-- **Netlify** — `netlify.toml` (SPA redirect, Node 20, asset caching).
+The canonical origin is **https://joseelizalde.dev**, hard-coded in four
+places that must be changed together: `index.html` (canonical, `og:*`,
+JSON-LD), `src/data/site.ts`, `public/robots.txt` and `public/sitemap.xml`.
 
-Before going live, replace `https://example.com` in `index.html`,
-`src/data/site.ts`, `public/robots.txt`, and `public/sitemap.xml` with the real
-domain. `public/assets/resume.pdf` is already in place — replace the file to
-update it, or set `resumeUrl: undefined` in `src/data/profile.ts` to hide the
-resume buttons.
+Configs for both hosts are committed:
+
+- **Vercel** — `vercel.json`: `vite` preset, SPA rewrite, cache headers.
+- **Netlify** — `netlify.toml`: SPA redirect, Node 20, cache headers.
+
+### The two asset directories
+
+`dist/` has two of them and they are cached very differently:
+
+| Path | Contents | `Cache-Control` |
+|---|---|---|
+| `/build/*` | Vite output; every filename carries a content hash | `max-age=31536000, immutable` |
+| `/assets/*` | Hand-authored files — `resume.pdf`, the papers, `og-cover.png`, project media | `max-age=86400, must-revalidate` |
+
+`build.assetsDir` in `vite.config.ts` is what keeps them apart. **Do not point
+Vite's output back at `/assets`**: the two would share one cache rule, and
+replacing `resume.pdf` in place would leave the old one in visitors' browsers
+for a year. Changing `assetsDir` means changing both host configs with it.
+
+### First deploy
+
+1. Register `joseelizalde.dev`. It is a Google-registry TLD on the HSTS preload
+   list, so it is **HTTPS-only in every browser** — there is no http:// fallback
+   to fall back to, and a host that cannot issue a certificate will look
+   completely offline rather than merely insecure.
+2. Import the repo on Vercel or Netlify. Both read the committed config, so no
+   build settings need entering, and both handle a private repo on the free
+   tier. Every push to `main` redeploys.
+3. Add the domain in the host's dashboard and point DNS at it — an `A`/`ALIAS`
+   for the apex plus a `CNAME` for `www`, per whatever the host prints. The
+   certificate is issued automatically.
+4. Set the apex as primary and redirect `www` to it, so there is one canonical
+   origin and the `og:url` matches what people actually land on.
+
+### After it is live
+
+- Check the link preview with the Facebook Sharing Debugger and X's Card
+  Validator. `og-cover.png` is a PNG on purpose — an SVG card is silently
+  dropped by X, LinkedIn, Discord and iMessage.
+- Submit `https://joseelizalde.dev/sitemap.xml` in Google Search Console.
+- `public/assets/resume.pdf` is already in place — replace the file to update
+  it, or set `resumeUrl: undefined` in `src/data/profile.ts` to hide the resume
+  buttons.
 
 ## Decisions taken from the spec's open questions (§14)
 
@@ -325,4 +366,4 @@ resume buttons.
 | Projects | Real work: Shellscape and Jump the Gun (game), DailyCodeforce, Robinhood Portfolio Bot and KurtCobot (software) |
 | Engineer world | Rebuilt as a typed console per the owner's brief, replacing the spec's scrolling-sections version |
 | Media | Generated SVG placeholders in `public/assets` — swap in real screenshots at the same paths |
-| Custom domain | Still `example.com`; update `index.html`, `src/data/site.ts`, `public/robots.txt`, `public/sitemap.xml` |
+| Custom domain | `joseelizalde.dev`, set in `index.html`, `src/data/site.ts`, `public/robots.txt` and `public/sitemap.xml` |
