@@ -4,6 +4,7 @@ import type { Project } from '@/types'
 import { useWorld } from '@/lib/world-context'
 import { cn } from '@/lib/cn'
 import { Chip, LinkButton } from './ui'
+import { ProjectEmbed } from './ProjectEmbed'
 
 // The WebGL demo viewer pulls three.js in — only loaded if a project uses it.
 const ProjectWebglDemo = lazy(() =>
@@ -125,6 +126,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                   {project.title}
                 </h2>
                 <p className="mt-2 text-sm text-muted">{project.tagline}</p>
+                {project.status && (
+                  <p className="mt-2 font-mono text-[11px] text-accentAlt">{project.status}</p>
+                )}
               </div>
               <button
                 type="button"
@@ -173,6 +177,31 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               <p className="whitespace-pre-line text-base leading-relaxed text-muted">
                 {project.description}
               </p>
+
+              {/* The long form. Sections come from `details` in src/data, so a
+                  project gets more verbose without this component changing. */}
+              {project.details?.map((section) => (
+                <section key={section.heading} className="mt-8">
+                  <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-accent">
+                    {section.heading}
+                  </h3>
+                  {section.body && (
+                    <p className="mt-3 text-base leading-relaxed text-muted">{section.body}</p>
+                  )}
+                  {section.bullets && (
+                    <ul className="mt-3 space-y-2">
+                      {section.bullets.map((b) => (
+                        <li key={b} className="flex gap-3 text-base leading-relaxed text-muted">
+                          <span aria-hidden="true" className="select-none text-accent">
+                            —
+                          </span>
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </section>
+              ))}
 
               <h3 className="mt-8 font-mono text-xs uppercase tracking-[0.3em] text-accent">
                 Tech stack
@@ -225,6 +254,7 @@ function MediaFrame({ project, index }: { project: Project; index: number }) {
     return (
       <video
         src={media.src}
+        poster={media.poster}
         controls
         playsInline
         preload="metadata"
@@ -233,6 +263,10 @@ function MediaFrame({ project, index }: { project: Project; index: number }) {
         <track kind="captions" />
       </video>
     )
+  }
+
+  if (media.type === 'embed') {
+    return <ProjectEmbed media={media} title={project.title} />
   }
 
   if (media.type === 'webgl') {

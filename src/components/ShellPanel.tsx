@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { shellContent, useHub } from '@/lib/hub-context'
 import { useWorld } from '@/lib/world-context'
 import { Chip, LinkButton } from './ui'
+import { ProjectEmbed } from './ProjectEmbed'
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
@@ -127,23 +128,57 @@ function ShellBody({ shell }: { shell: NonNullable<ReturnType<typeof useHub>['sh
 
   if (content.type === 'project') {
     const p = content.project
+    // A playable build beats a screenshot when there is one — and ProjectEmbed
+    // does not fetch it until the visitor presses play.
+    const embed = p.media.find((m) => m.type === 'embed')
     const cover = p.media.find((m) => m.type === 'image')
     return (
       <>
-        {cover?.src && (
-          <img
-            src={cover.src}
-            alt={cover.alt ?? ''}
-            loading="lazy"
-            decoding="async"
-            className="mb-6 aspect-video w-full rounded-world border border-line/60 object-cover"
-          />
+        {embed ? (
+          <div className="mb-6 overflow-hidden rounded-world border border-line/60">
+            <ProjectEmbed media={embed} title={p.title} />
+          </div>
+        ) : (
+          cover?.src && (
+            <img
+              src={cover.src}
+              alt={cover.alt ?? ''}
+              loading="lazy"
+              decoding="async"
+              className="mb-6 aspect-video w-full rounded-world border border-line/60 object-cover"
+            />
+          )
         )}
         <p className="font-mono text-xs uppercase tracking-[0.25em] text-accent">
           {p.role} · {p.year}
         </p>
         <p className="mt-3 text-base leading-relaxed text-fg/90">{p.tagline}</p>
         <p className="mt-4 text-base leading-relaxed text-muted">{p.description}</p>
+
+        {/* Content parity: the list view's modal shows these sections, so the
+            arena must too — neither view may hide what the other shows. */}
+        {p.details?.map((section) => (
+          <section key={section.heading} className="mt-8">
+            <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-accent">
+              {section.heading}
+            </h3>
+            {section.body && (
+              <p className="mt-3 text-base leading-relaxed text-muted">{section.body}</p>
+            )}
+            {section.bullets && (
+              <ul className="mt-3 space-y-2">
+                {section.bullets.map((b) => (
+                  <li key={b} className="flex gap-3 text-base leading-relaxed text-muted">
+                    <span aria-hidden="true" className="select-none text-accent">
+                      —
+                    </span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        ))}
 
         <h3 className="mt-8 font-mono text-xs uppercase tracking-[0.3em] text-accent">Stack</h3>
         <ul className="mt-3 flex flex-wrap gap-2">

@@ -29,11 +29,33 @@ export interface ProjectLink {
 }
 
 export interface ProjectMedia {
-  type: 'image' | 'video' | 'webgl'
+  /**
+   * `embed` is a third-party iframe — an itch.io HTML5 build, say. It is never
+   * loaded until the visitor asks for it: a Unity WebGL build is tens of
+   * megabytes and would otherwise download on modal open.
+   */
+  type: 'image' | 'video' | 'webgl' | 'embed'
   src?: string
   glb?: string
   /** Alt text / caption. Required for images so the gallery stays accessible. */
   alt?: string
+  /** Still shown before a `video` or `embed` is loaded. */
+  poster?: string
+  /** CSS aspect ratio ('16 / 9' by default) for embeds with an odd canvas. */
+  aspect?: string
+  /** Button copy for an `embed`. Defaults to "Play". */
+  action?: string
+}
+
+/**
+ * One section of a long-form write-up. The Engineer console prints these under
+ * `open <project>` and the project modal renders them below the summary, so a
+ * project's depth lives in `src/data` rather than in either component.
+ */
+export interface ProjectDetail {
+  heading: string
+  body?: string
+  bullets?: string[]
 }
 
 export interface Project {
@@ -49,6 +71,10 @@ export interface Project {
   year: string
   links: ProjectLink[]
   media: ProjectMedia[]
+  /** Section-by-section write-up, shown after `description`. */
+  details?: ProjectDetail[]
+  /** Where the thing actually is — "Live on a DigitalOcean VPS", "In development". */
+  status?: string
   /** Featured projects render as large bento cards (spec §6.3). */
   featured: boolean
   highlighted?: boolean

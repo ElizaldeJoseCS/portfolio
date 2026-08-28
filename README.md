@@ -79,19 +79,115 @@ Append an object to the array in `src/data/projects.ts`:
   role: 'Solo',
   year: '2025',
   links: [{ label: 'GitHub', url: 'https://github.com/…' }],
-  media: [{ type: 'image', src: '/assets/my-shot.png', alt: 'Gameplay' }],
+  media: [{ type: 'image', src: '/assets/my-shot.webp', alt: 'Gameplay' }],
+  status: 'Released',            // optional; shown under the title
+  details: [                     // optional long form — see below
+    { heading: 'How it works', bullets: ['…'] },
+  ],
   featured: true,                // featured cards span two grid columns
 }
 ```
 
-Then drop the referenced media into `public/assets/`. Notes:
+Then drop the referenced media into `public/assets/`.
 
-- `media` supports `image`, `video` (any browser-playable file), and `webgl`
-  (`{ type: 'webgl', glb: '/assets/model.glb' }`, rendered in an orbitable
-  viewer that is lazy-loaded only when such a project is opened).
-- `alt` is required in practice for images — it is what screen readers read.
-- Compress any `.glb` with
-  [`gltf-transform`](https://gltf-transform.dev/) before committing it.
+`details` is the depth. `description` is the summary paragraph; each `details`
+section becomes a heading plus a paragraph and/or a bullet list, rendered
+identically by the project modal, the arena's shell panel and the Engineer
+console's `open <project>`. **Making a project more verbose is always a data
+edit here — never a component change.**
+
+### Adding screenshots, video and playable builds
+
+Every project's `media` array is a gallery: the modal shows arrows when there is
+more than one item, and item **0 is what you see first**. Put the best thing
+first.
+
+**1. Capture.** Screenshots at 1920×1080; video as `.mp4` (H.264 + AAC), 10–25
+seconds, no sound needed.
+
+**2. Convert and compress** — everything in `public/assets/` ships to every
+visitor, so nothing goes in raw:
+
+```bash
+# Screenshot → 1600×900 webp, letterboxed rather than cropped
+magick shot.png -resize 1600x900 -background "#0b0a12" \
+  -gravity center -extent 1600x900 -quality 84 public/assets/myproject-01.webp
+
+# Screen recording → a web-sized mp4 (aim for under ~4 MB)
+ffmpeg -i raw.mov -vf "scale=1280:-2,fps=30" -c:v libx264 -crf 26 \
+  -preset slow -movflags +faststart -an public/assets/myproject.mp4
+
+# A poster frame for that video, so the modal is not a black box
+ffmpeg -i public/assets/myproject.mp4 -vframes 1 -q:v 3 poster.jpg
+magick poster.jpg -resize 1600x900 -quality 84 public/assets/myproject-poster.webp
+```
+
+**3. Reference them** in the project's `media` array:
+
+```ts
+media: [
+  { type: 'image', src: '/assets/myproject-01.webp', alt: 'The first room' },
+  { type: 'video', src: '/assets/myproject.mp4',
+    poster: '/assets/myproject-poster.webp', alt: 'Two minutes of play' },
+]
+```
+
+`alt` is not optional in practice — it is what a screen reader announces, and
+the a11y pass in the spec depends on it. Delete the matching
+`placeholder-*.svg` once a project has real media.
+
+Media types:
+
+| type | fields | notes |
+|---|---|---|
+| `image` | `src`, `alt` | webp or png. 16:9 — the frame is `object-cover`. |
+| `video` | `src`, `poster`, `alt` | `preload="metadata"`, so only the header is fetched up front. |
+| `embed` | `src`, `poster`, `action`, `aspect` | A third-party iframe. **Not loaded until the visitor presses play.** |
+| `webgl` | `glb` | Orbitable model viewer, lazy-loaded with three.js. Compress with [`gltf-transform`](https://gltf-transform.dev/). |
+
+### Embedding a playable itch.io build
+
+Shellscape is wired up this way already; the same three steps work for any
+HTML5 game on itch.io.
+
+**1. Allow embedding.** On itch: *Edit game → Uploads*, confirm the HTML5 file
+has "This file will be played in the browser" ticked, and under *Embed options*
+choose **Embed in page** with a fixed viewport size. A game set to "click to
+launch in fullscreen" cannot be embedded on another site.
+
+**2. Find the upload id.** It is *not* the number in the game's URL. Open the
+game page and pull it out of the Run-game iframe:
+
+```bash
+curl -s https://YOURNAME.itch.io/YOURGAME | grep -o 'html/[0-9]*'
+# html/18748789   <- that number
+```
+
+(Or: right-click the game page → Inspect → search the HTML for
+`html-classic.itch.zone/html/`.)
+
+**3. Add it as `embed` media**, first in the array so the modal opens on the
+play button:
+
+```ts
+{
+  type: 'embed',
+  src: 'https://itch.io/embed-upload/18748789?color=12101c',
+  poster: '/assets/shellscape-cover.webp',  // shown before it loads
+  alt: 'Shellscape, playable in the browser',
+  action: 'Play Shellscape',                // button copy
+  aspect: '16 / 9',                         // match the game's canvas
+}
+```
+
+`ProjectEmbed` keeps the `<iframe>` out of the DOM until the play button is
+pressed, and unmounting the panel unmounts the iframe — which is what actually
+stops the game's audio and frame loop. **Do not "simplify" that into an
+always-mounted iframe**: a Unity WebGL build is tens of megabytes and would
+otherwise download for every visitor who only opened the write-up.
+
+`?color=` is the loader's background; match the site's `bg` token so the frame
+does not flash white.
 
 ### How to add a console command
 

@@ -72,9 +72,17 @@ function Line({ line }: { line: ConsoleLine }) {
       return (
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 font-mono text-sm">
           <span className="text-muted">{line.label}:</span>
+          {/* Separated, not just spaced: plenty of these items are two or three
+              words ("Docker Compose", "Competitive Programming") and without a
+              divider the list reads as one run-on string. */}
           <ul className="flex flex-wrap gap-x-2 gap-y-1">
-            {line.items.map((item) => (
+            {line.items.map((item, i) => (
               <li key={item} className="text-accentAlt">
+                {i > 0 && (
+                  <span aria-hidden="true" className="mr-2 text-muted/60">
+                    ·
+                  </span>
+                )}
                 {item}
               </li>
             ))}
@@ -99,15 +107,40 @@ function Line({ line }: { line: ConsoleLine }) {
 
     case 'projects':
       return (
-        <ol className="mt-1 space-y-2 font-mono text-sm">
+        <ol className="mt-1 space-y-3 font-mono text-sm">
           {line.items.map(({ index, project }) => (
             <li key={project.id} className="flex gap-3">
               <span className="text-accent">{String(index).padStart(2, '0')}</span>
-              <span>
+              <span className="min-w-0">
                 <span className="text-fg">{project.title}</span>
                 <span className="text-muted"> · {project.year}</span>
                 <br />
                 <span className="text-fg/70">{project.tagline}</span>
+                {project.status && (
+                  <>
+                    <br />
+                    <span className="text-muted">{project.status}</span>
+                  </>
+                )}
+                {/* The links live in the list, not only behind `open` — someone
+                    scanning the listing should not have to run a second command
+                    to reach the repo or the deployed site. */}
+                {project.links.length > 0 && (
+                  <span className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                    {project.links.map((l) => (
+                      <a
+                        key={l.url + l.label}
+                        href={l.url}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="text-accentAlt underline decoration-line underline-offset-4 transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                      >
+                        {l.label}
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    ))}
+                  </span>
+                )}
               </span>
             </li>
           ))}

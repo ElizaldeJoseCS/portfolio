@@ -54,6 +54,43 @@ const fmtDate = (v: string) => {
   return MONTHS[idx] ? `${MONTHS[idx]} ${year}` : (year ?? v)
 }
 
+/**
+ * The long form of a project, as console lines.
+ *
+ * Everything below the summary comes from `project.details` in `src/data`, so
+ * making a project more verbose is a data edit — this function never grows a
+ * per-project branch.
+ */
+function projectWriteUp(project: Project): ConsoleLine[] {
+  return [
+    { kind: 'heading', text: project.title },
+    { kind: 'text', tone: 'accent', text: project.tagline },
+    { kind: 'blank' },
+    { kind: 'kv', key: 'role', value: project.role },
+    { kind: 'kv', key: 'year', value: project.year },
+    ...(project.status
+      ? ([{ kind: 'kv', key: 'status', value: project.status }] as ConsoleLine[])
+      : []),
+    { kind: 'blank' },
+    { kind: 'text', text: project.description },
+    ...(project.details ?? []).flatMap((section): ConsoleLine[] => [
+      { kind: 'blank' },
+      { kind: 'heading', text: section.heading },
+      ...(section.body ? ([{ kind: 'text', text: section.body }] as ConsoleLine[]) : []),
+      ...(section.bullets ?? []).map((text): ConsoleLine => ({ kind: 'bullet', text })),
+    ]),
+    { kind: 'blank' },
+    { kind: 'chips', label: 'Stack', items: project.techStack },
+    { kind: 'chips', label: 'Tags', items: project.tags },
+    ...(project.links.length
+      ? ([{ kind: 'blank' }, { kind: 'heading', text: 'Links' }] as ConsoleLine[])
+      : []),
+    ...project.links.map(
+      (l): ConsoleLine => ({ kind: 'link', label: l.label, url: l.url, external: true }),
+    ),
+  ]
+}
+
 const notFound = (what: string, hint: string): CommandResult => ({
   lines: [
     { kind: 'text', tone: 'error', text: what },
@@ -124,7 +161,7 @@ export const commands: Command[] = [
         {
           kind: 'text',
           tone: 'muted',
-          text: 'Run `open 1` (or `open dailycodeforce`) for the full write-up.',
+          text: 'Every link is right there in the list. Run `open 1` (or `open dailycodeforce`) for the full write-up.',
         },
       ],
     }),
@@ -164,25 +201,7 @@ export const commands: Command[] = [
         )
       }
 
-      return {
-        lines: [
-          { kind: 'heading', text: project.title },
-          { kind: 'text', tone: 'accent', text: project.tagline },
-          { kind: 'blank' },
-          { kind: 'kv', key: 'role', value: project.role },
-          { kind: 'kv', key: 'year', value: project.year },
-          { kind: 'blank' },
-          { kind: 'text', text: project.description },
-          { kind: 'blank' },
-          { kind: 'chips', label: 'Stack', items: project.techStack },
-          ...(project.links.length
-            ? ([{ kind: 'blank' }, { kind: 'heading', text: 'Links' }] as ConsoleLine[])
-            : []),
-          ...project.links.map(
-            (l): ConsoleLine => ({ kind: 'link', label: l.label, url: l.url, external: true }),
-          ),
-        ],
-      }
+      return { lines: projectWriteUp(project) }
     },
   },
   {
