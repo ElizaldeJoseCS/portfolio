@@ -341,9 +341,30 @@ for a year. Changing `assetsDir` means changing both host configs with it.
 2. Import the repo on Vercel or Netlify. Both read the committed config, so no
    build settings need entering, and both handle a private repo on the free
    tier. Every push to `main` redeploys.
-3. Add the domain in the host's dashboard and point DNS at it — an `A`/`ALIAS`
-   for the apex plus a `CNAME` for `www`, per whatever the host prints. The
-   certificate is issued automatically.
+3. Add both `joseelizalde.dev` and `www.joseelizalde.dev` in the host's
+   dashboard, then point DNS at it. The domain is registered at **Porkbun**,
+   which is also running its DNS (`*.ns.porkbun.com`), so records are edited
+   there — Domain Management → the domain → DNS.
+
+   A fresh Porkbun domain ships with two parking records that must be deleted
+   first: an `A` at the apex pointing at their parking IPs, and a `CNAME` for
+   `www` → `pixie.porkbun.com`. Replace them with:
+
+   | Type | Host | Value |
+   |---|---|---|
+   | `A` | *(blank — the apex)* | the IP on Vercel's domain card |
+   | `CNAME` | `www` | the hostname on Vercel's domain card |
+
+   **Read both values off the dashboard rather than copying them from here.**
+   The apex IP is usually `76.76.21.21` but newer projects get an anycast
+   address such as `216.198.79.1`, and the `www` CNAME target is now unique per
+   project (`<hash>.vercel-dns-0NN.com`) — the universal `cname.vercel-dns.com`
+   is gone.
+
+   There are no `CAA` records on the domain, so nothing blocks Let's Encrypt
+   from issuing. If you ever add one, it has to permit `letsencrypt.org` or the
+   certificate will silently fail to issue — and on a `.dev` domain that reads
+   as the site being completely down.
 4. Set the apex as primary and redirect `www` to it, so there is one canonical
    origin and the `og:url` matches what people actually land on.
 
