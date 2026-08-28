@@ -92,12 +92,18 @@ function TimelineItem({ entry, index }: { entry: ExperienceEntry; index: number 
 }
 
 export function ExperienceTimeline() {
+  // Game World only: research and software roles are listed by the Engineer
+  // World's `experience` command instead.
+  const entries = experience.filter(
+    (e) => e.worlds.includes('game') || e.worlds.includes('both'),
+  )
+
   return (
     <Section
       id="experience"
       eyebrow="02 — Timeline"
       title="Experience"
-      lead="Where the two tracks actually ran in parallel — shipping games at night, running platform systems by day."
+      lead="Studio work and school. My research and software roles are in the Engineer World — run `experience` there."
     >
       <div className="relative">
         {/* Centre rail (desktop) / left rail (mobile). */}
@@ -106,7 +112,7 @@ export function ExperienceTimeline() {
           className="absolute inset-y-0 left-[18px] w-px bg-gradient-to-b from-transparent via-line to-transparent md:left-1/2"
         />
         <ol className="space-y-8 md:space-y-4">
-          {experience.map((entry, i) => (
+          {entries.map((entry, i) => (
             <TimelineItem key={entry.id} entry={entry} index={i} />
           ))}
         </ol>

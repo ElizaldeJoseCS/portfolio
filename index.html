@@ -9,28 +9,28 @@
       TODO(owner): update the copy below and in src/data/site.ts together, and
       swap https://example.com for the real domain before launch (spec §14.4).
     -->
-    <title>Alex Rivera — Game Developer &amp; Software Engineer</title>
+    <title>Jose Elizalde — Software Engineer &amp; Game Developer</title>
     <meta
       name="description"
-      content="Interactive WebGL portfolio of Alex Rivera: gameplay engineering, netcode, and the data platforms behind them. Two worlds, one set of work."
+      content="Portfolio of Jose Elizalde, CS &amp; Engineering at UCLA. C++ and Python systems, a Robinhood analytics bot, a daily Codeforces trainer, and games built in Unity."
     />
     <link rel="canonical" href="https://example.com/" />
 
     <meta property="og:type" content="profile" />
-    <meta property="og:site_name" content="Alex Rivera" />
-    <meta property="og:title" content="Alex Rivera — Game Developer & Software Engineer" />
+    <meta property="og:site_name" content="Jose Elizalde" />
+    <meta property="og:title" content="Jose Elizalde — Software Engineer &amp; Game Developer" />
     <meta
       property="og:description"
-      content="An interactive 3D portfolio with two switchable worlds: game development and software engineering."
+      content="Two switchable worlds: a 3D game-dev showcase, and a typed console for the software engineering work."
     />
     <meta property="og:url" content="https://example.com/" />
     <meta property="og:image" content="https://example.com/assets/og-cover.svg" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Alex Rivera — Game Developer & Software Engineer" />
+    <meta name="twitter:title" content="Jose Elizalde — Software Engineer &amp; Game Developer" />
     <meta
       name="twitter:description"
-      content="An interactive 3D portfolio with two switchable worlds: game development and software engineering."
+      content="Two switchable worlds: a 3D game-dev showcase, and a typed console for the software engineering work."
     />
     <meta name="twitter:image" content="https://example.com/assets/og-cover.svg" />
 
@@ -50,19 +50,37 @@
         "@type": "ProfilePage",
         "mainEntity": {
           "@type": "Person",
-          "name": "Alex Rivera",
-          "jobTitle": ["Game Developer", "Software Engineer"],
+          "name": "Jose Elizalde",
+          "alternateName": "Jose Antonio Elizalde",
+          "jobTitle": ["Software Engineer", "Game Developer"],
           "url": "https://example.com/",
-          "email": "mailto:hello@example.com",
-          "address": { "@type": "PostalAddress", "addressLocality": "Austin", "addressRegion": "TX" },
-          "sameAs": ["https://github.com/", "https://www.linkedin.com/", "https://itch.io/"],
+          "email": "mailto:joseelizalde02@g.ucla.edu",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Los Angeles",
+            "addressRegion": "CA",
+            "addressCountry": "US"
+          },
+          "alumniOf": [
+            {
+              "@type": "CollegeOrUniversity",
+              "name": "University of California, Los Angeles"
+            },
+            { "@type": "CollegeOrUniversity", "name": "Los Angeles Pierce College" }
+          ],
+          "sameAs": [
+            "https://github.com/ElizaldeJoseCS",
+            "https://www.linkedin.com/in/jose-elizalde-184781342/",
+            "https://joseelizalde02.itch.io/"
+          ],
           "knowsAbout": [
-            "Game development",
+            "C++",
+            "Python",
+            "Systems programming",
             "Unity",
-            "Netcode",
-            "WebGL",
-            "TypeScript",
-            "Distributed systems"
+            "Game development",
+            "Distributed systems",
+            "Embedded systems"
           ]
         }
       }
@@ -76,36 +94,52 @@
         crawlers and no-JS visitors read this. Keep it in sync with src/data.
       -->
       <div id="static-fallback">
-        <h1>Alex Rivera</h1>
-        <p>Game Developer &amp; Software Engineer — Austin, TX</p>
-        <p>I build worlds you can play in and systems you can trust.</p>
+        <h1>Jose Elizalde</h1>
+        <p>Software Engineer &amp; Game Developer — Los Angeles, CA</p>
+        <p>
+          CS &amp; Engineering at UCLA. I write systems in C++ and Python, and I direct and build
+          games in Unity.
+        </p>
 
-        <h2>Projects</h2>
+        <h2>Software engineering projects</h2>
         <ul>
-          <li><strong>SWE Internship Tracker</strong> — one deduplicated board for ~1,170 roles scraped from five sources.</li>
-          <li><strong>Neon Drift</strong> — a rollback-netcode arcade racer built for four players on bad Wi-Fi.</li>
-          <li><strong>Atlas</strong> — trace-driven service map that renders 40k spans without dropping a frame.</li>
-          <li><strong>Tilewright</strong> — an in-editor level tool that cut designer iteration from minutes to seconds.</li>
-          <li><strong>Shaderbook</strong> — a live GLSL playground with hot-reload and shareable permalinks.</li>
-          <li><strong>Signal Mesh</strong> — self-healing job queue that survived a region outage without losing work.</li>
+          <li><strong>DailyCodeforce</strong> — four fresh Codeforces problems a day with LeetCode-style editorials, plus a Go Discord bot. Next.js, TypeScript, PostgreSQL, Prisma, Docker.</li>
+          <li><strong>Robinhood Portfolio Bot</strong> — a C++ (D++) Discord bot on a Python FastAPI backend serving live portfolio analytics and momentum/fundamentals stock screening, deployed on a Linux VPS under systemd.</li>
+          <li><strong>KurtCobot</strong> — embedded C++ on Arduino generating music through hand-written PWM signal timing, on circuitry I designed and soldered.</li>
+        </ul>
+
+        <h2>Game development projects</h2>
+        <ul>
+          <li><strong>Shellscape</strong> — Club Club Jam Jam entry built with a team of five UCLA students; possess the guards of the lab that made you. Unity, HTML5.</li>
+          <li><strong>Jump the Gun</strong> — first-person action shooter in development at UCLA ACM Studio SRS, where I am Game Director. Custom C# physics-based movement controller.</li>
         </ul>
 
         <h2>Experience</h2>
         <ul>
-          <li>Gameplay Engineer, Vector Foundry (2024 — present)</li>
-          <li>Software Engineer, Platform, Northline Systems (2022 — 2024)</li>
-          <li>Software Engineering Intern, Halcyon Labs (2021)</li>
-          <li>B.S. Computer Science, University of Texas at Austin (2018 — 2022)</li>
+          <li>Game Director, Jump the Gun — UCLA ACM Studio SRS (2024 — present)</li>
+          <li>Undergraduate Researcher, REUSE Program — Carnegie Mellon University HCII (2025); co-authored paper accepted to CHI 2026</li>
+          <li>Undergraduate Researcher, SURE C² Program — UCLA Department of Mathematics (2024); co-authored paper presented at UT Arlington</li>
+        </ul>
+
+        <h2>Education</h2>
+        <ul>
+          <li>B.S. Computer Science and Engineering, University of California, Los Angeles (2025 — 2027)</li>
+          <li>A.A. Physics and Mathematics, Los Angeles Pierce College (2023 — 2025), GPA 3.92/4.00</li>
         </ul>
 
         <h2>Skills</h2>
         <p>
-          TypeScript, C#, Go, Python, C++, GLSL, Unity, Three.js, React, WebGL2, PostgreSQL,
-          Kubernetes, OpenTelemetry.
+          C++, C#, C, Python, Bash, TypeScript, Go, Linux, FastAPI, pandas, Unity, PostgreSQL,
+          Docker, CMake, Git, Vim/Neovim, LaTeX, Arduino.
         </p>
 
         <h2>Contact</h2>
-        <p><a href="mailto:hello@example.com">hello@example.com</a></p>
+        <p><a href="mailto:joseelizalde02@g.ucla.edu">joseelizalde02@g.ucla.edu</a></p>
+        <ul>
+          <li><a href="https://github.com/ElizaldeJoseCS">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/jose-elizalde-184781342/">LinkedIn</a></li>
+          <li><a href="https://joseelizalde02.itch.io/">itch.io</a></li>
+        </ul>
       </div>
     </div>
 

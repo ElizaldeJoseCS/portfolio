@@ -4,7 +4,6 @@ import { WorldProvider, useWorld, WORLD_TRANSITION_MS } from '@/lib/world-contex
 import type { World } from '@/types'
 import { useIsWebglSupported } from '@/hooks/useIsWebglSupported'
 import { NavBar } from '@/components/NavBar'
-import { Footer } from '@/components/Footer'
 import { FpsOverlay } from '@/components/FpsOverlay'
 import { NoWebglNotice } from '@/components/NoWebglNotice'
 import { GameWorld } from '@/worlds/GameWorld'
@@ -103,7 +102,6 @@ function Shell() {
 
       <NavBar />
       <WorldStage />
-      <Footer />
       <FpsOverlay />
     </div>
   )

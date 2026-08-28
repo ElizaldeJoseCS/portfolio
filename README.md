@@ -1,16 +1,17 @@
 # Portfolio — two-world WebGL site
 
-An interactive, single-page portfolio built to the spec in
-[`portfolio_website_spec.md`](./portfolio_website_spec.md). The same content is
-presented through two switchable "worlds":
+Jose Elizalde's portfolio: one site, two switchable "worlds", built to the spec
+in [`portfolio_website_spec.md`](./portfolio_website_spec.md).
 
-- **Game World** — neon grid, emissive low-poly props, and a driveable
-  centrepiece you can steer with WASD/arrows or by dragging.
-- **Engineer World** — a live terminal panel, a hoverable network graph of the
-  tech stack, and instanced micro-charts for skill levels.
+- **Game World** — a scrolling 3D showcase. Neon grid, emissive low-poly props,
+  and a driveable centrepiece you can steer with WASD/arrows or by dragging.
+  Shows **game development** work.
+- **Engineer World** — an interactive console. You navigate it by typing
+  commands (`help`, `projects`, `open 1`, `about`, `contact`…) or by clicking
+  the command buttons under the prompt. Shows **software engineering** work only.
 
-Both worlds render the *same* React components from the *same* data. Only the
-theme tokens, the section order, and the 3D scene differ.
+Both worlds read the same `src/data`, but they are genuinely different
+interfaces, and the `worlds` tag on each item decides which one it appears in.
 
 ## Quick start
 
@@ -35,9 +36,21 @@ before launch.
 |---|---|
 | `src/data/profile.ts` | Name, tagline, bio, roles, location, email, socials, resume link |
 | `src/data/projects.ts` | Every project (see below) |
-| `src/data/experience.ts` | Work, internships, education |
+| `src/data/experience.ts` | Work, research, education |
 | `src/data/skills.ts` | Skill groups and 0–1 proficiency levels |
 | `src/data/site.ts` | Title, meta description, canonical URL, OG image |
+
+### Which world does an item show up in?
+
+Every project, experience entry and skill has a `worlds` array:
+
+| `worlds` value | Appears in |
+|---|---|
+| `['game']` | Game World only |
+| `['swe']` | Engineer console only |
+| `['both']` | Both |
+
+This is the entire mechanism behind the split, so set it deliberately.
 
 The shapes are defined and documented in `src/types.ts`; TypeScript will tell
 you if a field is missing or misspelled.
@@ -52,7 +65,7 @@ Append an object to the array in `src/data/projects.ts`:
   title: 'My Project',
   tagline: 'One line that fits on a card.',
   description: 'The long version, shown in the modal.',
-  worlds: ['game'],              // 'game' | 'swe' | 'both' — drives filtering
+  worlds: ['game'],              // 'game' | 'swe' | 'both' — decides the world
   tags: ['Unity', 'Multiplayer'],
   techStack: ['Unity', 'C#'],
   role: 'Solo',
@@ -71,6 +84,24 @@ Then drop the referenced media into `public/assets/`. Notes:
 - `alt` is required in practice for images — it is what screen readers read.
 - Compress any `.glb` with
   [`gltf-transform`](https://gltf-transform.dev/) before committing it.
+
+### How to add a console command
+
+Append one entry to `commands` in `src/lib/console-commands.ts`:
+
+```ts
+{
+  name: 'talks',
+  aliases: ['speaking'],
+  help: 'Talks I have given',
+  run: () => ({ lines: [{ kind: 'heading', text: 'Talks' }, /* … */] }),
+}
+```
+
+`help`, Tab completion and the click-to-run button bar pick it up automatically.
+Return `ConsoleLine` records rather than raw strings so the output stays real
+DOM (headings, lists, links) for screen readers. Side effects like clearing the
+screen go in `effect`, not in `run`.
 
 ### Other content touch points
 
@@ -143,8 +174,9 @@ Static output in `dist/`. Configs for both hosts are committed:
 
 Before going live, replace `https://example.com` in `index.html`,
 `src/data/site.ts`, `public/robots.txt`, and `public/sitemap.xml` with the real
-domain, and add `public/assets/resume.pdf` (or set `resumeUrl: undefined` in
-`src/data/profile.ts` to hide the resume buttons).
+domain. `public/assets/resume.pdf` is already in place — replace the file to
+update it, or set `resumeUrl: undefined` in `src/data/profile.ts` to hide the
+resume buttons.
 
 ## Decisions taken from the spec's open questions (§14)
 
@@ -152,6 +184,7 @@ domain, and add `public/assets/resume.pdf` (or set `resumeUrl: undefined` in
 |---|---|
 | Game centrepiece controls | Both — WASD/arrow steering *and* pointer drag, with idle auto-drift and momentum |
 | SSG vs SPA | Static SPA with a hand-written HTML fallback; §9 says this is fine for a personal portfolio |
-| Projects | 8 placeholders, weighted toward game dev, with the real SWE Internship Tracker included |
-| Media | Generated SVG placeholders in `public/assets`, sized for real screenshots |
-| Custom domain / resume | Left as `example.com` / `/assets/resume.pdf`; both marked `TODO(owner)` |
+| Projects | Real work: Shellscape and Jump the Gun (game), DailyCodeforce, Robinhood Portfolio Bot and KurtCobot (software) |
+| Engineer world | Rebuilt as a typed console per the owner's brief, replacing the spec's scrolling-sections version |
+| Media | Generated SVG placeholders in `public/assets` — swap in real screenshots at the same paths |
+| Custom domain | Still `example.com`; update `index.html`, `src/data/site.ts`, `public/robots.txt`, `public/sitemap.xml` |

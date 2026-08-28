@@ -1,9 +1,9 @@
 /** Site-level metadata used for <title>, meta tags and JSON-LD. */
 export const siteMeta = {
-  // TODO(owner): set the real deployed origin before launch (spec §14.4).
+  // TODO(owner): set the real deployed origin before launch.
   url: 'https://example.com',
-  title: 'Alex Rivera — Game Developer & Software Engineer',
+  title: 'Jose Elizalde — Software Engineer & Game Developer',
   description:
-    'Interactive WebGL portfolio of Alex Rivera: gameplay engineering, netcode, and the data platforms behind them. Two worlds, one set of work.',
+    'Portfolio of Jose Elizalde, CS & Engineering at UCLA. C++ and Python systems, a Robinhood analytics bot, a daily Codeforces trainer, and games built in Unity.',
   ogImage: '/assets/og-cover.svg',
 }

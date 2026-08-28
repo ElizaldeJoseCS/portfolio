@@ -1,3 +1,4 @@
+import { Footer } from '@/components/Footer'
 import { WorldSections, type SectionKey } from './sharedWorldSections'
 
 /**
@@ -22,6 +23,7 @@ export function GameWorld() {
         className="pointer-events-none fixed inset-0 -z-[6] bg-[radial-gradient(ellipse_at_50%_0%,rgb(var(--c-accent)/0.18),transparent_55%),radial-gradient(ellipse_at_20%_100%,rgb(var(--c-accent-alt)/0.14),transparent_50%)]"
       />
       <WorldSections order={ORDER} />
+      <Footer />
     </div>
   )
 }

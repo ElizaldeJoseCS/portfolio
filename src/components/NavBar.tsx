@@ -23,7 +23,10 @@ const monogram = (name: string) =>
     .toUpperCase()
 
 export function NavBar() {
-  const { theme, reducedMotion } = useWorld()
+  const { theme, reducedMotion, world } = useWorld()
+  // The Engineer World is a console: it has no scrollable sections, so the
+  // anchor list would point at elements that do not exist there.
+  const showSectionLinks = world === 'game'
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState<string>('')
@@ -37,6 +40,7 @@ export function NavBar() {
 
   // Highlight the section currently under the sticky nav.
   useEffect(() => {
+    if (!showSectionLinks) return
     const targets = SECTIONS.map((s) => document.getElementById(s.id)).filter(
       (el): el is HTMLElement => Boolean(el),
     )
@@ -52,7 +56,13 @@ export function NavBar() {
     )
     targets.forEach((t) => io.observe(t))
     return () => io.disconnect()
-  }, [])
+  }, [showSectionLinks, world])
+
+  // Switching worlds from inside the mobile menu should reveal the world you
+  // just picked, not leave the overlay covering it.
+  useEffect(() => {
+    setOpen(false)
+  }, [world])
 
   // Lock body scroll and close on Escape while the mobile menu is open.
   useEffect(() => {
@@ -94,7 +104,19 @@ export function NavBar() {
             <span className="sr-only">{profile.name} — back to top</span>
           </a>
 
-          <ul className="ml-4 hidden flex-1 items-center gap-1 lg:flex">
+          {!showSectionLinks && (
+            <p className="ml-4 hidden flex-1 font-mono text-xs text-muted lg:block">
+              <span className="text-accent">console:</span> type{' '}
+              <code className="text-accentAlt">help</code> to navigate
+            </p>
+          )}
+
+          <ul
+            className={cn(
+              'ml-4 flex-1 items-center gap-1',
+              showSectionLinks ? 'hidden lg:flex' : 'hidden',
+            )}
+          >
             {SECTIONS.map((s) => (
               <li key={s.id}>
                 <a
@@ -165,7 +187,15 @@ export function NavBar() {
             transition={{ duration: reducedMotion ? 0.001 : 0.2 }}
             className="fixed inset-0 z-40 flex flex-col bg-bg/95 px-5 pb-10 pt-24 backdrop-blur-xl lg:hidden"
           >
-            <ul className="flex flex-col gap-1">
+            {!showSectionLinks && (
+              <p className="mb-6 font-mono text-sm leading-relaxed text-muted">
+                <span className="text-accent">You are in the console world.</span> Close this menu
+                and type <code className="text-accentAlt">help</code> at the prompt — or tap any of
+                the command buttons under it.
+              </p>
+            )}
+
+            <ul className={cn('flex-col gap-1', showSectionLinks ? 'flex' : 'hidden')}>
               {SECTIONS.map((s, i) => (
                 <motion.li
                   key={s.id}
