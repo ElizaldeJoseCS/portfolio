@@ -36,7 +36,14 @@ export function InstitutionMark({
         title={labelled ? undefined : logo.alt}
         loading="lazy"
         decoding="async"
-        className={cn('h-7 w-auto max-w-[92px] shrink-0 object-contain object-left', className)}
+        /*
+          Sized by height with the width left free, so marks of different
+          proportions read at a comparable weight: a one-line wordmark (UCLA,
+          ~2.2:1) lands near 87px wide, a three-line lockup (CMU, ~1.6:1) near
+          63px. 40px is the floor at which a stacked lockup's lines stay
+          legible — 28px turned CMU's three lines into 8px each.
+        */
+        className={cn('h-10 w-auto max-w-[96px] shrink-0 object-contain object-left', className)}
       />
     )
   }

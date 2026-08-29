@@ -12,8 +12,11 @@ const UCLA: ExperienceEntry['logo'] = {
   alt: 'University of California, Los Angeles',
   src: '/assets/logo-ucla.png',
 }
-// TODO(owner): add `src: '/assets/logo-cmu.png'` once the wordmark is to hand.
-const CMU: ExperienceEntry['logo'] = { short: 'CMU', alt: 'Carnegie Mellon University' }
+const CMU: ExperienceEntry['logo'] = {
+  short: 'CMU',
+  alt: 'Carnegie Mellon University',
+  src: '/assets/logo-cmu.png',
+}
 const PIERCE: ExperienceEntry['logo'] = { short: 'LAPC', alt: 'Los Angeles Pierce College' }
 
 export const experience: ExperienceEntry[] = [
