@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
-import { profile, publications } from '@/data'
+import { experience, profile, publications } from '@/data'
 import { useWorld } from '@/lib/world-context'
 import { cn } from '@/lib/cn'
-import { Chip, LinkButton } from './ui'
+import { Chip, InstitutionMark, LinkButton } from './ui'
 import type { World } from '@/types'
 
 interface Door {
@@ -39,6 +39,14 @@ const DOORS: Door[] = [
     bullets: ['DailyCodeforce', 'Robinhood Portfolio Bot', 'Research & systems work'],
   },
 ]
+
+/**
+ * The mark for the position a paper came out of. Papers carry `experienceId`
+ * rather than their own logo so the institution is defined once, in
+ * `experience.ts`.
+ */
+const logoForPaper = (experienceId?: string) =>
+  experienceId ? experience.find((e) => e.id === experienceId)?.logo : undefined
 
 export function Landing() {
   const { enterWorld, reducedMotion, theme } = useWorld()
@@ -100,12 +108,26 @@ export function Landing() {
         {/* About me — the landing is the only place the full bio lives. */}
         <motion.div {...fade(0.15)} className="mt-12 max-w-3xl">
           <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-accent">About me</h2>
-          <div className="mt-5 space-y-4 text-base leading-relaxed text-muted">
-            {profile.bio.map((paragraph, i) => (
-              <p key={i} className={i === 0 ? 'text-lg text-fg/90' : undefined}>
-                {paragraph}
-              </p>
-            ))}
+
+          <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-[minmax(0,180px)_1fr] sm:gap-8">
+            {profile.avatarUrl && (
+              <img
+                src={profile.avatarUrl}
+                alt={`Portrait of ${profile.name}`}
+                width={400}
+                height={400}
+                /* Above the fold on the landing, so it is not lazy. */
+                decoding="async"
+                className="aspect-square w-full max-w-[180px] rounded-world border border-line/70 object-cover"
+              />
+            )}
+            <div className="space-y-4 text-base leading-relaxed text-muted">
+              {profile.bio.map((paragraph, i) => (
+                <p key={i} className={i === 0 ? 'text-lg text-fg/90' : undefined}>
+                  {paragraph}
+                </p>
+              ))}
+            </div>
           </div>
 
           {profile.today && (
@@ -135,34 +157,40 @@ export function Landing() {
               </h3>
               <ul className="mt-4 space-y-5">
                 {publications.map((paper) => (
-                  <li key={paper.id} className="border-l-2 border-line pl-4">
-                    <p className="font-display text-base font-semibold leading-snug text-fg">
-                      {paper.title}
-                    </p>
-                    <p className="mt-1 text-sm leading-relaxed text-muted">
-                      {/* The author's own name is marked so a reader can see the
+                  <li key={paper.id} className="flex gap-4 border-l-2 border-line pl-4">
+                    {(() => {
+                      const logo = logoForPaper(paper.experienceId)
+                      return logo ? <InstitutionMark logo={logo} className="mt-1" /> : null
+                    })()}
+                    <div className="min-w-0 flex-1">
+                      <p className="font-display text-base font-semibold leading-snug text-fg">
+                        {paper.title}
+                      </p>
+                      <p className="mt-1 text-sm leading-relaxed text-muted">
+                        {/* The author's own name is marked so a reader can see the
                           co-authorship without reading the whole list. */}
-                      {paper.authors.map((author, i) => (
-                        <span key={author}>
-                          {i > 0 && ', '}
-                          <span className={author === profile.name ? 'text-fg/90' : undefined}>
-                            {author}
+                        {paper.authors.map((author, i) => (
+                          <span key={author}>
+                            {i > 0 && ', '}
+                            <span className={author === profile.name ? 'text-fg/90' : undefined}>
+                              {author}
+                            </span>
                           </span>
-                        </span>
-                      ))}
-                    </p>
-                    <p className="mt-1 font-mono text-xs text-muted">
-                      {paper.venue} · {paper.year}
-                    </p>
-                    <div className="mt-3 flex flex-wrap gap-3">
-                      <LinkButton href={paper.pdf} size="sm" variant="outline" external>
-                        Read the PDF
-                      </LinkButton>
-                      {paper.doi && (
-                        <LinkButton href={paper.doi} size="sm" variant="ghost" external>
-                          DOI
+                        ))}
+                      </p>
+                      <p className="mt-1 font-mono text-xs text-muted">
+                        {paper.venue} · {paper.year}
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-3">
+                        <LinkButton href={paper.pdf} size="sm" variant="outline" external>
+                          Read the PDF
                         </LinkButton>
-                      )}
+                        {paper.doi && (
+                          <LinkButton href={paper.doi} size="sm" variant="ghost" external>
+                            DOI
+                          </LinkButton>
+                        )}
+                      </div>
                     </div>
                   </li>
                 ))}
@@ -192,12 +220,10 @@ export function Landing() {
 
         {/* The two doors. */}
         <motion.div {...fade(0.2)} id="worlds" className="mt-16 scroll-mt-24">
-          <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-accent">
-            Pick a world
-          </h2>
+          <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-accent">Pick a world</h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
-            My work is split across two of them. Same person, two very different ways to look
-            around — and you can switch between them at any time from the nav.
+            My work is split across two of them. Same person, two very different ways to look around
+            — and you can switch between them at any time from the nav.
           </p>
 
           <ul className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2">

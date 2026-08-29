@@ -4,6 +4,7 @@ import type { Project } from '@/types'
 import { useWorld } from '@/lib/world-context'
 import { cn } from '@/lib/cn'
 import { Chip, LinkButton } from './ui'
+import { ProjectVideo } from './ProjectVideo'
 import { ProjectEmbed } from './ProjectEmbed'
 
 // The WebGL demo viewer pulls three.js in — only loaded if a project uses it.
@@ -214,7 +215,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 ))}
               </ul>
 
-              <h3 className="mt-8 font-mono text-xs uppercase tracking-[0.3em] text-accent">Tags</h3>
+              <h3 className="mt-8 font-mono text-xs uppercase tracking-[0.3em] text-accent">
+                Tags
+              </h3>
               <ul className="mt-3 flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
                   <li key={tag}>
@@ -251,18 +254,7 @@ function MediaFrame({ project, index }: { project: Project; index: number }) {
   if (!media) return null
 
   if (media.type === 'video' && media.src) {
-    return (
-      <video
-        src={media.src}
-        poster={media.poster}
-        controls
-        playsInline
-        preload="metadata"
-        className="aspect-video w-full bg-black"
-      >
-        <track kind="captions" />
-      </video>
-    )
+    return <ProjectVideo media={media} />
   }
 
   if (media.type === 'embed') {

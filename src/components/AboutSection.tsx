@@ -32,7 +32,6 @@ export function AboutSection() {
                 className="h-full w-full object-cover"
               />
             ) : (
-              // TODO(owner): add `avatarUrl` to profile.ts to replace the monogram.
               <div
                 aria-hidden="true"
                 className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_30%_25%,rgb(var(--c-accent)/0.4),transparent_60%),radial-gradient(circle_at_75%_80%,rgb(var(--c-accent-alt)/0.35),transparent_55%)] font-display text-6xl font-bold text-fg/80"

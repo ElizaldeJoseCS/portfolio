@@ -1,5 +1,21 @@
 import type { ExperienceEntry } from '@/types'
 
+/*
+  Institution marks. `src` is the real wordmark; without one the UI falls back
+  to `short` as a lettermark badge, which is a finished look rather than a gap.
+  To add artwork, drop a transparent PNG or an SVG in `public/assets` and set
+  `src` here — nothing else changes. Knock the background out first: these sit
+  on a dark surface, and a white plate reads as a white box.
+*/
+const UCLA: ExperienceEntry['logo'] = {
+  short: 'UCLA',
+  alt: 'University of California, Los Angeles',
+  src: '/assets/logo-ucla.png',
+}
+// TODO(owner): add `src: '/assets/logo-cmu.png'` once the wordmark is to hand.
+const CMU: ExperienceEntry['logo'] = { short: 'CMU', alt: 'Carnegie Mellon University' }
+const PIERCE: ExperienceEntry['logo'] = { short: 'LAPC', alt: 'Los Angeles Pierce College' }
+
 export const experience: ExperienceEntry[] = [
   {
     id: 'acm-studio-srs',
@@ -17,6 +33,7 @@ export const experience: ExperienceEntry[] = [
     skills: ['Unity', 'C#', 'Game design', 'Git'],
     worlds: ['game'],
     url: 'https://github.com/SRS-Jump-the-Gun/JumpTheGunUnityBuild',
+    logo: UCLA,
   },
   {
     id: 'cmu-reuse',
@@ -33,6 +50,7 @@ export const experience: ExperienceEntry[] = [
     ],
     skills: ['HCI', 'User research', 'Usability testing', 'Python'],
     worlds: ['swe'],
+    logo: CMU,
   },
   {
     id: 'ucla-sure',
@@ -49,6 +67,7 @@ export const experience: ExperienceEntry[] = [
     ],
     skills: ['C++', 'Combinatorics', 'Algorithms', 'Research'],
     worlds: ['swe'],
+    logo: UCLA,
   },
   {
     id: 'edu-ucla',
@@ -63,6 +82,7 @@ export const experience: ExperienceEntry[] = [
     ],
     skills: ['C++', 'Operating Systems', 'Distributed Systems', 'Networking'],
     worlds: ['both'],
+    logo: UCLA,
   },
   {
     id: 'edu-pierce',
@@ -75,5 +95,6 @@ export const experience: ExperienceEntry[] = [
     description: ['Graduated with a 3.92 / 4.00 GPA before transferring to UCLA.'],
     skills: ['Physics', 'Mathematics'],
     worlds: ['both'],
+    logo: PIERCE,
   },
 ]

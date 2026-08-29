@@ -80,6 +80,19 @@ export interface Project {
   highlighted?: boolean
 }
 
+/**
+ * A school or employer mark. `src` is a file in `public/assets`; when it is
+ * absent the UI renders `short` as a lettermark instead, so an entry never
+ * breaks on a missing image. `alt`/`short` are required for that reason.
+ */
+export interface EntryLogo {
+  /** Lettermark fallback — "UCLA", "CMU". Keep it to ~4 characters. */
+  short: string
+  /** The institution's full name, for assistive tech. */
+  alt: string
+  src?: string
+}
+
 export interface ExperienceEntry {
   id: string
   role: string
@@ -93,6 +106,7 @@ export interface ExperienceEntry {
   skills: string[]
   worlds: WorldTag[]
   url?: string
+  logo?: EntryLogo
 }
 
 /**

@@ -25,7 +25,7 @@ export const profile: Profile = {
     { label: 'Email', url: 'mailto:joseelizalde02@g.ucla.edu', icon: 'mail' },
   ],
   resumeUrl: '/assets/resume.pdf',
-  avatarUrl: undefined,
+  avatarUrl: '/assets/me.webp',
   interests: [
     'Competitive programming',
     'Game jams',

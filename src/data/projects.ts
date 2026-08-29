@@ -211,7 +211,30 @@ export const projects: Project[] = [
     role: 'Game Director',
     year: '2024',
     links: [{ label: 'GitHub', url: 'https://github.com/SRS-Jump-the-Gun/JumpTheGunUnityBuild' }],
-    media: [{ type: 'image', src: '/assets/placeholder-jumpthegun.svg', alt: 'Jump the Gun' }],
+    media: [
+      /*
+        Captured from the editor mid-development, which is the point — these
+        show the build as it actually stands. H.264 rather than the source
+        GIFs: the pair were 41MB as GIF and are 1.9MB as video, and `/assets/*`
+        is served on a one-day cache, so the GIFs would have been re-fetched
+        constantly. 50/23 is the capture's real aspect, cropped free of the
+        letterbox ezgif added and of the editor's status bar.
+      */
+      {
+        type: 'video',
+        src: '/assets/jtg-walljump-shockwave.mp4',
+        poster: '/assets/jtg-walljump-shockwave.jpg',
+        alt: 'Wall jumping around a derelict factory while a boss enemy fires shockwaves',
+        aspect: '50 / 23',
+      },
+      {
+        type: 'video',
+        src: '/assets/jtg-parry.mp4',
+        poster: '/assets/jtg-parry.jpg',
+        alt: 'Parrying an incoming boss projectile at close range',
+        aspect: '50 / 23',
+      },
+    ],
     featured: true,
   },
 ]

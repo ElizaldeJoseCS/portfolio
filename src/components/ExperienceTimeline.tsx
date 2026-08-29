@@ -4,7 +4,7 @@ import type { ExperienceEntry } from '@/types'
 import { useWorld } from '@/lib/world-context'
 import { useIsInView } from '@/hooks/useIsInView'
 import { cn } from '@/lib/cn'
-import { Chip, Section } from './ui'
+import { Chip, InstitutionMark, Section } from './ui'
 
 const MONTHS = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -53,25 +53,32 @@ function TimelineItem({ entry, index }: { entry: ExperienceEntry; index: number 
       />
 
       <article className="rounded-world border border-line/70 bg-surface/70 p-5 backdrop-blur-md transition-colors hover:border-accent/60">
-        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent">
-          {KIND_LABEL[entry.kind]} · {formatDate(entry.start)} — {formatDate(entry.end)}
-        </p>
-        <h3 className="mt-2 font-display text-xl font-bold text-fg">{entry.role}</h3>
-        <p className="mt-1 text-sm text-muted">
-          {entry.url ? (
-            <a
-              href={entry.url}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="underline decoration-line underline-offset-4 transition-colors hover:text-accent"
-            >
-              {entry.company}
-            </a>
-          ) : (
-            entry.company
-          )}
-          {entry.location && <span className="text-muted/70"> · {entry.location}</span>}
-        </p>
+        {/* The mark leads the header, and swaps to the outside edge on the
+            left-hand column so it stays against the rail on both sides. */}
+        <div className={cn('flex items-start gap-3', left && 'md:flex-row-reverse')}>
+          {entry.logo && <InstitutionMark logo={entry.logo} />}
+          <div className="min-w-0 flex-1">
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent">
+              {KIND_LABEL[entry.kind]} · {formatDate(entry.start)} — {formatDate(entry.end)}
+            </p>
+            <h3 className="mt-2 font-display text-xl font-bold text-fg">{entry.role}</h3>
+            <p className="mt-1 text-sm text-muted">
+              {entry.url ? (
+                <a
+                  href={entry.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="underline decoration-line underline-offset-4 transition-colors hover:text-accent"
+                >
+                  {entry.company}
+                </a>
+              ) : (
+                entry.company
+              )}
+              {entry.location && <span className="text-muted/70"> · {entry.location}</span>}
+            </p>
+          </div>
+        </div>
 
         <ul className={cn('mt-4 space-y-2 text-sm leading-relaxed text-muted', left && 'md:text-right')}>
           {entry.description.map((line) => (

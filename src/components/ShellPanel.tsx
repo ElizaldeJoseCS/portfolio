@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { shellContent, useHub } from '@/lib/hub-context'
 import { useWorld } from '@/lib/world-context'
 import { Chip, LinkButton } from './ui'
+import { ProjectVideo } from './ProjectVideo'
 import { ProjectEmbed } from './ProjectEmbed'
 
 const FOCUSABLE =
@@ -75,7 +76,11 @@ export function ShellPanel() {
           exit={{ opacity: 0 }}
           transition={{ duration: reducedMotion ? 0.001 : 0.2 }}
         >
-          <div className="absolute inset-0 bg-bg/80 backdrop-blur-md" onClick={release} aria-hidden="true" />
+          <div
+            className="absolute inset-0 bg-bg/80 backdrop-blur-md"
+            onClick={release}
+            aria-hidden="true"
+          />
 
           <motion.div
             ref={panelRef}
@@ -131,12 +136,20 @@ function ShellBody({ shell }: { shell: NonNullable<ReturnType<typeof useHub>['sh
     // A playable build beats a screenshot when there is one — and ProjectEmbed
     // does not fetch it until the visitor presses play.
     const embed = p.media.find((m) => m.type === 'embed')
+    // A project may ship clips and no stills (Jump the Gun does), so video is
+    // a first-class cover here — otherwise the arena panel shows nothing where
+    // the modal shows footage, and the two views fall out of parity.
+    const clip = p.media.find((m) => m.type === 'video' && m.src)
     const cover = p.media.find((m) => m.type === 'image')
     return (
       <>
         {embed ? (
           <div className="mb-6 overflow-hidden rounded-world border border-line/60">
             <ProjectEmbed media={embed} title={p.title} />
+          </div>
+        ) : clip ? (
+          <div className="mb-6 overflow-hidden rounded-world border border-line/60">
+            <ProjectVideo media={clip} />
           </div>
         ) : (
           cover?.src && (
