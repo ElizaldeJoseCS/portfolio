@@ -5,7 +5,6 @@ import { useWorld } from '@/lib/world-context'
 import { useHub } from '@/lib/hub-context'
 import { cn } from '@/lib/cn'
 import { WorldSwitcher } from './WorldSwitcher'
-import { LinkButton, Tooltip } from './ui'
 
 const SECTIONS = [
   { id: 'projects', label: 'Projects' },
@@ -13,6 +12,18 @@ const SECTIONS = [
   { id: 'skills', label: 'Skills' },
   { id: 'about', label: 'About' },
   { id: 'contact', label: 'Contact' },
+]
+
+/**
+ * The landing's own anchors. It is one long page — bio, papers, then the two
+ * doors — and without these the bar carried a monogram and nothing else.
+ * Distinct ids from SECTIONS on purpose: both layers are briefly in the DOM
+ * during a world crossfade, and duplicate anchors would be ambiguous.
+ */
+const LANDING_SECTIONS = [
+  { id: 'about-me', label: 'About' },
+  { id: 'research', label: 'Research' },
+  { id: 'worlds', label: 'Worlds' },
 ]
 
 const monogram = (name: string) =>
@@ -33,6 +44,7 @@ export function NavBar() {
   // exist.
   const showSectionLinks = inWorld && world === 'game' && !arenaActive
   const showConsoleHint = inWorld && world === 'engineer'
+  const showLandingLinks = stage === 'landing'
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState<string>('')
@@ -46,10 +58,11 @@ export function NavBar() {
 
   // Highlight the section currently under the sticky nav.
   useEffect(() => {
-    if (!showSectionLinks) return
-    const targets = SECTIONS.map((s) => document.getElementById(s.id)).filter(
-      (el): el is HTMLElement => Boolean(el),
-    )
+    if (!showSectionLinks && !showLandingLinks) return
+    const list = showLandingLinks ? LANDING_SECTIONS : SECTIONS
+    const targets = list
+      .map((s) => document.getElementById(s.id))
+      .filter((el): el is HTMLElement => Boolean(el))
     if (!targets.length) return
     const io = new IntersectionObserver(
       (entries) => {
@@ -62,7 +75,7 @@ export function NavBar() {
     )
     targets.forEach((t) => io.observe(t))
     return () => io.disconnect()
-  }, [showSectionLinks, world, stage, arenaActive])
+  }, [showSectionLinks, showLandingLinks, world, stage, arenaActive])
 
   // Switching worlds from inside the mobile menu should reveal the world you
   // just picked, not leave the overlay covering it.
@@ -157,22 +170,43 @@ export function NavBar() {
             </ul>
           )}
 
-          <div className="ml-auto flex items-center gap-3">
-            {inWorld && <WorldSwitcher className="hidden sm:flex" />}
-            {profile.resumeUrl && (
-              <Tooltip label="PDF, opens in a new tab" className="hidden md:inline-flex">
-                <LinkButton href={profile.resumeUrl} size="sm" variant="outline" external>
-                  Resume
-                </LinkButton>
-              </Tooltip>
+          <div className="ml-auto flex items-center gap-1 sm:gap-3">
+            {/*
+              Right-aligned rather than beside the monogram: the landing has no
+              world switcher to balance against, so anchoring the links to the
+              far edge keeps the bar from sitting all in one corner.
+            */}
+            {showLandingLinks && (
+              <ul className="hidden items-center gap-1 sm:flex">
+                {LANDING_SECTIONS.map((s) => (
+                  <li key={s.id}>
+                    <a
+                      href={`#${s.id}`}
+                      aria-current={active === s.id ? 'true' : undefined}
+                      className={cn(
+                        'inline-flex min-h-[44px] items-center rounded-world px-3 font-display text-sm transition-colors',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                        active === s.id ? 'text-accent' : 'text-muted hover:text-fg',
+                      )}
+                    >
+                      {s.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             )}
+            {inWorld && <WorldSwitcher className="hidden sm:flex" />}
             <button
               type="button"
               aria-label={open ? 'Close menu' : 'Open menu'}
               aria-expanded={open}
               aria-controls="mobile-menu"
               onClick={() => setOpen((v) => !v)}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-world border border-line/80 text-fg transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent lg:hidden"
+              className={cn(
+                'inline-flex h-11 w-11 items-center justify-center rounded-world border border-line/80 text-fg transition-colors',
+                'hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                showLandingLinks ? 'sm:hidden' : 'lg:hidden',
+              )}
             >
               <span aria-hidden="true" className="relative block h-4 w-5">
                 <span
@@ -217,11 +251,27 @@ export function NavBar() {
                 command button and press Enter.
               </p>
             )}
-            {!inWorld && (
-              <p className="mb-6 font-mono text-sm leading-relaxed text-muted">
-                <span className="text-accent">Pick a world</span> from the two cards on the page to
-                get started.
-              </p>
+            {showLandingLinks && (
+              <ul className="flex flex-col gap-1">
+                {LANDING_SECTIONS.map((s, i) => (
+                  <motion.li
+                    key={s.id}
+                    initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={
+                      reducedMotion ? { duration: 0.1 } : { ...theme.motionSpring, delay: i * 0.04 }
+                    }
+                  >
+                    <a
+                      href={`#${s.id}`}
+                      onClick={() => setOpen(false)}
+                      className="flex min-h-[56px] items-center border-b border-line/50 font-display text-2xl text-fg transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    >
+                      {s.label}
+                    </a>
+                  </motion.li>
+                ))}
+              </ul>
             )}
 
             {showSectionLinks && (
@@ -261,11 +311,6 @@ export function NavBar() {
                 </button>
               )}
               {inWorld && <WorldSwitcher layout="full" />}
-              {profile.resumeUrl && (
-                <LinkButton href={profile.resumeUrl} variant="outline" className="w-full" external>
-                  Resume
-                </LinkButton>
-              )}
             </div>
           </motion.div>
         )}

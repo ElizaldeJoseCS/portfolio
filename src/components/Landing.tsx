@@ -106,7 +106,7 @@ export function Landing() {
         </motion.div>
 
         {/* About me — the landing is the only place the full bio lives. */}
-        <motion.div {...fade(0.15)} className="mt-12 max-w-3xl">
+        <motion.div {...fade(0.15)} id="about-me" className="mt-12 max-w-3xl scroll-mt-24">
           <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-accent">About me</h2>
 
           <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-[minmax(0,180px)_1fr] sm:gap-8">
@@ -151,7 +151,7 @@ export function Landing() {
               anyone commits to the console or the arena. The console has a
               `papers` command as well. */}
           {publications.length > 0 && (
-            <div className="mt-8">
+            <div id="research" className="mt-8 scroll-mt-24">
               <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-accent">
                 Published research
               </h3>
@@ -200,7 +200,7 @@ export function Landing() {
 
           <div className="mt-8 flex flex-wrap gap-3">
             {profile.resumeUrl && (
-              <LinkButton href={profile.resumeUrl} size="sm" variant="outline" external>
+              <LinkButton href={profile.resumeUrl} size="sm" variant="ghost" external>
                 Resume
               </LinkButton>
             )}

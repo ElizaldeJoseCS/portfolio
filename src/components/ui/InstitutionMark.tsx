@@ -23,10 +23,20 @@ export function InstitutionMark({
   labelled?: boolean
 }) {
   /*
-    A wordmark and a lettermark are different objects and must not share a
-    frame: real artwork is wide, already carries its own colour, and reads best
-    unboxed, while the fallback needs the box to look deliberate.
+    Every mark occupies the same fixed column, whatever its proportions, so the
+    text beside it always starts at the same x. Sizing by height alone let a
+    one-line wordmark (UCLA, ~2.2:1) run to 87px while a three-line lockup
+    (CMU, ~1.6:1) stopped at 63px, and the two entries read as misaligned.
+
+    Inside that column the artwork is `object-contain`, so nothing is cropped
+    or stretched to fit — a wide mark fills the width, a squat one fills the
+    height, and both hug the left edge.
   */
+  // Narrower on phones, where 80px of a 360px viewport crowds a paper title
+  // into four wrapped lines. Both marks still share a width at every breakpoint,
+  // which is what keeps the text aligned.
+  const COLUMN = 'h-10 w-16 shrink-0 sm:w-20'
+
   if (logo.src) {
     return (
       <img
@@ -36,31 +46,29 @@ export function InstitutionMark({
         title={labelled ? undefined : logo.alt}
         loading="lazy"
         decoding="async"
-        /*
-          Sized by height with the width left free, so marks of different
-          proportions read at a comparable weight: a one-line wordmark (UCLA,
-          ~2.2:1) lands near 87px wide, a three-line lockup (CMU, ~1.6:1) near
-          63px. 40px is the floor at which a stacked lockup's lines stay
-          legible — 28px turned CMU's three lines into 8px each.
-        */
-        className={cn('h-10 w-auto max-w-[96px] shrink-0 object-contain object-left', className)}
+        className={cn(COLUMN, 'object-contain object-left', className)}
       />
     )
   }
 
+  /*
+    The fallback keeps a plate, because letters with no frame read as stray
+    text rather than a mark — but the plate sits inside the same column, left
+    aligned, so it lines up with real artwork.
+  */
   return (
     <span
-      className={cn(
-        'flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg',
-        'border border-line/70 bg-bg/60',
-        'font-display text-[11px] font-bold tracking-tight text-fg/75',
-        className,
-      )}
+      className={cn(COLUMN, 'flex items-center justify-start', className)}
       aria-hidden={labelled ? undefined : true}
       title={labelled ? undefined : logo.alt}
     >
       {labelled && <span className="sr-only">{logo.alt}</span>}
-      <span aria-hidden="true">{logo.short}</span>
+      <span
+        aria-hidden="true"
+        className="flex h-10 min-w-[2.5rem] items-center justify-center rounded-lg border border-line/70 bg-bg/60 px-2 font-display text-[11px] font-bold tracking-tight text-fg/75"
+      >
+        {logo.short}
+      </span>
     </span>
   )
 }
