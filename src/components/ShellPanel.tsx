@@ -136,10 +136,14 @@ function ShellBody({ shell }: { shell: NonNullable<ReturnType<typeof useHub>['sh
     // A playable build beats a screenshot when there is one — and ProjectEmbed
     // does not fetch it until the visitor presses play.
     const embed = p.media.find((m) => m.type === 'embed')
-    // A project may ship clips and no stills (Jump the Gun does), so video is
-    // a first-class cover here — otherwise the arena panel shows nothing where
-    // the modal shows footage, and the two views fall out of parity.
-    const clip = p.media.find((m) => m.type === 'video' && m.src)
+    /*
+      A project may ship clips and no stills (Jump the Gun does), so video is a
+      first-class cover here. *Every* clip is shown, not just the first: the
+      modal pages through them in a carousel, and this panel has no carousel,
+      so showing one would hide footage the other view offers. The panel
+      scrolls, so they simply stack.
+    */
+    const clips = p.media.filter((m) => m.type === 'video' && m.src)
     const cover = p.media.find((m) => m.type === 'image')
     return (
       <>
@@ -147,9 +151,21 @@ function ShellBody({ shell }: { shell: NonNullable<ReturnType<typeof useHub>['sh
           <div className="mb-6 overflow-hidden rounded-world border border-line/60">
             <ProjectEmbed media={embed} title={p.title} />
           </div>
-        ) : clip ? (
-          <div className="mb-6 overflow-hidden rounded-world border border-line/60">
-            <ProjectVideo media={clip} />
+        ) : clips.length > 0 ? (
+          <div className="mb-6 space-y-3">
+            {clips.map((clip) => (
+              <figure
+                key={clip.src}
+                className="overflow-hidden rounded-world border border-line/60"
+              >
+                <ProjectVideo media={clip} />
+                {clip.alt && (
+                  <figcaption className="border-t border-line/60 bg-bg/40 px-3 py-2 font-mono text-[11px] leading-relaxed text-muted">
+                    {clip.alt}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
           </div>
         ) : (
           cover?.src && (
