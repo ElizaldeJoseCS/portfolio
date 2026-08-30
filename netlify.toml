@@ -5,11 +5,11 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Single-page app: every path serves the same shell.
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# No catch-all redirect. The build emits a real .html file per route (see the
+# static-routes plugin in vite.config.ts), so pretty URLs resolve straight off
+# the filesystem, and an unknown path falls through to the emitted 404.html
+# with an actual 404 status — which a catch-all to index.html cannot do, since
+# it answers 200 for pages that do not exist.
 
 # Vite's own output. Every filename here carries a content hash, so it can be
 # cached forever — a change ships under a new name.

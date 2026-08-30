@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { profile } from '@/data'
-import { pageFor, PAGES } from '@/lib/nav'
+import { pageFor } from '@/lib/nav'
 import { XpMenuBar, XpPanel, XpTaskbar, XpVisitorCounter, XpWindow } from './xp'
 import { SocialIcon } from './ui'
 import { Footer } from './Footer'
@@ -15,20 +15,30 @@ import { Footer } from './Footer'
  * navigations is what makes this read as one application window rather than
  * five separate documents.
  */
+/** Head tags for a path that matches no route. Mirrors the emitted 404.html. */
+const NOT_FOUND_META = {
+  title: 'Not found — Jose Elizalde',
+  description: 'That page does not exist on this site.',
+}
+
 export function SiteShell() {
   const { pathname } = useLocation()
   const page = pageFor(pathname)
 
   /*
-    This is a single HTML document, so the title and description have to be set
-    per route by hand. Crawlers that execute JS pick these up; the ones that do
-    not get index.html's static copy, which describes the site as a whole.
+    Each route ships its own HTML file with the right head tags already in it
+    (see `staticRoutes` in vite.config.ts), so this only has to keep up with
+    *client-side* navigation, where the document never reloads.
+
+    The unknown-path case is spelled out rather than falling back to PAGES[0]:
+    doing that overwrote 404.html's correct "Not found" title with the home
+    page's the moment React booted.
   */
   useEffect(() => {
-    const fallback = PAGES[0]!
-    document.title = page?.title ?? fallback.title
-    const meta = document.querySelector('meta[name="description"]')
-    if (meta) meta.setAttribute('content', page?.description ?? fallback.description)
+    const meta = page ?? NOT_FOUND_META
+    document.title = meta.title
+    const tag = document.querySelector('meta[name="description"]')
+    if (tag) tag.setAttribute('content', meta.description)
   }, [page])
 
   /*

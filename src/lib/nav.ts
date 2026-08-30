@@ -1,4 +1,4 @@
-import type { NavPage } from '@/types'
+import type { NavPage } from '../types'
 
 /**
  * The site, as data.
