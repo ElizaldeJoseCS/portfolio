@@ -7,8 +7,8 @@ import { cn } from '@/lib/cn'
  * blogroll.
  *
  * The header keeps XP's rounded top corners. They are the one piece of
- * rounding on this landing (`--radius-world` is 0 here), which is what makes
- * them read as a quotation rather than an inconsistency.
+ * rounding on the site (`--radius-world` is 0), which is what makes them read
+ * as a quotation rather than an inconsistency.
  */
 export function XpPanel({
   title,

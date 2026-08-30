@@ -3,24 +3,38 @@
 @tailwind utilities;
 
 /*
-  Default token values = the Game world. `applyThemeVars` in lib/theme.ts
-  overwrites these on :root at runtime; declaring them here means the static
-  fallback in index.html is styled correctly before React mounts.
+  The palette, and the only place in the codebase a colour value is written.
+
+  There used to be a `lib/theme.ts` holding three palettes and swapping them
+  onto :root at runtime, because the site was two 3D worlds plus a hub. There
+  is one look now, so the tokens are static and Tailwind maps every colour
+  utility onto them (see tailwind.config.js) — `bg-accent` needs no JS to be
+  correct.
+
+  Cyberpunk 2077's hazard yellow and cyan on near-black. The body face is what
+  Windows actually shipped its UI in; it is a system stack on purpose, so no
+  extra webfont is fetched and on Windows the chrome renders in the genuine
+  article. Display is Chakra Petch, the one webfont left.
 */
 :root {
-  --c-bg: 9 6 20;
-  --c-surface: 20 14 38;
-  --c-surface-alt: 30 20 54;
-  --c-fg: 245 240 255;
-  --c-muted: 167 156 196;
-  --c-accent: 255 62 165;
-  --c-accent-alt: 56 232 255;
-  --c-line: 82 58 128;
+  --c-bg: 8 8 12;
+  --c-surface: 18 18 24;
+  --c-surface-alt: 26 27 36;
+  --c-fg: 235 238 245;
+  --c-muted: 150 156 170;
+  --c-accent: 252 238 10;
+  --c-accent-alt: 0 240 255;
+  --c-line: 72 76 92;
 
   --font-display: 'Chakra Petch', 'Rajdhani', system-ui, sans-serif;
-  --font-body: 'Chakra Petch', 'Rajdhani', system-ui, sans-serif;
+  --font-body: Tahoma, Verdana, 'DejaVu Sans', Geneva, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-  --radius-world: 20px;
+
+  /*
+    Square. XP's own rounding survives only on the panel headers, applied
+    there directly — everything else in both references is hard-edged.
+  */
+  --radius-world: 0px;
 
   color-scheme: dark;
 }
@@ -28,17 +42,13 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Sticky nav clearance for anchor jumps (spec §6.1). */
-    scroll-padding-top: 6rem;
+    /* Sticky chrome clearance for anchor jumps (spec §6.1). */
+    scroll-padding-top: 7rem;
     -webkit-text-size-adjust: 100%;
   }
 
   body {
     @apply bg-bg font-body text-fg antialiased;
-    /* Colour transition carries the DOM half of the world crossfade. */
-    transition:
-      background-color 400ms ease,
-      color 400ms ease;
     overflow-x: hidden;
   }
 
@@ -50,10 +60,13 @@
 
   ::selection {
     background: rgb(var(--c-accent) / 0.35);
-    color: rgb(var(--c-fg));
+    color: rgb(var(--c-bg));
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     @apply font-display;
     text-wrap: balance;
   }
@@ -69,7 +82,6 @@
   }
   ::-webkit-scrollbar-thumb {
     background: rgb(var(--c-line));
-    border-radius: 999px;
   }
 }
 
@@ -81,17 +93,14 @@
 
 /*
   ============================================================================
-  Windows XP chrome, in Cyberpunk 2077 colours (landing only).
+  Windows XP chrome, in Cyberpunk 2077 colours.
   ============================================================================
 
-  These are the primitives the landing's window frame is built from. They live
-  in CSS rather than in Tailwind classes because a bevel is four different
-  border colours at once, which is unreadable inline and identical everywhere
-  it is used.
+  The primitives the whole site is built from. They live in CSS rather than in
+  Tailwind classes because a bevel is four different border colours at once,
+  which is unreadable inline and identical everywhere it is used.
 
-  Every colour here is a token reference, never a literal — the rule in
-  lib/theme.ts holds. That is also what lets the same chrome inherit whichever
-  palette is active, though in practice only the landing renders it.
+  Every colour here is a token reference, never a literal.
 */
 @layer components {
   /*
@@ -117,19 +126,13 @@
   }
 
   /*
-    Luna's title bar was a vertical gradient with a bright top lip. Same
-    construction, accent hue — the lip is what stops it looking like a flat
-    coloured band.
+    Opaque base, shading on top. Building the whole bar out of translucent
+    accent stops let the page scroll visibly through it once the bar went
+    sticky. A background-color paints under a background-image, so the gradient
+    is only the light and shade: a bright lip along the top, darkening to the
+    bottom, which is what Luna's title bars actually did.
   */
   .xp-titlebar {
-    /*
-      Opaque base, shading on top. Building the whole bar out of translucent
-      accent stops let the page scroll visibly through it once the bar went
-      sticky — body copy from the section below was legible across the title.
-      A background-color paints under a background-image, so the gradient is
-      now only the light and shade: a bright lip along the top, darkening to
-      the bottom, which is what Luna's title bars actually did.
-    */
     background-color: rgb(var(--c-accent));
     background-image: linear-gradient(
       180deg,
@@ -141,9 +144,9 @@
   }
 
   /*
-    2077's hazard tape. Used as a thin rule under the title bar, where XP had a
-    plain border — it is the clearest single signal that this is not actually
-    Windows.
+    2077's hazard tape, used as a rule where XP had a plain border. It is the
+    clearest single signal that this is not actually Windows. The strip has to
+    be at least ~6px tall or the diagonals read as dashes.
   */
   .xp-hazard {
     background-image: repeating-linear-gradient(
@@ -156,8 +159,8 @@
   /*
     CRT scanlines over the window body. Deliberately faint: this sits behind
     body copy, and the contrast floor (spec §8) is not negotiable for a
-    texture. It is a static gradient, not an animation, so reduced motion has
-    nothing to switch off.
+    texture. A static gradient, not an animation, so reduced motion has nothing
+    to switch off.
   */
   .xp-scanlines::after {
     content: '';
@@ -175,8 +178,8 @@
     The menu bar's access-key underline. Done with ::first-letter rather than by
     splitting the label into a marked span plus an sr-only copy: that version
     put three text nodes in every menu item and left the DOM reading
-    "AboutAbout" to anything that ignores aria-hidden. There is no real Alt+key
-    binding behind it, so it is decoration and belongs in CSS.
+    "AboutAbout". There is no real Alt+key binding behind it, so it is
+    decoration and belongs in CSS.
   */
   .xp-accesskey::first-letter {
     text-decoration: underline;
@@ -193,9 +196,9 @@
 }
 
 /*
-  The title bar's glitch. Two offset colour ghosts on a short, rare cycle —
-  long enough between passes that it reads as interference rather than as a
-  broken element. The blanket reduced-motion rule above neutralises it.
+  The title bar's glitch. Two offset colour ghosts on a rare cycle — long
+  enough between passes that it reads as interference rather than as a broken
+  element. The blanket reduced-motion rule below neutralises it.
 */
 @keyframes xp-glitch {
   0%,
@@ -219,9 +222,31 @@
 }
 
 /*
-  Global reduced-motion kill switch. The React components already branch on the
-  preference; this catches CSS-driven motion (smooth scroll, the marquee, and
-  any transition we add later) without a second code path.
+  Page transition. One short fade with a few pixels of travel, keyed off the
+  route in `SiteShell` — this is the whole animation budget for the site now,
+  and it is CSS rather than a library. framer-motion used to drive world
+  crossfades, card layout animation and modal choreography; none of that
+  survives, and dropping it took ~36kB gzipped with it.
+*/
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.page-enter {
+  animation: page-enter 220ms ease-out both;
+}
+
+/*
+  Global reduced-motion kill switch. Components branch on the preference where
+  behaviour differs; this catches everything CSS-driven — smooth scroll, the
+  marquee, the glitch, the page fade — without a second code path.
 */
 @media (prefers-reduced-motion: reduce) {
   html {

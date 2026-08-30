@@ -6,8 +6,8 @@ import type { Publication } from '@/types'
  * reorganised — the same reason `resume.pdf` lives in `public/assets`.
  *
  * `experienceId` ties a paper to the research position it came out of, so the
- * console can print the link inside `experience` rather than only under
- * `papers`.
+ * Experience page can show the institution's mark beside the paper without
+ * the logo being defined twice.
  */
 export const publications: Publication[] = [
   {
@@ -23,7 +23,7 @@ export const publications: Publication[] = [
     contribution:
       'Built the interactive application the study ran on at CMU’s HCI Institute, and iterated its features from usability testing across the workshops.',
     experienceId: 'cmu-reuse',
-    worlds: ['swe'],
+    track: ['swe'],
   },
   {
     id: 'transfer-systems',
@@ -37,10 +37,10 @@ export const publications: Publication[] = [
     contribution:
       'Wrote the C++ enumerator that counts every transfer system of a given finite poset — the count grows exponentially in the size of the set — and found the recursive relationship the formula is built on.',
     experienceId: 'ucla-sure',
-    worlds: ['swe'],
+    track: ['swe'],
   },
 ]
 
-/** Papers for a given world, matching `projectsForWorld`. */
-export const publicationsForWorld = (world: 'game' | 'swe') =>
-  publications.filter((p) => p.worlds.includes(world) || p.worlds.includes('both'))
+/** Papers on one side of the work, matching `projectsForTrack`. */
+export const publicationsForTrack = (track: 'game' | 'swe') =>
+  publications.filter((p) => p.track.includes(track) || p.track.includes('both'))

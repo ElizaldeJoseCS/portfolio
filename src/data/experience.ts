@@ -34,7 +34,7 @@ export const experience: ExperienceEntry[] = [
       'Run the team on Git branching and pull requests so multiple people can land gameplay features concurrently.',
     ],
     skills: ['Unity', 'C#', 'Game design', 'Git'],
-    worlds: ['game'],
+    track: ['game'],
     url: 'https://github.com/SRS-Jump-the-Gun/JumpTheGunUnityBuild',
     logo: UCLA,
   },
@@ -52,7 +52,7 @@ export const experience: ExperienceEntry[] = [
       'Co-authored a research paper accepted to CHI 2026 evaluating the application’s impact on user engagement and empathy.',
     ],
     skills: ['HCI', 'User research', 'Usability testing', 'Python'],
-    worlds: ['swe'],
+    track: ['swe'],
     logo: CMU,
   },
   {
@@ -69,7 +69,7 @@ export const experience: ExperienceEntry[] = [
       'Discovered a recursive relationship for the family of sets Xₙ⁺⁺, contributing to a co-authored paper presented at the University of Texas at Arlington.',
     ],
     skills: ['C++', 'Combinatorics', 'Algorithms', 'Research'],
-    worlds: ['swe'],
+    track: ['swe'],
     logo: UCLA,
   },
   {
@@ -84,7 +84,7 @@ export const experience: ExperienceEntry[] = [
       'Coursework: Data Structures and Algorithms, Networking Fundamentals, Distributed Systems, Operating Systems, Systems Programming, Computer Architecture, Discrete Mathematics, Object-Oriented C++.',
     ],
     skills: ['C++', 'Operating Systems', 'Distributed Systems', 'Networking'],
-    worlds: ['both'],
+    track: ['both'],
     logo: UCLA,
   },
   {
@@ -97,7 +97,7 @@ export const experience: ExperienceEntry[] = [
     kind: 'education',
     description: ['Graduated with a 3.92 / 4.00 GPA before transferring to UCLA.'],
     skills: ['Physics', 'Mathematics'],
-    worlds: ['both'],
+    track: ['both'],
     logo: PIERCE,
   },
 ]

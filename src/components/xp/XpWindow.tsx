@@ -80,8 +80,7 @@ export function XpWindow({
             Minimise / maximise / close. Ornament, not controls — there is no
             window to minimise and nothing sane for "close" to do on a portfolio
             landing. They are inert spans rather than disabled buttons so they
-            never take focus and never appear in the accessibility tree, exactly
-            like the traffic lights on the Engineer console's terminal.
+            never take focus and never appear in the accessibility tree.
           */}
           <span aria-hidden="true" className="flex shrink-0 items-center gap-1">
             {['–', '□', '✕'].map((glyph, i) => (

@@ -36,16 +36,23 @@ export default defineConfig({
     assetsDir: 'build',
     rollupOptions: {
       output: {
-        // Only the always-needed vendors get forced groups. three/drei/
-        // postprocessing are deliberately left alone so Rollup keeps them in
-        // the lazy chunks their dynamic imports create — forcing them into a
-        // named chunk pulls the whole WebGL stack onto the critical path.
+        /*
+          One vendor group. This used to also name a `motion` chunk and
+          deliberately leave three/drei/postprocessing unnamed so they stayed
+          in the lazy chunks their dynamic imports created; all four of those
+          packages are gone, and what is left is React plus the router, which
+          every page needs on first paint anyway.
+        */
         manualChunks(id) {
           if (!id.includes('node_modules')) return
-          if (id.includes('/react-dom/') || id.includes('/react/') || id.includes('/scheduler/'))
+          if (
+            id.includes('/react-dom/') ||
+            id.includes('/react/') ||
+            id.includes('/scheduler/') ||
+            id.includes('/react-router') ||
+            id.includes('/@remix-run/')
+          )
             return 'react'
-          if (id.includes('framer-motion') || id.includes('/motion-dom/') || id.includes('/motion-utils/'))
-            return 'motion'
         },
       },
     },

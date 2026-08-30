@@ -10,18 +10,18 @@ const monogram = (name: string) =>
     .toUpperCase()
 
 /**
- * Landing-only (see `WorldLayer` in App.tsx). The worlds are full-viewport
- * experiences you navigate rather than scroll to the bottom of, so a footer
- * there would either never be reached or would sit under the arena HUD.
+ * Sits below the window, on every page — the desktop under it, in effect.
+ *
+ * It repeats the social links the sidebar already has, which is deliberate:
+ * the sidebar is sticky chrome people learn to ignore, and the bottom of a
+ * page is where someone who has finished reading looks for a way to get in
+ * touch.
  */
 export function Footer() {
   return (
-    <footer className="xp-bevel border-x-0 border-b-0 bg-bg/60 backdrop-blur-md">
-      {/*
-        `pb-28` clears the landing's fixed taskbar, which is the last thing on
-        the page and would otherwise sit on top of the copyright row.
-      */}
-      <div className="mx-auto w-full max-w-6xl px-5 pb-28 pt-10 sm:px-8">
+    <footer className="xp-bevel border-x-0 border-b-0 bg-surface/60">
+      {/* Taskbar clearance is applied by `SiteShell`, which owns the layout. */}
+      <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="font-display text-lg font-bold tracking-[0.2em] text-fg">
@@ -39,9 +39,7 @@ export function Footer() {
           </div>
 
           <nav aria-label="Social links">
-            <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-muted/70">
-              Elsewhere
-            </h2>
+            <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-muted">Elsewhere</h2>
             <ul className="mt-4 flex flex-wrap gap-3">
               {profile.socials.map((social) => (
                 <li key={social.url}>
@@ -57,7 +55,7 @@ export function Footer() {
                     {...(social.url.startsWith('mailto:')
                       ? {}
                       : { target: '_blank', rel: 'noreferrer noopener' })}
-                    className="flex h-11 w-11 items-center justify-center rounded-world border border-line/70 bg-surface/60 text-muted transition-colors hover:border-accent/70 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                    className="flex h-11 w-11 items-center justify-center xp-bevel bg-surfaceAlt text-muted transition-colors hover:border-accent/70 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                   >
                     <SocialIcon name={social.icon} className="h-5 w-5" />
                   </a>
@@ -69,7 +67,7 @@ export function Footer() {
 
         <div className="mt-10 flex flex-col gap-3 border-t border-line/50 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-mono text-xs text-muted">
-            © {new Date().getFullYear()} {profile.name}. Built with React Three Fiber.
+            © {new Date().getFullYear()} {profile.name}. Built with React and Vite.
           </p>
           {profile.resumeUrl && (
             <a

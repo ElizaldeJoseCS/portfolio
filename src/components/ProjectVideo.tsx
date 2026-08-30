@@ -2,8 +2,7 @@ import { cn } from '@/lib/cn'
 import type { ProjectMedia } from '@/types'
 
 /**
- * A gameplay clip. Shared by the project modal and the arena's shell panel so
- * both views frame it identically (content parity, spec §6.3).
+ * A gameplay clip, shown inside an expanded project card.
  *
  * `preload="metadata"` with a poster is deliberate, and matches `ProjectEmbed`:
  * nothing but the still is fetched until the visitor presses play. These clips

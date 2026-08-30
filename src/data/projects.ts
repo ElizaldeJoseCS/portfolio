@@ -1,12 +1,12 @@
 import type { Project } from '@/types'
 
 /**
- * `worlds` is what splits the site in two: the Engineer console lists only
- * `swe` entries, and the Game world's grid shows the `game` ones.
+ * `track` is what the Projects page filters on: 'swe', 'game', or 'both' to
+ * appear under either.
  *
- * `details` is the long form. The console prints it under `open <project>` and
- * the modal renders it under the summary, so adding depth to a project is a
- * data edit here — never a component change.
+ * `details` is the long form, rendered under the summary when a card is
+ * expanded — so adding depth to a project is a data edit here, never a
+ * component change.
  */
 export const projects: Project[] = [
   // ---------------------------------------------------------------- software
@@ -47,7 +47,7 @@ export const projects: Project[] = [
         body: 'Editorial generation is synchronous with the daily job, so a failure leaves a gap for that day rather than retrying on its own — a queue would fix that. The difficulty tiers are also fixed bands rather than adapting to how the person is actually doing, which is the obvious next thing to build.',
       },
     ],
-    worlds: ['swe'],
+    track: ['swe'],
     tags: ['Full-stack', 'Competitive Programming', 'Discord Bot'],
     techStack: [
       'Next.js 14',
@@ -107,7 +107,7 @@ export const projects: Project[] = [
         body: 'Both services run on a DigitalOcean Linux VPS wrapped in systemd units, so they restart on crash and come back after a reboot without anyone logging in. That is the difference between a project that works on my machine and one that is still answering commands a month later.',
       },
     ],
-    worlds: ['swe'],
+    track: ['swe'],
     tags: ['C++', 'Backend', 'Quant', 'Discord Bot'],
     techStack: ['C++', 'D++', 'Python', 'FastAPI', 'pandas', 'yfinance', 'systemd', 'DigitalOcean'],
     role: 'Solo',
@@ -141,7 +141,7 @@ export const projects: Project[] = [
         body: 'It is the smallest project on this list and the one that taught the most about the layer under the abstraction. Everything else I write sits on a stack that has already solved timing for me.',
       },
     ],
-    worlds: ['swe'],
+    track: ['swe'],
     tags: ['Embedded', 'Firmware', 'Hardware'],
     techStack: ['C++', 'Arduino', 'PWM', 'Circuit design'],
     role: 'Solo',
@@ -170,7 +170,7 @@ export const projects: Project[] = [
         ],
       },
     ],
-    worlds: ['game'],
+    track: ['game'],
     tags: ['Game Jam', 'Action', 'Team of 5'],
     techStack: ['Unity', 'C#', 'HTML5'],
     role: 'Gameplay Programmer',
@@ -205,7 +205,7 @@ export const projects: Project[] = [
     description:
       'A single-player first-person action shooter in development at UCLA ACM Studio SRS, the student-run studio, where I am Game Director. The narrative follows a father tearing through his former mob boss’s organisation to get his kidnapped daughter back, and the combat is built to match that tone — close, fast and desperate rather than tactical. I lead the design and coordinate implementation across the team, and I wrote the custom physics-based movement controller in C#, replacing Unity’s built-in character controller with hand-written movement and collision logic so the feel is ours rather than the engine’s default. The team works through Git branching and pull requests so several people can land gameplay features in parallel. Still in active development.',
     status: 'In active development at UCLA ACM Studio SRS',
-    worlds: ['game'],
+    track: ['game'],
     tags: ['Unity', 'FPS', 'Game Direction', 'In development'],
     techStack: ['Unity', 'C#', 'HLSL', 'ShaderLab', 'Git'],
     role: 'Game Director',
@@ -239,6 +239,6 @@ export const projects: Project[] = [
   },
 ]
 
-/** Projects for a given world. The Engineer console is `swe`-only by design. */
-export const projectsForWorld = (world: 'game' | 'swe') =>
-  projects.filter((p) => p.worlds.includes(world) || p.worlds.includes('both'))
+/** Projects on one side of the work; 'both' entries always come along. */
+export const projectsForTrack = (track: 'game' | 'swe') =>
+  projects.filter((p) => p.track.includes(track) || p.track.includes('both'))
