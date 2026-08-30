@@ -16,8 +16,12 @@ const monogram = (name: string) =>
  */
 export function Footer() {
   return (
-    <footer className="border-t border-line/60 bg-bg/60 backdrop-blur-md">
-      <div className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8">
+    <footer className="xp-bevel border-x-0 border-b-0 bg-bg/60 backdrop-blur-md">
+      {/*
+        `pb-28` clears the landing's fixed taskbar, which is the last thing on
+        the page and would otherwise sit on top of the copyright row.
+      */}
+      <div className="mx-auto w-full max-w-6xl px-5 pb-28 pt-10 sm:px-8">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="font-display text-lg font-bold tracking-[0.2em] text-fg">

@@ -12,24 +12,48 @@ const FONT_DISPLAY_GAME = "'Chakra Petch', 'Rajdhani', system-ui, sans-serif"
 const FONT_DISPLAY_ENG = "'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif"
 const FONT_MONO = "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace"
 
+/*
+  The landing's body face is the one Windows actually shipped its UI in. It is
+  a system stack on purpose — no extra webfont, and on a Windows machine the
+  chrome renders in the genuine article. Verdana and DejaVu Sans cover macOS
+  and Linux with the same wide, slightly clumsy proportions.
+
+  Display stays Chakra Petch: XP supplies the geometry of this landing, 2077
+  supplies the palette and the type. Already loaded for the Game World, so it
+  costs nothing new.
+*/
+const FONT_BODY_XP = "Tahoma, Verdana, 'DejaVu Sans', Geneva, sans-serif"
+
 export const themes: Record<ThemeName, Theme> = {
   landing: {
     name: 'landing',
     label: 'Landing',
-    // Neutral ground: a violet/cyan pair that belongs to neither world but
-    // rhymes with both, so entering either one reads as a shift, not a jolt.
-    accent: '167 139 250',
-    accentAlt: '103 232 249',
-    bg: '10 10 18',
-    fg: '240 240 250',
-    muted: '160 160 184',
-    surface: '20 20 32',
-    surfaceAlt: '28 28 44',
-    line: '64 64 92',
-    fontDisplay: FONT_DISPLAY_ENG,
-    fontBody: FONT_DISPLAY_ENG,
+    /*
+      Cyberpunk 2077's hazard yellow against its cyan, on near-black. It reads
+      as neither world — the Game World is magenta, the Engineer World green —
+      so entering either one is still a shift. The yellow is also what carries
+      the XP chrome: a title bar gradient needs a saturated hue to look like a
+      title bar rather than a rule, and this one clears 15:1 on the ground.
+    */
+    accent: '252 238 10',
+    accentAlt: '0 240 255',
+    bg: '8 8 12',
+    fg: '235 238 245',
+    muted: '150 156 170',
+    surface: '18 18 24',
+    surfaceAlt: '26 27 36',
+    line: '72 76 92',
+    fontDisplay: FONT_DISPLAY_GAME,
+    fontBody: FONT_BODY_XP,
     fontMono: FONT_MONO,
-    radius: '14px',
+    /*
+      Square. Every shared component (Chip, LinkButton, Card) reads
+      `--radius-world`, so dropping it to 0 puts the whole landing on hard
+      corners without touching one of them — which is what both halves of this
+      reference want. XP's own rounding lives only on the window's top corners,
+      applied there directly.
+    */
+    radius: '0px',
     motionSpring: { type: 'spring', stiffness: 260, damping: 26, mass: 0.85 },
     preserveDarkLight: false,
   },

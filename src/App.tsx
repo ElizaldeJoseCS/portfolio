@@ -101,6 +101,18 @@ function Shell() {
   // background lives on <body> in styles/globals.css.
   return (
     <div className="relative min-h-screen text-fg">
+      {/*
+        Lives here rather than in `NavBar`, which returns null in the door room
+        and on the landing (that stage renders its own window chrome). A skip
+        link that disappears on two of the three stages is worse than none.
+      */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-world focus:bg-accent focus:px-4 focus:py-3 focus:font-display focus:text-bg"
+      >
+        Skip to content
+      </a>
+
       {/* `null` means "still detecting" — render nothing rather than flash. */}
       {webgl === true && (
         <Suspense fallback={null}>

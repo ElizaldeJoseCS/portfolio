@@ -80,6 +80,145 @@
 }
 
 /*
+  ============================================================================
+  Windows XP chrome, in Cyberpunk 2077 colours (landing only).
+  ============================================================================
+
+  These are the primitives the landing's window frame is built from. They live
+  in CSS rather than in Tailwind classes because a bevel is four different
+  border colours at once, which is unreadable inline and identical everywhere
+  it is used.
+
+  Every colour here is a token reference, never a literal — the rule in
+  lib/theme.ts holds. That is also what lets the same chrome inherit whichever
+  palette is active, though in practice only the landing renders it.
+*/
+@layer components {
+  /*
+    The raised bevel: light on the top-left, dark on the bottom-right. This is
+    the single gesture that makes a flat rectangle read as a 2001 UI control.
+    Two pixels, because one reads as a plain border and three reads as a toy.
+  */
+  .xp-bevel {
+    border: 2px solid;
+    border-top-color: rgb(var(--c-fg) / 0.28);
+    border-left-color: rgb(var(--c-fg) / 0.28);
+    border-right-color: rgb(var(--c-bg));
+    border-bottom-color: rgb(var(--c-bg));
+  }
+
+  /* Pressed / inset: the same bevel with the light source flipped. */
+  .xp-bevel-in {
+    border: 2px solid;
+    border-top-color: rgb(var(--c-bg));
+    border-left-color: rgb(var(--c-bg));
+    border-right-color: rgb(var(--c-fg) / 0.28);
+    border-bottom-color: rgb(var(--c-fg) / 0.28);
+  }
+
+  /*
+    Luna's title bar was a vertical gradient with a bright top lip. Same
+    construction, accent hue — the lip is what stops it looking like a flat
+    coloured band.
+  */
+  .xp-titlebar {
+    /*
+      Opaque base, shading on top. Building the whole bar out of translucent
+      accent stops let the page scroll visibly through it once the bar went
+      sticky — body copy from the section below was legible across the title.
+      A background-color paints under a background-image, so the gradient is
+      now only the light and shade: a bright lip along the top, darkening to
+      the bottom, which is what Luna's title bars actually did.
+    */
+    background-color: rgb(var(--c-accent));
+    background-image: linear-gradient(
+      180deg,
+      rgb(var(--c-fg) / 0.4) 0%,
+      rgb(var(--c-fg) / 0.05) 9%,
+      rgb(var(--c-bg) / 0.06) 50%,
+      rgb(var(--c-bg) / 0.28) 100%
+    );
+  }
+
+  /*
+    2077's hazard tape. Used as a thin rule under the title bar, where XP had a
+    plain border — it is the clearest single signal that this is not actually
+    Windows.
+  */
+  .xp-hazard {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgb(var(--c-accent)) 0 7px,
+      rgb(var(--c-bg)) 7px 14px
+    );
+  }
+
+  /*
+    CRT scanlines over the window body. Deliberately faint: this sits behind
+    body copy, and the contrast floor (spec §8) is not negotiable for a
+    texture. It is a static gradient, not an animation, so reduced motion has
+    nothing to switch off.
+  */
+  .xp-scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      180deg,
+      rgb(var(--c-accent-alt) / 0.035) 0 1px,
+      transparent 1px 3px
+    );
+  }
+
+  /*
+    The menu bar's access-key underline. Done with ::first-letter rather than by
+    splitting the label into a marked span plus an sr-only copy: that version
+    put three text nodes in every menu item and left the DOM reading
+    "AboutAbout" to anything that ignores aria-hidden. There is no real Alt+key
+    binding behind it, so it is decoration and belongs in CSS.
+  */
+  .xp-accesskey::first-letter {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /*
+    2077 clips its corners rather than rounding them. One notch, bottom-right,
+    on the things that are meant to read as actionable.
+  */
+  .xp-notch {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  }
+}
+
+/*
+  The title bar's glitch. Two offset colour ghosts on a short, rare cycle —
+  long enough between passes that it reads as interference rather than as a
+  broken element. The blanket reduced-motion rule above neutralises it.
+*/
+@keyframes xp-glitch {
+  0%,
+  92%,
+  100% {
+    transform: translate(0);
+    opacity: 0;
+  }
+  93% {
+    transform: translate(-2px, 1px);
+    opacity: 0.75;
+  }
+  95% {
+    transform: translate(2px, -1px);
+    opacity: 0.6;
+  }
+  97% {
+    transform: translate(-1px, 0);
+    opacity: 0.5;
+  }
+}
+
+/*
   Global reduced-motion kill switch. The React components already branch on the
   preference; this catches CSS-driven motion (smooth scroll, the marquee, and
   any transition we add later) without a second code path.

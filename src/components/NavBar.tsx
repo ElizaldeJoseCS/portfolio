@@ -14,18 +14,6 @@ const SECTIONS = [
   { id: 'contact', label: 'Contact' },
 ]
 
-/**
- * The landing's own anchors. It is one long page — bio, papers, then the two
- * doors — and without these the bar carried a monogram and nothing else.
- * Distinct ids from SECTIONS on purpose: both layers are briefly in the DOM
- * during a world crossfade, and duplicate anchors would be ambiguous.
- */
-const LANDING_SECTIONS = [
-  { id: 'about-me', label: 'About' },
-  { id: 'research', label: 'Research' },
-  { id: 'worlds', label: 'Worlds' },
-]
-
 const monogram = (name: string) =>
   name
     .split(' ')
@@ -44,7 +32,6 @@ export function NavBar() {
   // exist.
   const showSectionLinks = inWorld && world === 'game' && !arenaActive
   const showConsoleHint = inWorld && world === 'engineer'
-  const showLandingLinks = stage === 'landing'
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState<string>('')
@@ -58,9 +45,8 @@ export function NavBar() {
 
   // Highlight the section currently under the sticky nav.
   useEffect(() => {
-    if (!showSectionLinks && !showLandingLinks) return
-    const list = showLandingLinks ? LANDING_SECTIONS : SECTIONS
-    const targets = list
+    if (!showSectionLinks) return
+    const targets = SECTIONS
       .map((s) => document.getElementById(s.id))
       .filter((el): el is HTMLElement => Boolean(el))
     if (!targets.length) return
@@ -75,7 +61,7 @@ export function NavBar() {
     )
     targets.forEach((t) => io.observe(t))
     return () => io.disconnect()
-  }, [showSectionLinks, showLandingLinks, world, stage, arenaActive])
+  }, [showSectionLinks, world, stage, arenaActive])
 
   // Switching worlds from inside the mobile menu should reveal the world you
   // just picked, not leave the overlay covering it.
@@ -96,18 +82,19 @@ export function NavBar() {
     }
   }, [open])
 
-  // The intro room is a threshold, not a page: no chrome over it.
-  if (inDoor) return null
+  /*
+    The intro room is a threshold, not a page: no chrome over it.
+
+    The landing is skipped for a different reason — it renders its own window
+    chrome (`XpWindow`), whose title bar and menu bar are sticky and carry the
+    same anchors this bar used to. Stacking this above it put three rows of
+    chrome on screen before any content. The skip link lives in `App`'s shell
+    so it survives both of these early returns.
+  */
+  if (inDoor || stage === 'landing') return null
 
   return (
     <>
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-world focus:bg-accent focus:px-4 focus:py-3 focus:font-display focus:text-bg"
-      >
-        Skip to content
-      </a>
-
       <header
         className={cn(
           'fixed inset-x-0 top-0 z-50 transition-colors duration-300',
@@ -171,30 +158,6 @@ export function NavBar() {
           )}
 
           <div className="ml-auto flex items-center gap-1 sm:gap-3">
-            {/*
-              Right-aligned rather than beside the monogram: the landing has no
-              world switcher to balance against, so anchoring the links to the
-              far edge keeps the bar from sitting all in one corner.
-            */}
-            {showLandingLinks && (
-              <ul className="hidden items-center gap-1 sm:flex">
-                {LANDING_SECTIONS.map((s) => (
-                  <li key={s.id}>
-                    <a
-                      href={`#${s.id}`}
-                      aria-current={active === s.id ? 'true' : undefined}
-                      className={cn(
-                        'inline-flex min-h-[44px] items-center rounded-world px-3 font-display text-sm transition-colors',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-                        active === s.id ? 'text-accent' : 'text-muted hover:text-fg',
-                      )}
-                    >
-                      {s.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
             {inWorld && <WorldSwitcher className="hidden sm:flex" />}
             <button
               type="button"
@@ -205,7 +168,7 @@ export function NavBar() {
               className={cn(
                 'inline-flex h-11 w-11 items-center justify-center rounded-world border border-line/80 text-fg transition-colors',
                 'hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-                showLandingLinks ? 'sm:hidden' : 'lg:hidden',
+                'lg:hidden',
               )}
             >
               <span aria-hidden="true" className="relative block h-4 w-5">
@@ -251,29 +214,6 @@ export function NavBar() {
                 command button and press Enter.
               </p>
             )}
-            {showLandingLinks && (
-              <ul className="flex flex-col gap-1">
-                {LANDING_SECTIONS.map((s, i) => (
-                  <motion.li
-                    key={s.id}
-                    initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={
-                      reducedMotion ? { duration: 0.1 } : { ...theme.motionSpring, delay: i * 0.04 }
-                    }
-                  >
-                    <a
-                      href={`#${s.id}`}
-                      onClick={() => setOpen(false)}
-                      className="flex min-h-[56px] items-center border-b border-line/50 font-display text-2xl text-fg transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                    >
-                      {s.label}
-                    </a>
-                  </motion.li>
-                ))}
-              </ul>
-            )}
-
             {showSectionLinks && (
               <ul className="flex flex-col gap-1">
                 {SECTIONS.map((s, i) => (
