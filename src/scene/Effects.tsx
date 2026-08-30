@@ -20,7 +20,15 @@ export function Effects({ transitionAmount }: EffectsProps) {
   )
 
   return (
-    <EffectComposer multisampling={0} enableNormalPass={false}>
+    /*
+      `multisampling` here, not on the Canvas. The scene never reaches the
+      default framebuffer once a post chain exists, so this is the only place
+      antialiasing can actually happen — and with it at 0 the neon grid lines
+      were rendering with no AA at all while the canvas paid for an MSAA
+      buffer it never used. 2 samples is enough for thin emissive lines and
+      costs a fraction of the 4 the backbuffer was allocating.
+    */
+    <EffectComposer multisampling={2} enableNormalPass={false}>
       {/* Modest: bloom is the "stunning" beat, but it sits behind body copy,
           so the threshold stays high enough that only emissive cores flare. */}
       <Bloom

@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { ReactNode } from 'react'
 import type { DoorState, QualityTier, Stage, Theme, World } from '@/types'
 import { applyThemeVars, otherWorld, themes } from './theme'
+import { probeGpu } from './gpu'
 import { useQualityTier, type QualityState } from '@/hooks/useQualityTier'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
 
@@ -25,17 +26,7 @@ function shouldShowDoor(): boolean {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false
 
   // A dark room with a door is pointless without WebGL to draw it.
-  try {
-    const canvas = document.createElement('canvas')
-    const gl = (canvas.getContext('webgl2') || canvas.getContext('webgl')) as
-      | WebGLRenderingContext
-      | null
-    if (!gl) return false
-    gl.getExtension('WEBGL_lose_context')?.loseContext()
-  } catch {
-    return false
-  }
-  return true
+  return probeGpu().supported
 }
 /** Must stay in step with the crossfade duration in SceneContainer (spec §13). */
 export const WORLD_TRANSITION_MS = 400
@@ -103,19 +94,16 @@ export function WorldProvider({ children }: { children: ReactNode }) {
     [setWorld, world],
   )
 
-  const enterWorld = useCallback(
-    (next: World) => {
-      setIsTransitioning(true)
-      setStage('world')
-      setWorldState(next)
-      try {
-        window.localStorage.setItem(WORLD_STORAGE_KEY, next)
-      } catch {
-        // Ignore storage failures — entering still works.
-      }
-    },
-    [],
-  )
+  const enterWorld = useCallback((next: World) => {
+    setIsTransitioning(true)
+    setStage('world')
+    setWorldState(next)
+    try {
+      window.localStorage.setItem(WORLD_STORAGE_KEY, next)
+    } catch {
+      // Ignore storage failures — entering still works.
+    }
+  }, [])
 
   const goToLanding = useCallback(() => {
     setIsTransitioning(true)

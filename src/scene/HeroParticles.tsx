@@ -41,11 +41,16 @@ export function HeroParticles() {
 
   const pointer = useRef(new THREE.Vector2())
   const targetBlend = world === 'engineer' ? 1 : 0
+  const points = useRef<THREE.Points>(null)
 
   useEffect(() => {
     material.uniforms.uPixelRatio.value = viewport.dpr
     material.uniforms.uMotion.value = reducedMotion ? 0 : 1
     material.uniforms.uSize.value = quality.tier === 'high' ? 1.0 : 1.35
+    // The low tier draws a third of the sprites, so each one is allowed to be
+    // larger to keep the field looking like a field — the fragment budget
+    // still comes out well ahead.
+    material.uniforms.uMaxSize.value = quality.tier === 'high' ? 22 : 26
   }, [material, viewport.dpr, reducedMotion, quality.tier])
 
   useFrame((state, delta) => {
@@ -70,6 +75,14 @@ export function HeroParticles() {
       dt,
     )
 
+    /*
+      Once that damp has bottomed out the field is invisible but still being
+      rasterised — thousands of additively blended sprites drawn over the
+      Engineer room for nothing. Stop submitting the draw call; the geometry
+      and the compiled program both stay, so coming back is free.
+    */
+    if (points.current) points.current.visible = u.uOpacity.value > 0.004
+
     // World blend + colour lerp: this is what makes the switch feel continuous.
     u.uBlend.value = THREE.MathUtils.damp(u.uBlend.value, targetBlend, 6, dt)
     u.uAccent.value.lerp(colors.accent, 1 - Math.pow(0.005, dt))
@@ -77,7 +90,7 @@ export function HeroParticles() {
   })
 
   return (
-    <points frustumCulled={false}>
+    <points ref={points} frustumCulled={false}>
       <primitive object={geometry} attach="geometry" />
       <primitive object={material} attach="material" />
     </points>

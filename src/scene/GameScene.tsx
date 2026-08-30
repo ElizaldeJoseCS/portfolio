@@ -27,19 +27,23 @@ export function GameScene({ opacity }: { opacity: number }) {
   return (
     <group ref={group}>
       <ambientLight intensity={0.35} />
-      <directionalLight
-        position={[6, 10, 4]}
-        intensity={1.5}
-        color={colors.accentAlt}
-        castShadow={quality.shadows}
-      />
+      {/*
+        No `castShadow`. The <Canvas> never sets `shadows`, so `gl.shadowMap`
+        is off and every `castShadow` in here was inert — the quality tier had
+        a `shadows` flag that switched nothing. The look does not want them
+        either: this scene is lit by emissive neon, and a shadow map over a
+        120-unit floor plane would cost more than everything else in the frame.
+      */}
+      <directionalLight position={[6, 10, 4]} intensity={1.5} color={colors.accentAlt} />
       <pointLight position={[-6, 3, -4]} intensity={30} color={colors.accent} distance={30} />
 
       <GridFloor opacity={opacity} />
       <Rover opacity={opacity} />
       <PossessionHub opacity={opacity} />
       <FloatingProps opacity={opacity} count={quality.tier === 'high' ? 7 : 4} />
-      {!reducedMotion && <Starfield opacity={opacity} count={quality.tier === 'high' ? 900 : 320} />}
+      {!reducedMotion && (
+        <Starfield opacity={opacity} count={quality.tier === 'high' ? 900 : 320} />
+      )}
     </group>
   )
 }
@@ -227,7 +231,7 @@ function Rover({ opacity }: { opacity: number }) {
   return (
     <group>
       <group ref={body} position={[0, -1.6, 0]}>
-        <mesh castShadow>
+        <mesh>
           <icosahedronGeometry args={[0.85, 1]} />
           {/*
             `toneMapped={false}` keeps the neon saturated — ACES tone mapping
@@ -283,7 +287,11 @@ function FloatingProps({ opacity, count }: { opacity: number; count: number }) {
         // Beyond the shell ring (8.5–10.1) so they never crowd an interactable.
         const radius = 15 + (i % 3) * 2.4
         return {
-          position: [Math.cos(angle) * radius, -0.4 + (i % 4) * 1.15, Math.sin(angle) * radius] as const,
+          position: [
+            Math.cos(angle) * radius,
+            -0.4 + (i % 4) * 1.15,
+            Math.sin(angle) * radius,
+          ] as const,
           scale: 0.45 + ((i * 37) % 60) / 100,
           kind: i % 3,
           phase: i * 0.7,
@@ -307,7 +315,7 @@ function FloatingProps({ opacity, count }: { opacity: number; count: number }) {
   return (
     <group ref={group}>
       {props.map((p, i) => (
-        <mesh key={i} position={p.position} scale={p.scale} castShadow>
+        <mesh key={i} position={p.position} scale={p.scale}>
           {p.kind === 0 ? (
             <boxGeometry args={[1, 1, 1]} />
           ) : p.kind === 1 ? (

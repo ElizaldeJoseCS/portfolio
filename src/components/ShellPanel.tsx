@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { shellContent, useHub } from '@/lib/hub-context'
 import { useWorld } from '@/lib/world-context'
+import { cn } from '@/lib/cn'
 import { Chip, LinkButton } from './ui'
 import { ProjectVideo } from './ProjectVideo'
 import { ProjectEmbed } from './ProjectEmbed'
@@ -24,7 +25,7 @@ const fmtDate = (v: string) => {
  */
 export function ShellPanel() {
   const { shells, possessedId, release } = useHub()
-  const { reducedMotion, theme } = useWorld()
+  const { reducedMotion, theme, quality } = useWorld()
   const panelRef = useRef<HTMLDivElement>(null)
   const restoreTo = useRef<HTMLElement | null>(null)
 
@@ -76,8 +77,17 @@ export function ShellPanel() {
           exit={{ opacity: 0 }}
           transition={{ duration: reducedMotion ? 0.001 : 0.2 }}
         >
+          {/*
+            Full-viewport, and its backdrop is the arena still animating
+            underneath — the most expensive blur on the site. Dropped to a
+            plain scrim off the high tier; at 95% over a dark scene the
+            difference is barely visible and the frame cost is not.
+          */}
           <div
-            className="absolute inset-0 bg-bg/80 backdrop-blur-md"
+            className={cn(
+              'absolute inset-0',
+              quality.blur ? 'bg-bg/80 backdrop-blur-md' : 'bg-bg/95',
+            )}
             onClick={release}
             aria-hidden="true"
           />

@@ -43,7 +43,21 @@ export function SceneContainer() {
       <Canvas
         className="!pointer-events-auto"
         dpr={quality.dpr}
-        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        /*
+          MSAA on the default framebuffer is worth paying for only when we draw
+          into it directly. With a post chain the scene is rendered into the
+          composer's own targets and the backbuffer receives one fullscreen
+          quad, so a multisampled backbuffer antialiased nothing and still cost
+          a resolve every frame — an ANGLE/D3D11 resolve on Windows, where this
+          site is slowest. The composer does the antialiasing instead (see
+          `Effects`). R3F reads `gl` once at mount, so this is fixed for the
+          session even if the tier degrades later.
+        */
+        gl={{
+          antialias: !quality.postProcessing,
+          alpha: true,
+          powerPreference: 'high-performance',
+        }}
         camera={{ position: [0, 0, 8], fov: 60 }}
         // Nothing here needs a persistent framebuffer between frames.
         frameloop={reducedMotion ? 'demand' : 'always'}

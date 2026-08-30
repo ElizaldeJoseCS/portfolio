@@ -13,6 +13,7 @@ const vertexShader = /* glsl */ `
   uniform float uTime;
   uniform vec2  uMouse;
   uniform float uSize;
+  uniform float uMaxSize;    // sprite cap in CSS pixels, set by the quality tier
   uniform float uBlend;      // 0 = game world, 1 = engineer world
   uniform float uPixelRatio;
   uniform float uMotion;     // 0 under prefers-reduced-motion
@@ -57,12 +58,42 @@ const vertexShader = /* glsl */ `
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mvPosition;
 
+    // The name depth is already taken by the parallax term above; this one is
+    // the distance from the camera in view space.
+    float viewDepth = -mvPosition.z;
+
+    /*
+      Fade at both ends.
+
+      Far is the depth cue it always was — written as 1.0 - smoothstep(lo, hi)
+      because smoothstep with edge0 > edge1 is undefined in GLSL, however
+      reliably drivers happen to handle it.
+
+      Near is new, and it is a fill-rate measure. In the arena the chase camera
+      flies *inside* this cloud (radius 5.5–11, camera ~10 units out), so a
+      large share of the field sits a couple of units from the lens, where
+      every sprite clamps to the size cap. Those are simultaneously the most
+      expensive fragments on screen and the ugliest — hand-sized blobs sliding
+      over the body copy.
+    */
+    float fadeFar  = 1.0 - smoothstep(4.0, 26.0, viewDepth);
+    float fadeNear = smoothstep(1.5, 6.5, viewDepth);
+    vFade = fadeFar * fadeNear;
+
     // Distance attenuation, capped hard: oversized points wash out the DOM
     // text sitting on top of the canvas.
-    float attenuation = 90.0 / max(-mvPosition.z, 0.001);
-    gl_PointSize = min(uSize * aScale * attenuation * uPixelRatio, 26.0 * uPixelRatio);
+    float attenuation = 90.0 / max(viewDepth, 0.001);
+    gl_PointSize = min(uSize * aScale * attenuation, uMaxSize) * uPixelRatio;
 
-    vFade = smoothstep(26.0, 4.0, -mvPosition.z);
+    /*
+      An invisible sprite still rasterises every fragment it covers, and this
+      shader discards, which costs the fragment its early-Z. Push the vertex
+      outside the clip volume instead so it produces nothing at all — setting
+      gl_PointSize to 0 would not, since implementations clamp point size to
+      ALIASED_POINT_SIZE_RANGE, whose minimum is typically 1.
+    */
+    if (vFade < 0.01) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
+
     vMix = hash(aSeed);
   }
 `
@@ -97,6 +128,7 @@ export interface HeroParticleUniforms {
   uTime: THREE.IUniform<number>
   uMouse: THREE.IUniform<THREE.Vector2>
   uSize: THREE.IUniform<number>
+  uMaxSize: THREE.IUniform<number>
   uBlend: THREE.IUniform<number>
   uPixelRatio: THREE.IUniform<number>
   uMotion: THREE.IUniform<number>
@@ -116,6 +148,7 @@ export function createHeroParticleMaterial() {
       uTime: { value: 0 },
       uMouse: { value: new THREE.Vector2(0, 0) },
       uSize: { value: 1.0 },
+      uMaxSize: { value: 22 },
       uBlend: { value: 0 },
       uPixelRatio: { value: 1 },
       uMotion: { value: 1 },
