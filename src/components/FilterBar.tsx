@@ -1,41 +1,42 @@
 import { cn } from '@/lib/cn'
-import type { TrackFilterValue } from '@/lib/track'
-
-const OPTIONS: { value: TrackFilterValue; label: string }[] = [
-  { value: 'all', label: 'All' },
-  { value: 'swe', label: 'Software' },
-  { value: 'game', label: 'Games' },
-]
+import type { FilterOption } from '@/lib/filters'
 
 /**
- * All / Software / Games, as an XP toolbar of toggle buttons.
+ * A row of toggle buttons that narrows the list below it, as an XP toolbar.
  *
- * This is what is left of the two worlds: the split was a wall between them,
- * and it is a filter now. Nothing is ever hidden from someone who does not
- * touch it — "All" is the default and every item stays reachable — but a
- * reader who only cares about the systems work can say so in one click.
+ * Generic over its options because the pages filter on different axes: the
+ * Projects and About pages split by track (All / Software / Games), the
+ * Experience page by area (All / Research / Education / Other). It used to
+ * hardcode the track options, which meant a second axis needed a second
+ * near-identical component.
+ *
+ * Whatever the axis, `All` is always first and always the default. Nothing is
+ * hidden from someone who never touches the control.
  *
  * Buttons with `aria-pressed` rather than radios: these filter a list in place
  * rather than submitting a choice, and pressed-state buttons are what a
  * toolbar is.
  */
-export function TrackFilter({
+export function FilterBar<T extends string>({
   value,
   onChange,
   label,
+  options,
   counts,
 }: {
-  value: TrackFilterValue
-  onChange: (next: TrackFilterValue) => void
+  value: T
+  onChange: (next: T) => void
   /** Names the group for assistive tech, e.g. "Filter projects". */
   label: string
+  options: readonly FilterOption<T>[]
   /** Optional per-option totals, shown in the button. */
-  counts?: Record<TrackFilterValue, number>
+  counts?: Partial<Record<T, number>>
 }) {
   return (
     <div role="group" aria-label={label} className="mb-5 flex flex-wrap items-center gap-1.5">
-      {OPTIONS.map((option) => {
+      {options.map((option) => {
         const active = option.value === value
+        const count = counts?.[option.value]
         return (
           <button
             key={option.value}
@@ -51,9 +52,9 @@ export function TrackFilter({
             )}
           >
             {option.label}
-            {counts && (
+            {typeof count === 'number' && (
               <span aria-hidden="true" className="text-[11px] text-muted">
-                {counts[option.value]}
+                {count}
               </span>
             )}
           </button>

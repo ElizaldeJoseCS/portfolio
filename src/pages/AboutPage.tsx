@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react'
 import { profile, skills } from '@/data'
 import { PageHeading, Chip } from '@/components/ui'
 import { SkillsList } from '@/components/SkillsList'
-import { TrackFilter } from '@/components/TrackFilter'
-import { matchesTrack, type TrackFilterValue } from '@/lib/track'
+import { FilterBar } from '@/components/FilterBar'
+import { matchesTrack, TRACK_OPTIONS, type TrackFilterValue } from '@/lib/filters'
 
 export function AboutPage() {
   const [filter, setFilter] = useState<TrackFilterValue>('all')
@@ -56,7 +56,13 @@ export function AboutPage() {
         <PageHeading lead="Bars are a rough self-assessment, not a certification.">
           Skills
         </PageHeading>
-        <TrackFilter value={filter} onChange={setFilter} label="Filter skills" counts={counts} />
+        <FilterBar
+          value={filter}
+          onChange={setFilter}
+          label="Filter skills"
+          options={TRACK_OPTIONS}
+          counts={counts}
+        />
         <SkillsList groups={filtered} />
       </section>
     </>

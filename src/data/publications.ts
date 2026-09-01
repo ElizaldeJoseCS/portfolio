@@ -23,7 +23,6 @@ export const publications: Publication[] = [
     contribution:
       'Built the interactive application the study ran on at CMU’s HCI Institute, and iterated its features from usability testing across the workshops.',
     experienceId: 'cmu-reuse',
-    track: ['swe'],
   },
   {
     id: 'transfer-systems',
@@ -37,10 +36,5 @@ export const publications: Publication[] = [
     contribution:
       'Wrote the C++ enumerator that counts every transfer system of a given finite poset — the count grows exponentially in the size of the set — and found the recursive relationship the formula is built on.',
     experienceId: 'ucla-sure',
-    track: ['swe'],
   },
 ]
-
-/** Papers on one side of the work, matching `projectsForTrack`. */
-export const publicationsForTrack = (track: 'game' | 'swe') =>
-  publications.filter((p) => p.track.includes(track) || p.track.includes('both'))

@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react'
 import { projects } from '@/data'
 import { PageHeading } from '@/components/ui'
 import { ProjectCard } from '@/components/ProjectCard'
-import { TrackFilter } from '@/components/TrackFilter'
-import { matchesTrack, type TrackFilterValue } from '@/lib/track'
+import { FilterBar } from '@/components/FilterBar'
+import { matchesTrack, TRACK_OPTIONS, type TrackFilterValue } from '@/lib/filters'
 
 export function ProjectsPage() {
   const [filter, setFilter] = useState<TrackFilterValue>('all')
@@ -36,7 +36,13 @@ export function ProjectsPage() {
         Projects
       </PageHeading>
 
-      <TrackFilter value={filter} onChange={setFilter} label="Filter projects" counts={counts} />
+      <FilterBar
+        value={filter}
+        onChange={setFilter}
+        label="Filter projects"
+        options={TRACK_OPTIONS}
+        counts={counts}
+      />
 
       {/*
         aria-live so the count is announced when the filter changes: the list

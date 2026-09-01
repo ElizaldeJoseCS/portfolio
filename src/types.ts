@@ -84,6 +84,17 @@ export interface EntryLogo {
   src?: string
 }
 
+/**
+ * What an entry *is*, for the Experience page's filter.
+ *
+ * Deliberately separate from `kind`, which is the employment type shown in the
+ * badge. They answer different questions and disagree on purpose: the CMU
+ * position is `kind: 'internship'` and `area: 'research'`, and both facts are
+ * worth showing. Collapsing them would mean losing either "this was an
+ * internship" from the badge or "this was research" from the filter.
+ */
+export type ExperienceArea = 'research' | 'education' | 'other'
+
 export interface ExperienceEntry {
   id: string
   role: string
@@ -92,10 +103,11 @@ export interface ExperienceEntry {
   /** ISO-ish "YYYY-MM". */
   start: string
   end: string | 'Present'
+  /** Employment type. Drives the badge; see `area` for the filter. */
   kind: 'work' | 'internship' | 'education'
   description: string[]
   skills: string[]
-  track: Track[]
+  area: ExperienceArea
   url?: string
   logo?: EntryLogo
 }
@@ -118,9 +130,12 @@ export interface Publication {
   doi?: string
   /** What I actually did on it — this is a portfolio, not a bibliography. */
   contribution: string
-  /** Ties the paper back to the `ExperienceEntry` it came out of. */
+  /**
+   * Ties the paper back to the `ExperienceEntry` it came out of — which is
+   * also where its filter category comes from, so a paper and the role that
+   * produced it can never disagree.
+   */
   experienceId?: string
-  track: Track[]
 }
 
 export interface SkillGroup {

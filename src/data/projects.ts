@@ -229,7 +229,3 @@ export const projects: Project[] = [
     featured: true,
   },
 ]
-
-/** Projects on one side of the work; 'both' entries always come along. */
-export const projectsForTrack = (track: 'game' | 'swe') =>
-  projects.filter((p) => p.track.includes(track) || p.track.includes('both'))

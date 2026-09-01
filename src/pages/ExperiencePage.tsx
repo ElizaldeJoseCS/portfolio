@@ -1,28 +1,34 @@
 import { useState } from 'react'
 import { experience, profile, publications } from '@/data'
+import type { ExperienceArea, Publication } from '@/types'
 import { InstitutionMark, LinkButton, PageHeading } from '@/components/ui'
 import { ExperienceTimeline } from '@/components/ExperienceTimeline'
-import { TrackFilter } from '@/components/TrackFilter'
-import { matchesTrack, type TrackFilterValue } from '@/lib/track'
+import { FilterBar } from '@/components/FilterBar'
+import { AREA_OPTIONS, matchesArea, type AreaFilterValue } from '@/lib/filters'
+
+/** The entry a paper came out of. Papers reference it by id, never inline it. */
+const roleForPaper = (experienceId?: string) =>
+  experienceId ? experience.find((e) => e.id === experienceId) : undefined
 
 /**
- * The mark for the position a paper came out of. Papers carry `experienceId`
- * rather than their own logo so the institution is defined once, in
- * `experience.ts`.
+ * A paper's filter category is the category of the role that produced it, so
+ * the two can never disagree — the same reason one filter drives both blocks.
+ * A paper with no linked role is research by nature.
  */
-const logoForPaper = (experienceId?: string) =>
-  experienceId ? experience.find((e) => e.id === experienceId)?.logo : undefined
+const areaForPaper = (paper: Publication): ExperienceArea =>
+  roleForPaper(paper.experienceId)?.area ?? 'research'
 
 export function ExperiencePage() {
-  const [filter, setFilter] = useState<TrackFilterValue>('all')
+  const [filter, setFilter] = useState<AreaFilterValue>('all')
 
-  const entries = experience.filter((e) => matchesTrack(e.track, filter))
-  const papers = publications.filter((p) => matchesTrack(p.track, filter))
+  const entries = experience.filter((e) => matchesArea(e.area, filter))
+  const papers = publications.filter((p) => matchesArea(areaForPaper(p), filter))
 
   const counts = {
     all: experience.length,
-    swe: experience.filter((e) => matchesTrack(e.track, 'swe')).length,
-    game: experience.filter((e) => matchesTrack(e.track, 'game')).length,
+    research: experience.filter((e) => e.area === 'research').length,
+    education: experience.filter((e) => e.area === 'education').length,
+    other: experience.filter((e) => e.area === 'other').length,
   }
 
   return (
@@ -33,10 +39,11 @@ export function ExperiencePage() {
 
       {/* One filter drives both blocks: a paper belongs to the role it came
           out of, so splitting them would let the two disagree. */}
-      <TrackFilter
+      <FilterBar
         value={filter}
         onChange={setFilter}
         label="Filter experience and papers"
+        options={AREA_OPTIONS}
         counts={counts}
       />
 
@@ -59,7 +66,7 @@ export function ExperiencePage() {
               <li key={paper.id} className="xp-bevel bg-surfaceAlt p-4">
                 <div className="flex gap-4">
                   {(() => {
-                    const logo = logoForPaper(paper.experienceId)
+                    const logo = roleForPaper(paper.experienceId)?.logo
                     return logo ? <InstitutionMark logo={logo} className="mt-1" /> : null
                   })()}
                   <div className="min-w-0 flex-1">
