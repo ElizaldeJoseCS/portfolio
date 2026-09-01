@@ -7,9 +7,9 @@ export const profile: Profile = {
     'Computer Science & Engineering at UCLA. I am interested systems, graphics, and video game programming',
   bio: [
     "My computer science journey began simply because I wanted to make my own video games and now my interest have expanded to not only developing and shipping amazing games. but also building low-level systems like my own custom game engine",
-    'I have worked on and some still currently working on are a Robinhood portfolio bot, a CodeForce practice website that generates 4 random problems as well as a complementary Discord bot that does the same thing, and two games I worked on in the last year being Shellscape and Jump the Gun.',
+    'My work spans a lot of software, ranging from web services like a Codeforces practice site and a Robinhood portfolio bot all the way to a published game, Shellscape, and two currently in development: Cloudy Critters and Jump the Gun.',
     'My game developer itch is satisfied with projects built with my club UCLA ACM Studio, where I am Game Director on Jump the Gun. I have participated in game jams where my team has publsihed a working product on itch.io on multiple occasions.',
-    'Before this I spent two summers on research: combinatorics on posets at UCLA, and human-computer interaction at Carnegie Mellon, which turned into a paper accepted to CHI 2026.',
+    'Before this I spent two summers on research: combinatorics on posets at UCLA, and human-computer interaction at Carnegie Mellon, both of which produced papers with even the CMU paper being accepted to CHI 2026.',
   ],
   roles: ['Software Engineer', 'Game Developer'],
   location: 'Los Angeles, CA',
@@ -33,7 +33,10 @@ export const profile: Profile = {
     'Linux',
     'NeoVim',
     'Systems programming',
+    'OPENGL',
+    'Vulcan',
+    'Graphics',
   ],
   today:
-    'Right now I am building DailyCodeforce, extending the Robinhood portfolio bot, and directing Jump the Gun at UCLA ACM Studio.',
+    'Right now I am maintaining my daily codeforce problem website, continuing development on Jump the Gun, and working on a new game called Cloudy Critter with UCLA\'s ACM Studio that is planned to be released on steam in January.',
 }
