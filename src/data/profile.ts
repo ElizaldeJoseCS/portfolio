@@ -6,9 +6,9 @@ export const profile: Profile = {
   tagline:
     'Computer Science & Engineering at UCLA. I am interested systems, graphics, and video game programming',
   bio: [
-    "My computer science journey began simply because I wanted to make my own video games and now my interest have expanded to not only developing and shipping amazing games. but also building low-level systems my own game engine",
-    'The systems half is where most of my time goes — a C++ Discord bot on the D++ library talking to a Python FastAPI backend, a market data pipeline built on pandas and yfinance, a Next.js site with a Go bot attached, all of it deployed on Linux boxes I administer myself. I like the parts of the stack where you can still see the machine: sockets, processes, systemd units, the reason a thing is slow.',
-    'The games half runs through UCLA ACM Studio, where I am Game Director on Jump the Gun. I have shipped jam games with teams on hard deadlines and written the movement code myself when Unity’s built-in character controller was not good enough.',
+    "My computer science journey began simply because I wanted to make my own video games and now my interest have expanded to not only developing and shipping amazing games. but also building low-level systems like my own custom game engine",
+    'I have worked on and some still currently working on are a Robinhood portfolio bot, a CodeForce practice website that generates 4 random problems as well as a complementary Discord bot that does the same thing, and two games I worked on in the last year being Shellscape and Jump the Gun.',
+    'My game developer itch is satisfied with projects built with my club UCLA ACM Studio, where I am Game Director on Jump the Gun. I have participated in game jams where my team has publsihed a working product on itch.io on multiple occasions.',
     'Before this I spent two summers on research: combinatorics on posets at UCLA, and human-computer interaction at Carnegie Mellon, which turned into a paper accepted to CHI 2026.',
   ],
   roles: ['Software Engineer', 'Game Developer'],
@@ -28,9 +28,10 @@ export const profile: Profile = {
   avatarUrl: '/assets/me.webp',
   interests: [
     'Competitive programming',
-    'Game jams',
+    'Video Game Programming',
     'Embedded & hardware',
-    'Linux / Neovim',
+    'Linux',
+    'NeoVim',
     'Systems programming',
   ],
   today:
