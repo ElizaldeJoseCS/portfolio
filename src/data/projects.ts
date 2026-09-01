@@ -20,7 +20,7 @@ export const projects: Project[] = [
     details: [
       {
         heading: 'The problem it solves',
-        body: 'Codeforces has thousands of problems and no daily rhythm, so practice either stops completely or turns into aimless scrolling. Picking a problem is its own chore, and some problems don\'t even have public editorials out there. Therefore I wanted to create a webservice that provides that seem experience as the LeetCode daily — a fixed set of problems each morning, at a difficulty you can actually clear.',
+        body: "Codeforces has thousands of problems and no daily rhythm, so practice either stops completely or turns into aimless scrolling. Picking a problem is its own chore, and some problems don't even have public editorials out there. Therefore I wanted to create a webservice that provides that seem experience as the LeetCode daily — a fixed set of problems each morning, at a difficulty you can actually clear.",
       },
       {
         heading: 'How it works',
@@ -68,7 +68,13 @@ export const projects: Project[] = [
       { label: 'GitHub', url: 'https://github.com/ElizaldeJoseCS/DailyCodeforce' },
     ],
     media: [
-      { type: 'image', src: '/assets/placeholder-dailycodeforce.svg', alt: 'DailyCodeforce' },
+      {
+        // Cropped from the top so the product header and all four difficulty
+        // tiers survive the card's 16:10 frame; only empty space below is lost.
+        type: 'image',
+        src: '/assets/dailycodeforce-cover.webp',
+        alt: "DailyCodeforce's daily problem set: four cards, one per difficulty tier, each with its tags",
+      },
     ],
     featured: true,
     highlighted: true,
@@ -113,7 +119,18 @@ export const projects: Project[] = [
     role: 'Solo',
     year: '2026',
     links: [{ label: 'GitHub', url: 'https://github.com/ElizaldeJoseCS/robinhood-D--bot' }],
-    media: [{ type: 'image', src: '/assets/placeholder-robinhood.svg', alt: 'Robinhood bot' }],
+    media: [
+      {
+        /*
+          The brand mark of the service the bot talks to, padded onto the
+          site's own ground rather than cropped — the card is object-cover, and
+          a 16:10 crop of a wordmark cuts the word in half.
+        */
+        type: 'image',
+        src: '/assets/robinhood-cover.webp',
+        alt: 'The Robinhood wordmark and feather logo',
+      },
+    ],
     featured: true,
   },
   {
@@ -131,14 +148,40 @@ export const projects: Project[] = [
           'Prototyped on breadboard, then soldered the components down to a permanent board.',
         ],
       },
-       ],
+    ],
     track: ['swe'],
     tags: ['Embedded', 'Firmware', 'Hardware'],
     techStack: ['C++', 'Arduino', 'PWM', 'Circuit design'],
     role: 'Solo',
     year: '2024',
     links: [],
-    media: [{ type: 'image', src: '/assets/placeholder-kurtcobot.svg', alt: 'KurtCobot' }],
+    media: [
+      {
+        /*
+          A frame from the demo video, which is portrait 360x640 — so this is a
+          landscape band through it rather than a scaled-down whole frame,
+          which left the board tiny in the middle of two black bars. 360px is
+          the source's full width and therefore the ceiling here.
+        */
+        type: 'image',
+        src: '/assets/kurtcobot-cover.webp',
+        alt: 'The KurtCobot breadboard: an Arduino Nano wired to a speaker, labelled Nirvana Bot',
+      },
+      {
+        /*
+          The whole point of this project is what it sounds like, so the clip
+          keeps its audio. Remuxed rather than re-encoded — the source was
+          already h264/AAC, so the mp4 is the same bytes with faststart on.
+          9/16 because it is a phone capture; ProjectCard caps the width of
+          portrait clips.
+        */
+        type: 'video',
+        src: '/assets/kurtcobot.mp4',
+        poster: '/assets/kurtcobot-poster.jpg',
+        alt: 'The breadboard playing a programmed melody through a speaker — with sound',
+        aspect: '9 / 16',
+      },
+    ],
     featured: false,
   },
 
@@ -194,7 +237,7 @@ export const projects: Project[] = [
     title: 'Jump the Gun',
     tagline: 'A first-person action shooter about a father going after his old mob boss.',
     description:
-      'A single-player first-person action shooter in development at UCLA ACM Studio SRS, the student-run studio, where I am Game Director. The narrative follows a father tearing through his former mob boss’s organisation to get his kidnapped daughter back, and the combat is built to match that. It\'s adrenaline inducing close and fast combat. I lead the design and coordinate implementation across the team, and I wrote the custom physics-based movement controller in C#, replacing Unity’s built-in character controller with hand-written movement and collision logic so the feel is ours rather than the engine’s default. The team works through Git branching and pull requests so several people can land gameplay features in parallel. Still in active development.',
+      "A single-player first-person action shooter in development at UCLA ACM Studio SRS, the student-run studio, where I am Game Director. The narrative follows a father tearing through his former mob boss’s organisation to get his kidnapped daughter back, and the combat is built to match that. It's adrenaline inducing close and fast combat. I lead the design and coordinate implementation across the team, and I wrote the custom physics-based movement controller in C#, replacing Unity’s built-in character controller with hand-written movement and collision logic so the feel is ours rather than the engine’s default. The team works through Git branching and pull requests so several people can land gameplay features in parallel. Still in active development.",
     status: 'In active development at UCLA ACM Studio SRS',
     track: ['game'],
     tags: ['Unity', 'FPS', 'Game Direction', 'In development'],
@@ -203,6 +246,18 @@ export const projects: Project[] = [
     year: '2024',
     links: [{ label: 'GitHub', url: 'https://github.com/SRS-Jump-the-Gun/JumpTheGunUnityBuild' }],
     media: [
+      /*
+        The itch.io cover art, pre-cropped from 5:4 to the 16:10 the card
+        renders. Cropping here rather than leaving it to `object-cover` is
+        deliberate: a centred crop clipped the tops of "Jump" and "p", so this
+        is taken 8% down, which keeps the whole title and the character and
+        loses only the warehouse floor.
+      */
+      {
+        type: 'image',
+        src: '/assets/jtg-cover.webp',
+        alt: 'Jump the Gun cover art: the protagonist holding a pistol in a derelict warehouse',
+      },
       /*
         Captured from the editor mid-development, which is the point — these
         show the build as it actually stands. H.264 rather than the source

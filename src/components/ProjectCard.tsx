@@ -5,6 +5,17 @@ import { Chip, LinkButton } from './ui'
 import { ProjectVideo } from './ProjectVideo'
 import { ProjectEmbed } from './ProjectEmbed'
 
+/**
+ * Portrait clips need a width cap. `ProjectVideo` is `w-full` with an
+ * aspect-ratio, so a 9:16 phone capture at the panel's full width renders
+ * about 1,200px tall and pushes the rest of the write-up off screen.
+ */
+function isPortrait(aspect?: string) {
+  if (!aspect) return false // the default is 16 / 9
+  const [w, h] = aspect.split('/').map((n) => Number(n.trim()))
+  return Boolean(w && h) && w < h
+}
+
 const TRACK_BADGE: Record<Track, string> = {
   game: 'Game dev',
   swe: 'Software',
@@ -136,7 +147,13 @@ export function ProjectCard({ project }: { project: Project }) {
             {clips.length > 0 && (
               <div className="mt-4 space-y-3">
                 {clips.map((clip) => (
-                  <figure key={clip.src} className="xp-bevel overflow-hidden">
+                  <figure
+                    key={clip.src}
+                    className={cn(
+                      'xp-bevel overflow-hidden',
+                      isPortrait(clip.aspect) && 'mx-auto max-w-[20rem]',
+                    )}
+                  >
                     <ProjectVideo media={clip} />
                     {clip.alt && (
                       <figcaption className="border-t-2 border-bg bg-surfaceAlt px-3 py-2 font-mono text-[11px] leading-relaxed text-muted">

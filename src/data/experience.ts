@@ -17,7 +17,21 @@ const CMU: ExperienceEntry['logo'] = {
   alt: 'Carnegie Mellon University',
   src: '/assets/logo-cmu.png',
 }
-const PIERCE: ExperienceEntry['logo'] = { short: 'LAPC', alt: 'Los Angeles Pierce College' }
+/*
+  The stacked lockup, not the single-line one. Both were on offer; the wide
+  version trims to ~5.9:1, and since every mark shares a fixed-width column
+  (that is what keeps the text beside them aligned) it rendered 14px tall
+  against UCLA's 37 and CMU's 40. Stacked it trims to ~1.9:1 and sits with them.
+
+  The source is black-and-red type on white, so the neutral ink is lifted to
+  the foreground token rather than merely knocked out — left black it vanished
+  against the card, leaving a floating red "pierce". The red is untouched.
+*/
+const PIERCE: ExperienceEntry['logo'] = {
+  short: 'LAPC',
+  alt: 'Los Angeles Pierce College',
+  src: '/assets/logo-pierce.png',
+}
 
 export const experience: ExperienceEntry[] = [
   {
