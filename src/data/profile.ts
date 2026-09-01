@@ -38,5 +38,5 @@ export const profile: Profile = {
     'Graphics',
   ],
   today:
-    'Right now I am maintaining my daily Codeforce problem website, continuing development on Jump the Gun, and working on a new game called Cloudy Critters with UCLA\'s ACM Studio that is planned to be released on Steam in January.',
+    'I am currently in my 4th year at UCLA and looking for Summer 2027 internship opportunities and New Grad roles. I\'m keeping busy with coursework and also maintaining my daily Codeforce problem website, continuing development on Jump the Gun, working on a new game called Cloudy Critters with UCLA\'s ACM Studio that is planned to be released on Steam in January.',
 }
