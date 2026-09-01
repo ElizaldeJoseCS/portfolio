@@ -15,12 +15,12 @@ export const projects: Project[] = [
     title: 'DailyCodeforce',
     tagline: 'Four fresh Codeforces problems a day, with LeetCode-style editorials.',
     description:
-      'A daily competitive-programming trainer. Every day it pulls four Codeforces problems, one per difficulty tier, and pairs each with a generated editorial written in the LeetCode style: intuition, approach, complexity analysis and C++ reference code. Editorials stay hidden behind an Answer tab so you actually attempt the problem first. The same functionality is exposed through a Discord bot written in Go, so a server can practise without leaving chat.',
+      'A daily competitive-programming trainer. Every day it pulls four Codeforces problems, one per difficulty tier, and pairs each with a generated editorial written in the LeetCode style: intuition, approach, complexity analysis and C++ reference code. Editorials stay hidden behind an Answer tab so you actually attempt the problem first. The same functionality is exposed through a Discord bot written in Go.',
     status: 'Live — self-hosted on a DigitalOcean droplet behind Nginx',
     details: [
       {
         heading: 'The problem it solves',
-        body: 'Codeforces has thousands of problems and no daily rhythm, so practice either stalls or turns into aimless scrolling. Picking a problem is its own chore, and once you are stuck the official editorials assume you already know the trick. I wanted the LeetCode habit — a fixed set of problems each morning, at a difficulty you can actually clear — on top of the Codeforces problem set.',
+        body: 'Codeforces has thousands of problems and no daily rhythm, so practice either stops completely or turns into aimless scrolling. Picking a problem is its own chore, and some problems don\'t even have public editorials out there. Therefore I wanted to create a webservice that provides that seem experience as the LeetCode daily — a fixed set of problems each morning, at a difficulty you can actually clear.',
       },
       {
         heading: 'How it works',
@@ -44,7 +44,7 @@ export const projects: Project[] = [
       },
       {
         heading: 'What I would change',
-        body: 'Editorial generation is synchronous with the daily job, so a failure leaves a gap for that day rather than retrying on its own — a queue would fix that. The difficulty tiers are also fixed bands rather than adapting to how the person is actually doing, which is the obvious next thing to build.',
+        body: 'Editorial generation is synchronous with the daily job, so a failure leaves a gap for that day rather than retrying on its own. The difficulty tiers are also fixed bands rather than adapting to how the person is actually doing, which is the obvious next thing to build.',
       },
     ],
     track: ['swe'],
@@ -76,14 +76,14 @@ export const projects: Project[] = [
   {
     id: 'robinhood-bot',
     title: 'Robinhood Portfolio Bot',
-    tagline: 'A C++ Discord bot on a Python quant backend, live on a VPS 24/7.',
+    tagline: 'A C++ Discord bot on a Python FastAPI backend, live on a VPS 24/7.',
     description:
       'A Discord bot that reports your live Robinhood portfolio and recommends stocks off a momentum-plus-fundamentals pipeline. It runs as two services: the bot itself is C++ on the D++ library, talking over HTTP to a Python FastAPI backend that owns the brokerage session and the analysis.',
     status: 'Live — running 24/7 under systemd on a DigitalOcean VPS',
     details: [
       {
         heading: 'Why two languages',
-        body: 'The split is deliberate rather than incidental. Discord gateway work is long-lived, latency-sensitive and mostly I/O, which C++ with D++ handles cleanly; the analysis side wanted pandas and the Python brokerage and market-data libraries. Keeping them as separate processes behind an HTTP boundary meant the brokerage session — the part holding credentials — lives in exactly one service, and the bot can be restarted without re-authenticating.',
+        body: 'Discord gateway work is long-lived, latency-sensitive and mostly I/O, which C++ with D++ handles cleanly. The analysis side warrants the use of data science libraries and utilities like pandas, yfinance, Python brokerage and market-data libraries. Keeping them as separate processes behind an HTTP boundary meant the brokerage session lives in exactly one service, and the bot can be restarted without re-authenticating.',
       },
       {
         heading: 'Commands',
@@ -104,7 +104,7 @@ export const projects: Project[] = [
       },
       {
         heading: 'Deployment',
-        body: 'Both services run on a DigitalOcean Linux VPS wrapped in systemd units, so they restart on crash and come back after a reboot without anyone logging in. That is the difference between a project that works on my machine and one that is still answering commands a month later.',
+        body: 'Both services run on a DigitalOcean Linux VPS wrapped in systemd units, so they restart on crash and come back after a reboot without anyone logging in.',
       },
     ],
     track: ['swe'],
@@ -121,26 +121,17 @@ export const projects: Project[] = [
     title: 'KurtCobot',
     tagline: 'Embedded C++ on an Arduino that plays programmed music from raw PWM.',
     description:
-      'An embedded C++ application on an Arduino that performs programmed musical notes. There is no audio library underneath it: note sequences are turned into sound by generating pulse-width-modulation signals directly, so every pitch and duration is a timing problem solved in software.',
+      'An embedded C++ application on an Arduino that performs the Nirvana song "Come As You Are" which the notes are hardcoded into the Arduino program using a header file named pitch.h that has all the possible notes that can be played by the speaker attached to the Arduino.',
     status: 'Complete — built on breadboard, then soldered',
     details: [
       {
-        heading: 'Sound with no audio library',
-        body: 'A pitch is just a square wave at the right frequency, so each note becomes a half-period delay driving a pin high and low. Duration is a count of those cycles rather than a wall-clock timer, which means tempo and pitch are the same calculation viewed from two directions. Getting a scale in tune came down to accounting for the overhead of the loop itself, not just the delay inside it.',
-      },
-      {
         heading: 'The hardware half',
         bullets: [
-          'Designed the supporting circuitry rather than buying a shield for it.',
+          'Designed the supporting circuitry rather.',
           'Prototyped on breadboard, then soldered the components down to a permanent board.',
-          'Debugging crossed the line constantly — a wrong note was as likely to be a cold joint as a bad constant.',
         ],
       },
-      {
-        heading: 'Why it is here',
-        body: 'It is the smallest project on this list and the one that taught the most about the layer under the abstraction. Everything else I write sits on a stack that has already solved timing for me.',
-      },
-    ],
+       ],
     track: ['swe'],
     tags: ['Embedded', 'Firmware', 'Hardware'],
     techStack: ['C++', 'Arduino', 'PWM', 'Circuit design'],
@@ -157,7 +148,7 @@ export const projects: Project[] = [
     title: 'Shellscape',
     tagline: 'Possess the guards who made you, and walk out of the lab wearing them.',
     description:
-      'A game-jam action game built for Club Club Jam Jam with a team of five UCLA students, finished and submitted inside the jam window. You play a test subject with no shell of its own: the only way out of the secret lab that made you is to take the guards apart and wear them. Possession is the whole verb — you hop bodies to borrow their weapons and get through rooms you cannot survive on your own. Shipped as an HTML5 build playable in the browser, with no generative AI used anywhere in its creation.',
+      'A game-jam action game built for Club Club Jam Jam with a team of five UCLA students, finished and submitted inside the jam window. You play a test subject with no shell of its own: the only way out of the secret lab that made you is to take the guards apart and wear them. You hop bodies to borrow their weapons and get through rooms you cannot survive on your own. Shipped as an HTML5 build playable in the browser.',
     status: 'Released — playable in the browser',
     details: [
       {
@@ -203,7 +194,7 @@ export const projects: Project[] = [
     title: 'Jump the Gun',
     tagline: 'A first-person action shooter about a father going after his old mob boss.',
     description:
-      'A single-player first-person action shooter in development at UCLA ACM Studio SRS, the student-run studio, where I am Game Director. The narrative follows a father tearing through his former mob boss’s organisation to get his kidnapped daughter back, and the combat is built to match that tone — close, fast and desperate rather than tactical. I lead the design and coordinate implementation across the team, and I wrote the custom physics-based movement controller in C#, replacing Unity’s built-in character controller with hand-written movement and collision logic so the feel is ours rather than the engine’s default. The team works through Git branching and pull requests so several people can land gameplay features in parallel. Still in active development.',
+      'A single-player first-person action shooter in development at UCLA ACM Studio SRS, the student-run studio, where I am Game Director. The narrative follows a father tearing through his former mob boss’s organisation to get his kidnapped daughter back, and the combat is built to match that. It\'s adrenaline inducing close and fast combat. I lead the design and coordinate implementation across the team, and I wrote the custom physics-based movement controller in C#, replacing Unity’s built-in character controller with hand-written movement and collision logic so the feel is ours rather than the engine’s default. The team works through Git branching and pull requests so several people can land gameplay features in parallel. Still in active development.',
     status: 'In active development at UCLA ACM Studio SRS',
     track: ['game'],
     tags: ['Unity', 'FPS', 'Game Direction', 'In development'],
