@@ -83,7 +83,7 @@ export function HomePage() {
 
       {featured.length > 0 && (
         <section className="mt-10">
-          <PageHeading lead="The two I would show first. The rest are on the Projects page.">
+          <PageHeading lead="The projects I am most proud of. The rest are on the Projects page.">
             Featured
           </PageHeading>
           <ul className="space-y-3">
