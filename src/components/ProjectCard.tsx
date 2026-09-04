@@ -50,7 +50,13 @@ export function ProjectCard({ project }: { project: Project }) {
         <span className="min-w-0 flex-1 truncate font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-bg">
           {project.id}.exe
         </span>
-        <span className="shrink-0 font-mono text-[10px] text-bg/75">{project.year}</span>
+        {/*
+          /85 rather than /75. Dark ink on the accent field is the one place an
+          alpha'd foreground lands near the floor: at /75 over the dim stop of
+          the header gradient it measured 4.91 against a 4.5 floor, which is
+          not margin. Ten percent more ink is invisible here and buys 5.97.
+        */}
+        <span className="shrink-0 font-mono text-[10px] text-bg/85">{project.year}</span>
       </div>
 
       <div className="p-4 sm:p-5">
