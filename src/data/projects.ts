@@ -225,7 +225,25 @@ export const projects: Project[] = [
         poster: '/assets/shellscape-cover.webp',
         alt: 'Shellscape, playable in the browser',
         action: 'Play Shellscape',
-        aspect: '16 / 9',
+        /*
+          Not a guess and not 16:9 — measured off the live build, which
+          `ProjectEmbed` then scales the iframe to instead of cropping it.
+
+          Unity's default WebGL template hard-codes the canvas at 960x600
+          (`canvas.style.width = "960px"`) and centres `#unity-container` with
+          translate(-50%, -50%). The container is absolutely positioned, so it
+          establishes a block formatting context and does contain the floated
+          38px `#unity-footer` — the one carrying the fullscreen button that
+          actually resizes the canvas. That makes the real content 960 x 638.
+          itch's wrapper then insets the game frame 1px on three sides and
+          reserves 20px at the bottom for its branding bar: 962 x 659.
+
+          If the build is ever re-exported from a template with a responsive
+          canvas, delete these two lines — the iframe goes back to filling its
+          frame and none of this is needed.
+        */
+        embedWidth: 962,
+        embedHeight: 659,
       },
       { type: 'image', src: '/assets/shellscape-cover.webp', alt: 'Shellscape title screen' },
     ],

@@ -36,6 +36,14 @@ export interface ProjectMedia {
   aspect?: string
   /** Button copy for an `embed`. Defaults to "Play". */
   action?: string
+  /**
+   * The embedded page's *natural* CSS size, when it has one it cannot give up.
+   * An itch.io HTML5 upload is a fixed-size Unity canvas centred in the frame,
+   * so anything narrower than this crops it rather than shrinking it; give the
+   * real numbers and `ProjectEmbed` scales the whole iframe to fit instead.
+   */
+  embedWidth?: number
+  embedHeight?: number
 }
 
 /**
