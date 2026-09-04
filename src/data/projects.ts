@@ -238,9 +238,20 @@ export const projects: Project[] = [
           itch's wrapper then insets the game frame 1px on three sides and
           reserves 20px at the bottom for its branding bar: 962 x 659.
 
-          If the build is ever re-exported from a template with a responsive
-          canvas, delete these two lines — the iframe goes back to filling its
-          frame and none of this is needed.
+          960 x 600 is also too small for the game: Shellscape's menu is laid
+          out in constant pixels for 1920 x 1080, so Start, Quit and the volume
+          slider all fall off the bottom of the canvas. Measured on the live
+          build — 1536 x 960 shows the whole menu, 1600 x 900 still clips Quit,
+          so it is height that binds, not aspect. That is a build-side crop and
+          it looks the same on itch.io's own page; nothing out here can reach
+          across the iframe to resize the canvas.
+
+          When the build is re-uploaded with `canvas.style` at 1920 x 1080,
+          these two numbers become 1922 x 1139 (1920 + 2 wide; 1080 + 38 footer
+          + 1 inset + 20 bar) and the scaling below does the rest. Do not
+          instead make the canvas fill its frame: with a constant-pixel UI a
+          responsive canvas would be ~688 CSS px wide in a card and crop even
+          harder. Large and scaled down is the right shape here.
         */
         embedWidth: 962,
         embedHeight: 659,

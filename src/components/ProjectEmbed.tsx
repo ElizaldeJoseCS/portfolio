@@ -158,9 +158,16 @@ export function ProjectEmbed({ media, title }: { media: ProjectMedia; title: str
         <iframe
           src={media.src}
           title={media.alt ?? `${title}, playable`}
-          // The allowlist itch.io's own embed uses. Gamepad and fullscreen matter
-          // for anything actually playable; the rest are what its player expects.
-          allow="autoplay; fullscreen; gamepad; xr-spatial-tracking"
+          /*
+            `fullscreen *`, not a bare `fullscreen`. There are two frames here,
+            not one: itch.io's wrapper, and the game itself on itch.zone inside
+            it. A bare grant covers only the frame's own origin, so the nested
+            build could not take fullscreen — and its fullscreen button is the
+            one that calls `SetFullscreen(1)` and resizes the canvas for real.
+            itch's own inner iframe delegates with `fullscreen *` for exactly
+            this reason.
+          */
+          allow="autoplay; fullscreen *; gamepad; xr-spatial-tracking"
           allowFullScreen
           className="absolute left-0 top-0 border-0 bg-black"
           style={
