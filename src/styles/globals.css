@@ -11,20 +11,24 @@
   utility onto them (see tailwind.config.js) — `bg-accent` needs no JS to be
   correct.
 
-  Cyberpunk 2077's hazard yellow and cyan on near-black. The body face is what
+  Cyberpunk 2077's hazard yellow and red on a near-black that is warmed toward
+  the red rather than left neutral, so the ground belongs to the same palette
+  instead of sitting under it. The yellow is paled off full hazard chroma: at
+  252 238 10 it was the loudest thing on every page, and it now reads as the
+  frame rather than as an alarm. The body face is what
   Windows actually shipped its UI in; it is a system stack on purpose, so no
   extra webfont is fetched and on Windows the chrome renders in the genuine
   article. Display is Chakra Petch, the one webfont left.
 */
 :root {
-  --c-bg: 8 8 12;
-  --c-surface: 18 18 24;
-  --c-surface-alt: 26 27 36;
-  --c-fg: 235 238 245;
-  --c-muted: 150 156 170;
-  --c-accent: 252 238 10;
-  --c-accent-alt: 0 240 255;
-  --c-line: 72 76 92;
+  --c-bg: 22 8 12;
+  --c-surface: 34 16 20;
+  --c-surface-alt: 48 23 28;
+  --c-fg: 245 235 232;
+  --c-muted: 188 156 158;
+  --c-accent: 240 228 134;
+  --c-accent-alt: 255 84 78;
+  --c-line: 112 60 68;
 
   --font-display: 'Chakra Petch', 'Rajdhani', system-ui, sans-serif;
   --font-body: Tahoma, Verdana, 'DejaVu Sans', Geneva, sans-serif;
@@ -147,12 +151,17 @@
     2077's hazard tape, used as a rule where XP had a plain border. It is the
     clearest single signal that this is not actually Windows. The strip has to
     be at least ~6px tall or the diagonals read as dashes.
+
+    Yellow against the red rather than against the ground: hazard tape striped
+    on `--c-bg` is the literal yellow-and-black the rest of the palette has
+    moved off, and it is the loudest element on the page, so leaving it would
+    have kept the old scheme no matter what the tokens said.
   */
   .xp-hazard {
     background-image: repeating-linear-gradient(
       -45deg,
       rgb(var(--c-accent)) 0 7px,
-      rgb(var(--c-bg)) 7px 14px
+      rgb(var(--c-accent-alt)) 7px 14px
     );
   }
 
