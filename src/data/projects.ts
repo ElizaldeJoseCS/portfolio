@@ -15,12 +15,12 @@ export const projects: Project[] = [
     title: 'DailyCodeforce',
     tagline: 'Four fresh Codeforces problems a day, with LeetCode-style editorials.',
     description:
-      'A daily competitive-programming trainer. Every day it pulls four Codeforces problems, one per difficulty tier, and pairs each with a generated editorial written in the LeetCode style: intuition, approach, complexity analysis and C++ reference code. Editorials stay hidden behind an Answer tab so you actually attempt the problem first. The same functionality is exposed through a Discord bot written in Go.',
+      'A daily competitive-programming trainer. Every day it pulls four Codeforces problems, one per difficulty tier, and pairs each with a generated editorial written in the LeetCode style which is in the format of intuition, approach, complexity analysis and C++ reference code. Editorials stay hidden behind an Answer tab so you actually attempt the problem first. The same functionality is exposed through a Discord bot written in Go.',
     status: 'Live — self-hosted on a DigitalOcean droplet behind Nginx',
     details: [
       {
         heading: 'The problem it solves',
-        body: "Codeforces has thousands of problems and no daily rhythm, so practice either stops completely or turns into aimless scrolling. Picking a problem is its own chore, and some problems don't even have public editorials out there. Therefore I wanted to create a webservice that provides that seem experience as the LeetCode daily — a fixed set of problems each morning, at a difficulty you can actually clear.",
+        body: "Codeforces has thousands of problems and no daily rhythm, so practice either stops completely or turns into aimless scrolling. Picking a problem is its own chore, and some problems don't even have public editorials out there. Therefore I wanted to create a webservice that provides that same experience as the LeetCode daily, which was a fixed set of problems each morning, at a difficulty you can actually clear.",
       },
       {
         heading: 'How it works',
@@ -144,7 +144,6 @@ export const projects: Project[] = [
       {
         heading: 'The hardware half',
         bullets: [
-          'Designed the supporting circuitry rather.',
           'Prototyped on breadboard, then soldered the components down to a permanent board.',
         ],
       },
@@ -201,6 +200,13 @@ export const projects: Project[] = [
           'Left click — shoot',
           'Space — dash',
           'E — possess the shell you are standing next to',
+        ],
+      },
+      {
+        heading: 'My Part',
+        bullets: [
+          'Implemented the movement and interaction system in the game which includes the possession.',
+          'Worked on the tutorial scene with the scripted narration and dialogue boxes',
         ],
       },
     ],
