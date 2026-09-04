@@ -1,0 +1,175 @@
+%-------------------------
+% Resume in LaTeX -- Game Development
+% Author: Jose Antonio Elizalde
+% Template based on: Jake Gutierrez / sb2nov-resume
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\usepackage{multicol}
+\input{glyphtounicode}
+
+%---------- Page setup ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Margins
+\addtolength{\oddsidemargin}{-0.6in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1.2in}
+\addtolength{\topmargin}{-.7in}
+\addtolength{\textheight}{1.4in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+\setlength{\multicolsep}{-3.0pt}
+\setlength{\columnsep}{-1pt}
+
+%---------- Section formatting ----------
+\titleformat{\section}{
+  \vspace{-12pt}\scshape\raggedright\large\bfseries
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+%---------- Custom Commands ----------
+\pdfgentounicode=1
+
+\newcommand{\resumeItem}[1]{\item\small{#1\vspace{-2pt}}}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-4pt}\item
+  \begin{tabular*}{1.0\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & \textbf{\small #2} \\
+    \textit{\small #3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+  \item
+  \begin{tabular*}{1.0\textwidth}{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & \textbf{\small #2} \\
+  \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%---------- HEADING ----------
+\begin{center}
+    {\huge \scshape Jose Antonio Elizalde} \\ \vspace{0pt}
+    \small
+    \faPhone\ 818-602-9892 ~|~
+    \href{mailto:joseelizalde02@g.ucla.edu}{\faEnvelope\ joseelizalde02@g.ucla.edu} ~|~
+    \href{https://www.linkedin.com/in/jose-elizalde-184781342/}{\faLinkedin\ linkedin.com/in/JoseElizalde} ~|~
+    \href{https://github.com/ElizaldeJoseCS}{\faGithub\ github.com/ElizaldeJoseCS} ~|~
+    \href{https://joseelizalde02.itch.io/}{\faGamepad\ joseelizalde02.itch.io}
+\end{center}
+
+%----------- EDUCATION -----------
+\section{Education}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {University of California, Los Angeles}{Sept 2025 -- June 2027}
+    {B.S. in Computer Science and Engineering}{Westwood, CA}
+  \resumeSubheading
+    {Los Angeles Pierce College}{Feb 2023 -- June 2025}
+    {A.A. in Physics and Mathematics, GPA: 3.92/4.00}{Woodland Hills, CA}
+\resumeSubHeadingListEnd
+
+%----------- TECHNICAL SKILLS -----------
+\section{Technical Skills}
+\begin{itemize}[leftmargin=0.15in, label={}]
+  \item \small{
+    \textbf{Engines \& Tools:} Unity, Blender, Git/GitHub, Visual Studio, Vim/NeoVim \\
+    \textbf{Languages:} C\#, C++, C, Python, HLSL/ShaderLab \\
+    \textbf{Gameplay:} character controllers, physics and collision, ability/card systems, state machines, UI and dialogue systems, game feel \\
+    \textbf{Production:} game direction, scope and milestone planning, Git branching and pull-request review, playtest iteration \\
+    \textbf{Coursework:} Data Structures and Algorithms, Object-Oriented C++, Computer Architecture, Discrete Mathematics, Physics \\
+  }
+\end{itemize}
+
+%----------- EXPERIENCE -----------
+\section{Experience}
+\resumeSubHeadingListStart
+\resumeSubheading
+    {UCLA ACM Studio (SRS) -- Student-Run Studio}{Oct 2024 -- Present}
+    {Game Director, \textit{Jump the Gun}; Gameplay Programmer, \textit{Cloudy Critters}}{Los Angeles, CA}
+\resumeItemListStart
+    \resumeItem{Direct a multi-person team on a first-person action shooter, owning the design direction and coordinating implementation across programmers, artists and designers.}
+    \resumeItem{Ship gameplay on a second title in parallel, \textit{Cloudy Critters}, a city-builder/deck-builder roguelike tycoon being prepared for a Steam release.}
+    \resumeItem{Run both teams on Git branching and pull requests so multiple contributors can land gameplay features concurrently without blocking each other.}
+\resumeItemListEnd
+\resumeSubHeadingListEnd
+
+%----------- GAME PROJECTS -----------
+\section{Game Projects}
+\resumeSubHeadingListStart
+
+\resumeProjectHeading
+    {\textbf{Jump the Gun} $|$ \emph{Unity, C\#, HLSL/ShaderLab, Git} -- Game Director}{Oct 2024 -- Present}
+\resumeItemListStart
+    \resumeItem{Leading design and development of a single-player first-person action shooter built around fast, close-range combat, defining the gameplay mechanics and coordinating implementation across the team.}
+    \resumeItem{Wrote the custom physics-based movement controller in C\#, replacing Unity's built-in character controller with hand-written movement and collision logic so the game's feel is authored rather than inherited from the engine default.}
+    \resumeItem{Maintain the team's Git branching and pull-request workflow, reviewing and integrating gameplay features developed concurrently by multiple contributors.}
+\resumeItemListEnd
+
+\resumeProjectHeading
+    {\textbf{Cloudy Critters} $|$ \emph{Unity, C\#, Blender} -- Gameplay Programmer}{2026 -- Present}
+\resumeItemListStart
+    \resumeItem{Building a city-builder/deck-builder roguelike tycoon in which the player constructs a sky zoo and has to clear a quota measured against the points their animal enclosures generate.}
+    \resumeItem{Own the card ability system: implementing individual card effects and the rules by which they resolve against the player's enclosures.}
+    \resumeItem{Implemented the main gameplay loop mechanics that tie building, scoring and the quota check together into a run.}
+    \resumeItem{Model the animals and habitats in Blender and bring them into Unity as game-ready assets, covering both the gameplay code and the 3D content it drives.}
+\resumeItemListEnd
+
+\resumeProjectHeading
+    {\textbf{Shellscape} $|$ \emph{Unity, C\#, WebGL} -- Gameplay Programmer, team of 5}{2026}
+\resumeItemListStart
+    \resumeItem{Shipped a browser-playable action game with a team of five UCLA students, designed and completed inside a game jam window and released publicly on itch.io.}
+    \resumeItem{Implemented the movement and interaction systems, including the body-possession mechanic the whole game is built around: the player has no shell of their own and takes over enemy bodies to borrow their weapons.}
+    \resumeItem{Built the tutorial scene, including the scripted narration and dialogue box system that teaches the possession mechanic.}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+%----------- RESEARCH -----------
+\section{Research Experience}
+\resumeSubHeadingListStart
+\resumeSubheading
+    {Carnegie Mellon University -- REUSE Research Program}{May 2025 -- Aug 2025}
+    {Undergraduate Researcher, Human-Computer Interaction Institute (HCII)}{Pittsburgh, PA}
+\resumeItemListStart
+    \resumeItem{Built an interactive application studying whether gamified in-ride interactions can improve communication and empathy between rideshare drivers and passengers, refining its features from usability testing across nine workshops.}
+    \resumeItem{Co-authored \textit{Beyond Riding: Passenger Engagement with Driver Labor through Gamified Interactions}, accepted to CHI 2026 (ACM Conference on Human Factors in Computing Systems, Barcelona).}
+\resumeItemListEnd
+\resumeSubheading
+    {University of California, Los Angeles -- SURE C\textsuperscript{2} Research Program}{June 2024 -- Aug 2024}
+    {Undergraduate Researcher, Department of Mathematics}{Los Angeles, CA}
+\resumeItemListStart
+    \resumeItem{Wrote a C++ program to enumerate all transfer systems of a given finite poset, automating a count that grows exponentially with the cardinality of the set, and discovered a recursive relationship for the family of sets $X_n^{++}$ that contributed to a co-authored paper.}
+\resumeItemListEnd
+\resumeSubHeadingListEnd
+
+\end{document}

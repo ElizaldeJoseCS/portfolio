@@ -1,0 +1,178 @@
+%-------------------------
+% Resume in LaTeX -- Software Engineering (general)
+% Author: Jose Antonio Elizalde
+% Template based on: Jake Gutierrez / sb2nov-resume
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\usepackage{multicol}
+\input{glyphtounicode}
+
+%---------- Page setup ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Margins
+\addtolength{\oddsidemargin}{-0.6in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1.2in}
+\addtolength{\topmargin}{-.7in}
+\addtolength{\textheight}{1.4in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+\setlength{\multicolsep}{-3.0pt}
+\setlength{\columnsep}{-1pt}
+
+%---------- Section formatting ----------
+\titleformat{\section}{
+  \vspace{-12pt}\scshape\raggedright\large\bfseries
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+%---------- Custom Commands ----------
+\pdfgentounicode=1
+
+\newcommand{\resumeItem}[1]{\item\small{#1\vspace{-2pt}}}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-4pt}\item
+  \begin{tabular*}{1.0\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & \textbf{\small #2} \\
+    \textit{\small #3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+  \item
+  \begin{tabular*}{1.0\textwidth}{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & \textbf{\small #2} \\
+  \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%---------- HEADING ----------
+\begin{center}
+    {\huge \scshape Jose Antonio Elizalde} \\ \vspace{0pt}
+    \small
+    \faPhone\ 818-602-9892 ~|~
+    \href{mailto:joseelizalde02@g.ucla.edu}{\faEnvelope\ joseelizalde02@g.ucla.edu} ~|~
+    \href{https://www.linkedin.com/in/jose-elizalde-184781342/}{\faLinkedin\ linkedin.com/in/JoseElizalde} ~|~
+    \href{https://github.com/ElizaldeJoseCS}{\faGithub\ github.com/ElizaldeJoseCS} ~|~
+    \href{https://joseelizalde.dev}{\faGlobe\ joseelizalde.dev}
+\end{center}
+
+%----------- EDUCATION -----------
+\section{Education}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {University of California, Los Angeles}{Sept 2025 -- June 2027}
+    {B.S. in Computer Science and Engineering}{Westwood, CA}
+  \resumeSubheading
+    {Los Angeles Pierce College}{Feb 2023 -- June 2025}
+    {A.A. in Physics and Mathematics, GPA: 3.92/4.00}{Woodland Hills, CA}
+\resumeSubHeadingListEnd
+
+%----------- COURSEWORK -----------
+\section{Relevant Coursework}
+\small{
+  \textbf{Data Structures and Algorithms, Networking Fundamentals, Distributed Systems, Operating Systems Architecture, Systems Programming, Computer Architecture, Discrete Mathematics, Object-Oriented C++}
+}
+
+%----------- TECHNICAL SKILLS -----------
+\section{Technical Skills}
+\begin{itemize}[leftmargin=0.15in, label={}]
+  \item \small{
+    \textbf{Languages:} C++, C, C\#, Python, Go, TypeScript, SQL, Bash \\
+    \textbf{Backend \& Infrastructure:} Linux, FastAPI, PostgreSQL, Prisma, Docker Compose, Nginx, systemd, DigitalOcean \\
+    \textbf{Web \& Data:} Next.js, React, Tailwind CSS, pandas, yfinance \\
+    \textbf{Tools:} Git/GitHub, CMake, Unity, Vim/NeoVim, Arduino, LaTeX \\
+  }
+\end{itemize}
+
+%----------- EXPERIENCE -----------
+\section{Experience}
+\resumeSubHeadingListStart
+\resumeSubheading
+    {Carnegie Mellon University -- REUSE Research Program}{May 2025 -- Aug 2025}
+    {Undergraduate Researcher, Human-Computer Interaction Institute (HCII)}{Pittsburgh, PA}
+\resumeItemListStart
+    \resumeItem{Developed an interactive application to investigate methods for improving communication and empathy between rideshare drivers and passengers.}
+    \resumeItem{Implemented and iteratively refined application features based on user feedback and usability testing conducted throughout the research process.}
+    \resumeItem{Collaborated with a faculty advisor, graduate students, and a research partner to design and improve the system.}
+    \resumeItem{Co-authored \textit{Beyond Riding: Passenger Engagement with Driver Labor through Gamified Interactions}, accepted to CHI 2026 (ACM Conference on Human Factors in Computing Systems, Barcelona).}
+\resumeItemListEnd
+\resumeSubheading
+    {University of California, Los Angeles -- SURE C\textsuperscript{2} Research Program}{June 2024 -- August 2024}
+    {Undergraduate Researcher, Department of Mathematics}{Los Angeles, CA}
+\resumeItemListStart
+    \resumeItem{Conducted research in combinatorics on partially ordered sets (posets), studying transfer systems and their patterns.}
+    \resumeItem{Developed a C++ program to enumerate all transfer systems of a given finite poset, automating computations for the amount of transfer systems for a given set, where it can grow exponentially with the cardinality of the set.}
+    \resumeItem{Discovered a recursive relationship for the family of sets $X_n^{++}$, contributing to a co-authored research paper presented at the University of Texas at Arlington.}
+\resumeItemListEnd
+\resumeSubHeadingListEnd
+
+%----------- PROJECTS -----------
+\section{Projects}
+\resumeSubHeadingListStart
+
+\resumeProjectHeading
+    {\textbf{RobinHood Discord Portfolio Bot} $|$ \emph{C++, D++, Python, FastAPI, Pandas, systemd, Linux}}{June 2026 -- Present}
+\resumeItemListStart
+    \resumeItem{Developed a C++ Discord bot using the D++ library that interfaces with a Python FastAPI backend to provide real-time Robinhood portfolio analytics and stock screening.}
+    \resumeItem{Split the system across two processes behind an HTTP boundary so the brokerage session lives in exactly one service, letting the bot be restarted without re-authenticating.}
+    \resumeItem{Implemented a background market data pipeline using \texttt{yfinance} and Pandas to periodically download and process historical S\&P 500 data, computing momentum breakouts and valuation metrics including P/E ratio and ROE.}
+    \resumeItem{Deployed the application on a DigitalOcean Linux VPS and configured a \texttt{systemd} service for automatic startup, crash recovery, and 24/7 availability.}
+\resumeItemListEnd
+
+\resumeProjectHeading
+    {\textbf{DailyCodeforce} $|$ \emph{Next.js, TypeScript, PostgreSQL, Prisma, Go, Docker, Nginx}}{2026 -- Present}
+\resumeItemListStart
+    \resumeItem{Built and self-host a daily competitive-programming trainer that selects four Codeforces problems each day, one per difficulty tier, and pairs each with a generated editorial in a fixed shape: intuition, approach, complexity analysis, and a C++ reference solution.}
+    \resumeItem{Designed the scheduling logic around a rolling 90-day deduplication window and a 30-day backfill on first deploy, so problems do not repeat and a fresh install never starts with an empty archive.}
+    \resumeItem{Wrote a separate Go service using DiscordGo that exposes the same functionality through \texttt{/daily}, \texttt{/solve}, \texttt{/stats} and \texttt{/leaderboard}, reading the same PostgreSQL instance through Prisma.}
+    \resumeItem{Containerized web, bot, database and Nginx with Docker Compose so a rebuild on the droplet is a single command.}
+\resumeItemListEnd
+
+\resumeProjectHeading
+    {\textbf{Jump the Gun -- UCLA ACM Studio} $|$ \emph{C\#, Unity, HLSL, Git}}{Oct 2024 -- Present}
+\resumeItemListStart
+    \resumeItem{Led the design and development of a first-person action shooter as Game Director, defining gameplay mechanics and coordinating implementation across the team.}
+    \resumeItem{Implemented a custom physics-based movement controller in C\#, replacing Unity's default character controller with manually programmed movement and collision logic.}
+    \resumeItem{Ran the team on Git branching and pull requests to integrate gameplay features developed concurrently by multiple contributors.}
+\resumeItemListEnd
+
+\resumeProjectHeading
+    {\textbf{Shellscape} $|$ \emph{C\#, Unity, WebGL}}{2026}
+\resumeItemListStart
+    \resumeItem{Shipped a browser-playable action game with a team of five, designed and completed inside a game jam window and released publicly on itch.io.}
+    \resumeItem{Implemented the movement and interaction systems, including the body-possession mechanic the game is built around, and built the tutorial scene with its scripted narration and dialogue boxes.}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+\end{document}
