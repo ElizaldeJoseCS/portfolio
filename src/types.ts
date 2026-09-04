@@ -44,6 +44,15 @@ export interface ProjectMedia {
    */
   embedWidth?: number
   embedHeight?: number
+  /**
+   * The device pixel ratio the embedded page must be rendered at, when its UI
+   * is laid out against the drawing buffer rather than the CSS box. A Unity
+   * build with a constant-pixel UI is the case: it needs *pixels*, and a
+   * frame-sized canvas at dpr 1 does not have them. `ProjectEmbed` reaches this
+   * with CSS `zoom`, which — unlike `transform` — propagates into a
+   * cross-origin frame.
+   */
+  embedMinDpr?: number
 }
 
 /**

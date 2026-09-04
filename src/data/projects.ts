@@ -255,6 +255,20 @@ export const projects: Project[] = [
         */
         embedWidth: 962,
         embedHeight: 659,
+        /*
+          And 960 x 600 is too small for the game, which is a separate problem
+          from the frame cropping it. Shellscape's menu is laid out in constant
+          pixels for 1920 x 1080, so at a 960 x 600 drawing buffer Start, Quit
+          and the volume slider all sit below the bottom edge. Measured on the
+          live build: 1536 x 960 shows the whole menu, 1600 x 900 still clips
+          Quit — height binds, not aspect.
+
+          dpr 2 over a 960-wide canvas is a 1920 x 1200 buffer, which clears it
+          with room to spare and matches what the game was authored for. This is
+          also the mechanism behind "it works if I zoom in a lot": browser zoom
+          raises devicePixelRatio, and the buffer grows with it.
+        */
+        embedMinDpr: 2,
       },
       { type: 'image', src: '/assets/shellscape-cover.webp', alt: 'Shellscape title screen' },
     ],

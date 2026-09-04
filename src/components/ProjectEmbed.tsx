@@ -37,7 +37,44 @@ import { cn } from '@/lib/cn'
  * that many CSS pixels and `transform: scale()` the element down to fit. The
  * transform is on our side of the boundary, so it needs no cooperation from the
  * embedded page, and the whole build is visible at every width.
+ *
+ * ## Why it is also zoomed
+ *
+ * Showing the whole canvas is not enough when the canvas itself is too small.
+ * Unity lays a constant-pixel UI out against the **drawing buffer**, which is
+ * `canvas.clientWidth * devicePixelRatio` — so Shellscape's menu, authored for
+ * 1920 x 1080, falls off the bottom of a 960 x 600 buffer. That is why zooming
+ * the browser "fixes" it: zoom raises `devicePixelRatio`, the buffer grows, and
+ * the menu comes back.
+ *
+ * `transform` cannot do that — it scales the rendered output and leaves the
+ * child's `devicePixelRatio` at 1. **CSS `zoom` can**, and it propagates across
+ * an origin boundary: `zoom: 2` on a 962px-wide iframe leaves the child a 962px
+ * viewport (so nothing crops) while giving it dpr 2 and a 1920 x 1200 buffer.
+ * Measured, not assumed — including that `transform: scale(0.7)` leaves dpr
+ * exactly 1.
+ *
+ * So the two work as a pair: `zoom` buys the embed the pixels it needs, and
+ * `transform` shrinks the result back to whatever the card can spare.
  */
+let zoomIsHonoured: boolean | null = null
+
+/**
+ * Whether the browser actually applies `zoom` — Firefox only implemented it in
+ * 126, and a silently ignored zoom would leave the frame measured for a size it
+ * never took. Measure the effect rather than trust `CSS.supports`.
+ */
+function supportsZoom() {
+  if (zoomIsHonoured === null) {
+    const probe = document.createElement('div')
+    probe.style.cssText = 'position:absolute;visibility:hidden;width:100px;height:1px;zoom:2'
+    document.body.appendChild(probe)
+    zoomIsHonoured = probe.getBoundingClientRect().width > 150
+    probe.remove()
+  }
+  return zoomIsHonoured
+}
+
 export function ProjectEmbed({ media, title }: { media: ProjectMedia; title: string }) {
   const [running, setRunning] = useState(false)
 
@@ -51,6 +88,19 @@ export function ProjectEmbed({ media, title }: { media: ProjectMedia; title: str
   const scaled = Boolean(nativeW && nativeH)
 
   /*
+    Settled once, when the visitor presses play, and deliberately not reactive.
+    Changing `zoom` mid-session changes the drawing buffer under a running game,
+    which makes Unity reallocate its render targets; the `transform` below keeps
+    adapting to the card for free, so there is nothing to gain by moving this
+    too. Never below 1: a device that already renders at dpr 2 has the pixels.
+  */
+  const [zoom] = useState(() => {
+    const min = media.embedMinDpr
+    if (!min || !supportsZoom()) return 1
+    return Math.max(1, min / (window.devicePixelRatio || 1))
+  })
+
+  /*
     Measure the frame rather than reading a breakpoint: the card is one column
     on a phone and one of two on a desktop, and it also changes width when the
     sidebar appears. The same observer covers going fullscreen, since the box
@@ -60,18 +110,23 @@ export function ProjectEmbed({ media, title }: { media: ProjectMedia; title: str
     const box = boxRef.current
     if (!running || !scaled || !box || !nativeW || !nativeH) return
 
+    // The stage is what gets transformed, and `zoom` has already multiplied its
+    // layout size — so fit against that, not against the iframe's own numbers.
+    const stageW = nativeW * zoom
+    const stageH = nativeH * zoom
+
     const measure = () => {
       const { width, height } = box.getBoundingClientRect()
       if (!width || !height) return
-      const scale = Math.min(width / nativeW, height / nativeH)
-      setFit({ scale, x: (width - nativeW * scale) / 2, y: (height - nativeH * scale) / 2 })
+      const scale = Math.min(width / stageW, height / stageH)
+      setFit({ scale, x: (width - stageW * scale) / 2, y: (height - stageH * scale) / 2 })
     }
 
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(box)
     return () => observer.disconnect()
-  }, [running, scaled, nativeW, nativeH])
+  }, [running, scaled, nativeW, nativeH, zoom])
 
   useEffect(() => {
     const sync = () => setFullscreen(document.fullscreenElement === rootRef.current)
@@ -155,10 +210,31 @@ export function ProjectEmbed({ media, title }: { media: ProjectMedia; title: str
         className={cn('relative w-full overflow-hidden', fullscreen && 'min-h-0 flex-1')}
         style={fullscreen ? undefined : { aspectRatio: aspect }}
       >
-        <iframe
-          src={media.src}
-          title={media.alt ?? `${title}, playable`}
-          /*
+        {/*
+          The transform lives on this wrapper rather than on the iframe, because
+          `zoom` and `transform` on one element compose in the *zoomed*
+          coordinate space — a translate in px would then move by px x zoom. Two
+          elements keep the two effects in spaces we can each reason about.
+        */}
+        <div
+          className={cn('absolute left-0 top-0', !scaled && 'h-full w-full')}
+          style={
+            scaled
+              ? {
+                  transformOrigin: '0 0',
+                  // Hidden until measured, or the first paint is a full-size
+                  // iframe bursting out of the card.
+                  transform: fit
+                    ? `translate(${fit.x}px, ${fit.y}px) scale(${fit.scale})`
+                    : 'scale(0)',
+                }
+              : undefined
+          }
+        >
+          <iframe
+            src={media.src}
+            title={media.alt ?? `${title}, playable`}
+            /*
             `fullscreen *`, not a bare `fullscreen`. There are two frames here,
             not one: itch.io's wrapper, and the game itself on itch.zone inside
             it. A bare grant covers only the frame's own origin, so the nested
@@ -167,24 +243,16 @@ export function ProjectEmbed({ media, title }: { media: ProjectMedia; title: str
             itch's own inner iframe delegates with `fullscreen *` for exactly
             this reason.
           */
-          allow="autoplay; fullscreen *; gamepad; xr-spatial-tracking"
-          allowFullScreen
-          className="absolute left-0 top-0 border-0 bg-black"
-          style={
-            scaled
-              ? {
-                  width: `${nativeW}px`,
-                  height: `${nativeH}px`,
-                  transformOrigin: '0 0',
-                  // Hidden until measured, or the first paint is a full-size
-                  // iframe bursting out of the card.
-                  transform: fit
-                    ? `translate(${fit.x}px, ${fit.y}px) scale(${fit.scale})`
-                    : 'scale(0)',
-                }
-              : { width: '100%', height: '100%' }
-          }
-        />
+            allow="autoplay; fullscreen *; gamepad; xr-spatial-tracking"
+            allowFullScreen
+            className="block border-0 bg-black"
+            style={
+              scaled
+                ? { width: `${nativeW}px`, height: `${nativeH}px`, zoom }
+                : { width: '100%', height: '100%' }
+            }
+          />
+        </div>
       </div>
 
       {/*
