@@ -11,24 +11,26 @@
   utility onto them (see tailwind.config.js) — `bg-accent` needs no JS to be
   correct.
 
-  Cyberpunk 2077's hazard yellow and red on a near-black that is warmed toward
-  the red rather than left neutral, so the ground belongs to the same palette
-  instead of sitting under it. The yellow is paled off full hazard chroma: at
-  252 238 10 it was the loudest thing on every page, and it now reads as the
-  frame rather than as an alarm. The body face is what
+  Cyberpunk 2077's hazard yellow and red on a neutral black ground. The ground
+  used to be warmed toward the red so it belonged to the same palette rather
+  than sitting under it, but that read as everything being red with yellow
+  accents rather than as yellow-and-red on black — so the ground is neutral
+  again and the two accents carry the colour instead. The yellow is paled off
+  full hazard chroma: at 252 238 10 it was the loudest thing on every page,
+  and it now reads as the frame rather than as an alarm. The body face is what
   Windows actually shipped its UI in; it is a system stack on purpose, so no
   extra webfont is fetched and on Windows the chrome renders in the genuine
   article. Display is Chakra Petch, the one webfont left.
 */
 :root {
-  --c-bg: 22 8 12;
-  --c-surface: 34 16 20;
-  --c-surface-alt: 48 23 28;
-  --c-fg: 245 235 232;
-  --c-muted: 188 156 158;
+  --c-bg: 10 10 11;
+  --c-surface: 20 20 22;
+  --c-surface-alt: 30 30 33;
+  --c-fg: 238 238 238;
+  --c-muted: 156 156 160;
   --c-accent: 240 228 134;
   --c-accent-alt: 255 84 78;
-  --c-line: 112 60 68;
+  --c-line: 80 80 86;
 
   --font-display: 'Chakra Petch', 'Rajdhani', system-ui, sans-serif;
   --font-body: Tahoma, Verdana, 'DejaVu Sans', Geneva, sans-serif;
