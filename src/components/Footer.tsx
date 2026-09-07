@@ -69,15 +69,20 @@ export function Footer() {
           <p className="font-mono text-xs text-muted">
             © {new Date().getFullYear()} {profile.name}. Built with React and Vite.
           </p>
-          {profile.resumeUrl && (
-            <a
-              href={profile.resumeUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex min-h-[44px] items-center font-mono text-xs text-muted underline decoration-line underline-offset-4 transition-colors hover:text-accent"
-            >
-              Resume (PDF)
-            </a>
+          {profile.resumes && profile.resumes.length > 0 && (
+            <div className="flex items-center gap-4">
+              {profile.resumes.map((resume) => (
+                <a
+                  key={resume.url}
+                  href={resume.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex min-h-[44px] items-center font-mono text-xs text-muted underline decoration-line underline-offset-4 transition-colors hover:text-accent"
+                >
+                  {resume.label}
+                </a>
+              ))}
+            </div>
           )}
         </div>
       </div>

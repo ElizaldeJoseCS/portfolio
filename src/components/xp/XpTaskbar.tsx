@@ -14,7 +14,7 @@ import { SocialIcon } from '../ui'
  * the tray clock on the right.
  *
  * None of it is ornament: Start is the mobile nav, Quick Launch is the fastest
- * path to the resume, and between them they mean no page needs its own set of
+ * path to the resumes, and between them they mean no page needs its own set of
  * "where to next" links at the bottom.
  */
 export function XpTaskbar() {
@@ -78,20 +78,22 @@ export function XpTaskbar() {
         {/* Quick Launch. Icon-only, so each carries its own accessible name. */}
         <nav aria-label="Quick links" className="min-w-0">
           <ul className="flex items-center gap-1">
-            {profile.resumeUrl && (
-              <li>
+            {profile.resumes?.map((resume) => (
+              <li key={resume.url}>
                 <a
-                  href={profile.resumeUrl}
+                  href={resume.url}
                   target="_blank"
                   rel="noreferrer noopener"
                   className="xp-bevel inline-flex h-11 items-center gap-2 bg-surface px-2.5 font-mono text-[11px] text-fg/85 transition-colors hover:border-accent/60 hover:bg-accent/15 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:px-3"
                 >
                   <span aria-hidden="true">▤</span>
-                  <span className="hidden xs:inline">resume.pdf</span>
-                  <span className="sr-only">Resume, PDF (opens in a new tab)</span>
+                  <span aria-hidden="true" className="hidden xs:inline">
+                    {resume.url.split('/').pop()}
+                  </span>
+                  <span className="sr-only">{resume.label}, PDF (opens in a new tab)</span>
                 </a>
               </li>
-            )}
+            ))}
             {quickLaunch.map((social) => (
               <li key={social.url}>
                 <a

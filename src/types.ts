@@ -169,7 +169,7 @@ export interface Profile {
   location: string
   email: string
   socials: { label: string; url: string; icon?: string }[]
-  resumeUrl?: string
+  resumes?: { label: string; url: string }[]
   /** Optional avatar in `public/assets`. Falls back to a generated monogram. */
   avatarUrl?: string
   interests?: string[]

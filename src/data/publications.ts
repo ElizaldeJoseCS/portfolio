@@ -3,7 +3,7 @@ import type { Publication } from '@/types'
 /**
  * Co-authored papers. Each one is hosted here as a PDF as well as linked to its
  * canonical record, so the link still works when a conference site is
- * reorganised — the same reason `resume.pdf` lives in `public/assets`.
+ * reorganised — the same reason the resume PDFs live in `public/assets`.
  *
  * `experienceId` ties a paper to the research position it came out of, so the
  * Experience page can show the institution's mark beside the paper without

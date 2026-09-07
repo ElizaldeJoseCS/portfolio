@@ -50,19 +50,24 @@ export function ContactPage() {
         </ul>
       </section>
 
-      {profile.resumeUrl && (
+      {profile.resumes && profile.resumes.length > 0 && (
         <section className="mt-8">
           <PageHeading>Resume</PageHeading>
-          <a
-            href={profile.resumeUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="xp-notch inline-flex min-h-[48px] items-center gap-2 bg-accent px-5 font-display text-sm font-bold uppercase tracking-wide text-bg transition-colors hover:bg-accentAlt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-          >
-            Download resume (PDF)
-            <span aria-hidden="true">↓</span>
-            <span className="sr-only">(opens in a new tab)</span>
-          </a>
+          <div className="flex flex-wrap gap-3">
+            {profile.resumes.map((resume) => (
+              <a
+                key={resume.url}
+                href={resume.url}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="xp-notch inline-flex min-h-[48px] items-center gap-2 bg-accent px-5 font-display text-sm font-bold uppercase tracking-wide text-bg transition-colors hover:bg-accentAlt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              >
+                Download {resume.label}
+                <span aria-hidden="true">↓</span>
+                <span className="sr-only">(opens in a new tab)</span>
+              </a>
+            ))}
+          </div>
         </section>
       )}
     </>

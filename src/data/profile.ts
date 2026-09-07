@@ -24,7 +24,10 @@ export const profile: Profile = {
     { label: 'itch.io', url: 'https://joseelizalde02.itch.io/', icon: 'itch' },
     { label: 'Email', url: 'mailto:joseelizalde02@g.ucla.edu', icon: 'mail' },
   ],
-  resumeUrl: '/assets/resume.pdf',
+  resumes: [
+    { label: 'Game Dev Resume', url: '/assets/resume-gamedev.pdf' },
+    { label: 'SWE Resume', url: '/assets/resume-swe.pdf' },
+  ],
   avatarUrl: '/assets/me.webp',
   interests: [
     'Competitive programming',

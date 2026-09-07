@@ -142,10 +142,10 @@ function Sidebar() {
               </a>
             </li>
           ))}
-          {profile.resumeUrl && (
-            <li>
+          {profile.resumes?.map((resume) => (
+            <li key={resume.url}>
               <a
-                href={profile.resumeUrl}
+                href={resume.url}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="flex min-h-[44px] items-center gap-2.5 px-1 text-[13px] text-fg/85 transition-colors hover:bg-accent hover:text-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
@@ -153,14 +153,14 @@ function Sidebar() {
                 <span aria-hidden="true" className="w-4 shrink-0 text-center">
                   ▤
                 </span>
-                Resume (PDF)
+                {resume.label}
                 <span aria-hidden="true" className="ml-auto text-[10px] opacity-60">
                   ↗
                 </span>
                 <span className="sr-only">(opens in a new tab)</span>
               </a>
             </li>
-          )}
+          ))}
         </ul>
       </XpPanel>
 

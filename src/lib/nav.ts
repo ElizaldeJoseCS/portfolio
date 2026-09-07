@@ -40,7 +40,7 @@ export const PAGES: NavPage[] = [
     path: '/contact',
     label: 'Contact',
     title: 'Contact — Jose Elizalde',
-    description: 'Email, GitHub, LinkedIn, itch.io and a copy of my resume.',
+    description: 'Email, GitHub, LinkedIn, itch.io and copies of my resumes.',
   },
 ]
 
