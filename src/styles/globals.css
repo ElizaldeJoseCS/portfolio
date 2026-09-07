@@ -11,30 +11,24 @@
   utility onto them (see tailwind.config.js) — `bg-accent` needs no JS to be
   correct.
 
-  Green on black. The ground is neutral again apart from a trace of green in
-  it, so it reads as the black the accent sits against rather than as a colour
-  of its own. Two greens carry the accents: a yellow-leaning green for the
-  chrome, and a cooler spring green for the secondary, far enough apart in hue
-  to stay distinguishable while both still reading as green.
-
-  Both accents have to clear the contrast floor in *two* directions — they are
-  each used as text on the dark ground and as a field under `text-bg` (the
-  title bar, the primary buttons, the Start button). Green makes that easy,
-  since luminance is weighted 0.7152 toward it; a saturated red sat close
-  enough to the floor to need picking carefully. The body face is what
+  Cyberpunk 2077's hazard yellow and red on a near-black that is warmed toward
+  the red rather than left neutral, so the ground belongs to the same palette
+  instead of sitting under it. The yellow is paled off full hazard chroma: at
+  252 238 10 it was the loudest thing on every page, and it now reads as the
+  frame rather than as an alarm. The body face is what
   Windows actually shipped its UI in; it is a system stack on purpose, so no
   extra webfont is fetched and on Windows the chrome renders in the genuine
   article. Display is Chakra Petch, the one webfont left.
 */
 :root {
-  --c-bg: 8 11 9;
-  --c-surface: 16 20 18;
-  --c-surface-alt: 24 30 27;
-  --c-fg: 232 240 234;
-  --c-muted: 148 164 152;
-  --c-accent: 148 234 122;
-  --c-accent-alt: 88 240 176;
-  --c-line: 70 88 76;
+  --c-bg: 22 8 12;
+  --c-surface: 34 16 20;
+  --c-surface-alt: 48 23 28;
+  --c-fg: 245 235 232;
+  --c-muted: 188 156 158;
+  --c-accent: 240 228 134;
+  --c-accent-alt: 255 84 78;
+  --c-line: 112 60 68;
 
   --font-display: 'Chakra Petch', 'Rajdhani', system-ui, sans-serif;
   --font-body: Tahoma, Verdana, 'DejaVu Sans', Geneva, sans-serif;
@@ -158,18 +152,16 @@
     clearest single signal that this is not actually Windows. The strip has to
     be at least ~6px tall or the diagonals read as dashes.
 
-    Striped against the ground, which is the whole point when black is half the
-    scheme. This stop tracks whatever the second colour of the palette is: it
-    was `--c-accent-alt` while the theme ran yellow-on-red, because tape
-    striped on the background *is* yellow-and-black and would have kept the
-    old scheme no matter what the tokens said. It is the loudest element on
-    the page, so it is the one that has to move first.
+    Yellow against the red rather than against the ground: hazard tape striped
+    on `--c-bg` is the literal yellow-and-black the rest of the palette has
+    moved off, and it is the loudest element on the page, so leaving it would
+    have kept the old scheme no matter what the tokens said.
   */
   .xp-hazard {
     background-image: repeating-linear-gradient(
       -45deg,
       rgb(var(--c-accent)) 0 7px,
-      rgb(var(--c-bg)) 7px 14px
+      rgb(var(--c-accent-alt)) 7px 14px
     );
   }
 
