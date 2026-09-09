@@ -292,7 +292,7 @@ export const projects: Project[] = [
     tags: ['Unity', 'FPS', 'Game Direction', 'In development'],
     techStack: ['Unity', 'C#', 'HLSL', 'ShaderLab', 'Git'],
     role: 'Game Director',
-    year: '2024',
+    year: '2025',
     links: [{ label: 'GitHub', url: 'https://github.com/SRS-Jump-the-Gun/JumpTheGunUnityBuild' }],
     media: [
       /*

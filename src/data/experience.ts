@@ -39,7 +39,7 @@ export const experience: ExperienceEntry[] = [
     role: 'Game Director — Jump the Gun',
     company: 'UCLA ACM Studio (SRS)',
     location: 'Los Angeles, CA',
-    start: '2024-10',
+    start: '2025-10',
     end: 'Present',
     kind: 'work',
     description: [
