@@ -184,7 +184,6 @@ function StatusTicker() {
   const items = [
     profile.today,
     `${profile.roles.join(' · ')} — ${profile.location}`,
-    'Every page is one document; the window never closes.',
   ].filter(Boolean) as string[]
 
   const strip = (
