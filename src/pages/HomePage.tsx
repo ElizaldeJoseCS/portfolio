@@ -46,7 +46,7 @@ export function HomePage() {
       </div>
 
       <section className="mt-8">
-        <PageHeading lead="Four pages. The window stays open.">Where to go</PageHeading>
+        <PageHeading>Where to go</PageHeading>
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {elsewhere.map((page) => (
             <li key={page.path}>
@@ -83,7 +83,7 @@ export function HomePage() {
 
       {featured.length > 0 && (
         <section className="mt-10">
-          <PageHeading lead="The projects I am most proud of. The rest are on the Projects page.">
+          <PageHeading lead="The projects I am most proud of">
             Featured
           </PageHeading>
           <ul className="space-y-3">
