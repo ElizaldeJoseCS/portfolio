@@ -53,7 +53,7 @@ export function AboutPage() {
       )}
 
       <section className="mt-10">
-        <PageHeading lead="Bars are a rough self-assessment, not a certification.">
+        <PageHeading lead="The bars represent my proficiency in these skills">
           Skills
         </PageHeading>
         <FilterBar
