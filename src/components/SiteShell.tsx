@@ -163,7 +163,9 @@ function Sidebar() {
           ))}
         </ul>
       </XpPanel>
-
+       <XpPanel title="Counter">
+        <XpVisitorCounter />
+      </XpPanel>
     </div>
   )
 }
