@@ -31,7 +31,7 @@ export function ProjectsPage() {
     <>
       <PageHeading
         level="h1"
-        lead="Systems work and games. Each one expands in place — nothing opens in a dialog."
+        lead="Systems work and games"
       >
         Projects
       </PageHeading>
