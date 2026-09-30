@@ -7,16 +7,9 @@ export const profile: Profile = {
     'Computer Science & Engineering at UCLA. I am interested systems, graphics, and video game programming',
   bio: [
     "My computer science journey began simply because I wanted to make my own video games and now my interest have expanded to not only developing and shipping amazing games. but also building low-level systems like my own custom game engine",
-<<<<<<< HEAD
     'My work spans a lot of software, ranging from web services like a Codeforces practice site and a Robinhood portfolio bot, all the way to a published game, Shellscape, and two currently in development: Cloudy Critters and Jump the Gun.',
     'My game developer itch is satisfied with projects built with my club UCLA ACM Studio, where I am Game Director on Jump the Gun. I have participated in game jams where my teams have published working games on itch.io on multiple occasions.',
-||||||| parent of c851454 (fixed typo in profile)
-    'My work spans a lot of software, ranging from web services like a Codeforces practice site and a Robinhood portfolio bot all the way to a published game, Shellscape, and two currently in development: Cloudy Critters and Jump the Gun.',
-    'My game developer itch is satisfied with projects built with my club UCLA ACM Studio, where I am Game Director on Jump the Gun. I have participated in game jams where my team has publsihed a working product on itch.io on multiple occasions.',
-=======
-    'My work spans a lot of software, ranging from web services like a Codeforces practice site and a Robinhood portfolio bot all the way to a published game, Shellscape, and two currently in development: Cloudy Critters and Jump the Gun.',
-    'My game developer itch is satisfied with projects built with my club UCLA ACM Studio, where I am Game Director on Jump the Gun. I have participated in game jams where my teams have published working products on itch.io on multiple occasions.',
->>>>>>> c851454 (fixed typo in profile)
+    'My work spans a lot of software, ranging from web services like a Codeforces practice site and a Robinhood portfolio bot all the way to a published game, Shellscape, and two more currently in development, Cloudy Critters and Jump the Gun.',
     'Before this I spent two summers on research: combinatorics on posets at UCLA, and human-computer interaction at Carnegie Mellon, both of which produced papers with even the CMU paper being accepted to CHI 2026.',
   ],
   roles: ['Software Engineer', 'Game Developer'],
