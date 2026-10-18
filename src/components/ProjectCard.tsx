@@ -82,19 +82,20 @@ export function ProjectCard({ project }: { project: Project }) {
             </div>
 
             {/*
-              h2, not h3: on the Projects page these are the top-level items
-              under the page's h1, and the write-up headings inside the panel
-              are the h3s below them.
+              h3: on the Projects page these sit under the Software / Games
+              column h2s, and the write-up headings inside the panel are h4s.
             */}
-            <h2
+            <h3
               id={titleId}
               className="mt-2 font-display text-xl font-bold uppercase tracking-tight text-fg"
             >
               {project.title}
-            </h2>
+            </h3>
             <p className="mt-2 text-sm leading-relaxed text-muted">{project.tagline}</p>
             <p className="mt-2 font-mono text-[11px] uppercase tracking-wider text-muted">
-              {project.role} · {project.techStack.slice(0, 4).join(' / ')}
+              {[project.role, project.techStack.slice(0, 4).join(' / ')]
+                .filter(Boolean)
+                .join(' · ')}
             </p>
 
             <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -173,9 +174,9 @@ export function ProjectCard({ project }: { project: Project }) {
 
             {project.details?.map((detail) => (
               <section key={detail.heading} className="mt-5">
-                <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent">
+                <h4 className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent">
                   {detail.heading}
-                </h3>
+                </h4>
                 {detail.body && (
                   <p className="mt-2 text-sm leading-relaxed text-muted">{detail.body}</p>
                 )}
@@ -196,9 +197,9 @@ export function ProjectCard({ project }: { project: Project }) {
 
             {project.techStack.length > 0 && (
               <div className="mt-5">
-                <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent">
+                <h4 className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent">
                   Built with
-                </h3>
+                </h4>
                 <ul className="mt-2 flex flex-wrap gap-1.5">
                   {project.techStack.map((tech) => (
                     <li key={tech}>

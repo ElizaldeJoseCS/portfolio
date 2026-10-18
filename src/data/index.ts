@@ -1,5 +1,5 @@
 export { profile } from './profile'
-export { projects } from './projects'
+export { projects, featuredOrder } from './projects'
 export { experience } from './experience'
 export { publications } from './publications'
 export { skills } from './skills'

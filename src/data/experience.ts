@@ -43,9 +43,9 @@ export const experience: ExperienceEntry[] = [
     end: 'Present',
     kind: 'work',
     description: [
-      'Lead design and development of a first-person action shooter at the student-run studio, defining gameplay mechanics and coordinating implementation across the team.',
-      'Wrote a custom physics-based movement controller in C#, replacing Unity’s default character controller with hand-written movement and collision logic.',
-      'Run the team on Git branching and pull requests so multiple people can land gameplay features concurrently.',
+        'Led the design and development of Jump the Gun, a single-player first-person action shooter, defining gameplay mechanics and coordinating implementation across an 8-person team of programmers, artists and designers',
+        'Implemented a custom physics-based movement controller in C#, replacing Unity’s default character controller',
+        'Ran the team\'s meetings, code reviews and task management to make sure the whole team works smoothly together'
     ],
     skills: ['Unity', 'C#', 'Game design', 'Git'],
     area: 'other',

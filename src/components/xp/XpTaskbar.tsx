@@ -52,7 +52,6 @@ export function XpTaskbar() {
     <div ref={rootRef} className="fixed inset-x-0 bottom-0 z-50">
       {open && <StartMenu id={menuId} />}
 
-      <div aria-hidden="true" className="xp-hazard h-1.5 opacity-80" />
       <div className="xp-bevel flex items-center gap-1.5 border-x-0 border-b-0 bg-surfaceAlt px-1.5 py-1 sm:gap-2 sm:px-2">
         <button
           ref={startRef}

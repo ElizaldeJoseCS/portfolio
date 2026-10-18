@@ -27,8 +27,7 @@ export const projects: Project[] = [
         bullets: [
           'A scheduled job selects four problems a day, one per tier: Beginner (800–1200), Intermediate (1200–1600), Advanced (1600–2000) and Expert (2000+).',
           'A rolling 90-day dedup window keeps a problem from coming back around before you have forgotten it.',
-          'A 30-day backfill runs on first deploy, so the archive is never empty on a fresh install.',
-          'Each problem gets a generated editorial in a fixed shape — intuition, approach, complexity, C++ reference solution — kept behind an Answer tab so the attempt comes first.',
+          "Each problem gets a generated editorial in a fixed shape — intuition, approach, complexity, C++ reference solution, and it's kept behind an Answer tab so the attempt comes first.",
           'The Go Discord bot talks to the same database, exposing /daily, /solve, /stats and /leaderboard.',
         ],
       },
@@ -38,13 +37,9 @@ export const projects: Project[] = [
           'Next.js 14 App Router with TypeScript and Tailwind for the web client.',
           'PostgreSQL through Prisma 7 — problems, editorials, submissions and streaks.',
           'A separate Go service using DiscordGo for the bot, reading the same Postgres instance.',
-          'GPT-4o generates the editorials; output is written back so a given problem is only ever paid for once.',
-          'Docker Compose brings up web, bot, database and Nginx together, which is what makes a rebuild on the droplet a single command.',
+          'Free Gemini Model generates the editorials',
+          'Docker Compose brings up web, bot, database and Nginx together.',
         ],
-      },
-      {
-        heading: 'What I would change',
-        body: 'Editorial generation is synchronous with the daily job, so a failure leaves a gap for that day rather than retrying on its own. The difficulty tiers are also fixed bands rather than adapting to how the person is actually doing, which is the obvious next thing to build.',
       },
     ],
     track: ['swe'],
@@ -57,7 +52,6 @@ export const projects: Project[] = [
       'Prisma 7',
       'Go',
       'DiscordGo',
-      'OpenAI GPT-4o',
       'Docker Compose',
       'Nginx',
     ],
@@ -82,35 +76,31 @@ export const projects: Project[] = [
   {
     id: 'robinhood-bot',
     title: 'Robinhood Portfolio Bot',
-    tagline: 'A C++ Discord bot on a Python FastAPI backend, live on a VPS 24/7.',
+    tagline: 'A Discord bot that checks on my stock portfolio and suggests stocks to look at.',
     description:
-      'A Discord bot that reports your live Robinhood portfolio and recommends stocks off a momentum-plus-fundamentals pipeline. It runs as two services: the bot itself is C++ on the D++ library, talking over HTTP to a Python FastAPI backend that owns the brokerage session and the analysis.',
-    status: 'Live — running 24/7 under systemd on a DigitalOcean VPS',
+      'A bot in my Discord server that keeps an eye on my Robinhood investing account. Type a command and it tells you how the account is doing right now, or which five stocks currently look most promising. It also posts a portfolio update on its own from a timer. It runs on a virtual private server hosted by DigitalOcean, so it works even when my computer is off.',
+    status: 'Live, running 24/7 on a rented server',
     details: [
       {
-        heading: 'Why two languages',
-        body: 'Discord gateway work is long-lived, latency-sensitive and mostly I/O, which C++ with D++ handles cleanly. The analysis side warrants the use of data science libraries and utilities like pandas, yfinance, Python brokerage and market-data libraries. Keeping them as separate processes behind an HTTP boundary meant the brokerage session lives in exactly one service, and the bot can be restarted without re-authenticating.',
-      },
-      {
-        heading: 'Commands',
+        heading: 'What you can ask it',
         bullets: [
-          '/portfolio — live equity, crypto holdings and market-value stats pulled straight from the account.',
-          '/recommend — the current top five picks out of the analysis pipeline.',
-          'A timer that auto-posts portfolio updates to a channel, so the report arrives without anyone asking for it.',
+          '/portfolio: how much the account is worth right now, what it holds (including crypto), and how each holding is doing.',
+          '/recommend: the five stocks that currently score best in its analysis.',
+          'Without being asked, it posts a portfolio update to a channel on a timer.',
         ],
       },
       {
-        heading: 'The analysis pipeline',
+        heading: 'How it picks stocks',
         bullets: [
-          'A background job periodically pulls historical S&P 500 data with yfinance.',
-          'pandas computes momentum breakouts over the price history.',
-          'Valuation metrics — P/E ratio, ROE — are folded in so a pure-momentum spike does not carry a pick on its own.',
-          'Results are cached so a /recommend during market hours answers immediately instead of triggering a full recompute.',
+          'Every so often it downloads the price history of the 500 biggest US companies (the S&P 500).',
+          'It looks for stocks whose price has recently started climbing faster than usual.',
+          'It then checks whether the company itself looks healthy, using standard measures like how much profit it makes compared to its price. A stock that is only rising on hype does not make the list.',
+          'It saves the results, so /recommend answers instantly instead of redoing all the math each time.',
         ],
       },
       {
-        heading: 'Deployment',
-        body: 'Both services run on a DigitalOcean Linux VPS wrapped in systemd units, so they restart on crash and come back after a reboot without anyone logging in.',
+        heading: 'How it is built',
+        body: 'It is two programs that talk to each other. The Discord side is written in C++, which is good at staying connected and responding quickly. The stock analysis is written in Python, which has the best tools for crunching financial data. Splitting them means I can restart the bot without logging back into Robinhood. Both run on a DigitalOcean server and restart on their own if they crash.',
       },
     ],
     track: ['swe'],
@@ -332,4 +322,80 @@ export const projects: Project[] = [
     ],
     featured: true,
   },
+  {
+    id: 'cloudy-critters',
+    title: 'Cloudy Critters',
+    tagline: 'Build the best zoo on an island floating in the clouds, one card at a time.',
+    description:
+      'A zoo-building game in development with team Black Belts at UCLA ACM Studio. You build your zoo on a floating island by playing cards from your hand, one week at a time. We are aiming for a Steam release in January 2027.',
+    status: 'In development, Steam release planned for January 2027',
+    track: ['game'],
+    tags: ['ACM Studio', 'Strategy', 'Card game', 'In development'],
+    techStack: ['Unity', 'C#'],
+    role: 'Game Programmer',
+    year: '2026',
+    links: [{ label: 'Dev reel on Instagram', url: 'https://www.instagram.com/reel/Deh-lgahuyk/' }],
+    media: [
+      // A frame from the dev reel, cropped to the card's 16:10.
+      {
+        type: 'image',
+        src: '/assets/cloudy-critters-cover.webp',
+        alt: 'Cloudy Critters: an isometric zoo on a floating island, with a hand of building cards below',
+      },
+      /*
+        The team's Instagram reel, rehosted rather than embedded: Instagram's
+        embed needs its own script to size the frame, which a click-to-load
+        iframe never runs. Re-encoded to 540 wide, 5.9MB down to 3MB.
+      */
+      {
+        type: 'video',
+        src: '/assets/cloudy-critters-reel.mp4',
+        poster: '/assets/cloudy-critters-reel.jpg',
+        alt: 'Development reel: the concept, then building a zoo across the first few weeks',
+        aspect: '9 / 16',
+      },
+    ],
+    featured: true,
+  },
+  {
+    id: 'one-tap-cook',
+    title: 'One Tap Cook',
+    tagline: 'A broke college student becomes a chef using only the spacebar.',
+    description:
+      'A rhythm game made for the ACM Studio Jam 2025 by a team of five: art by Emma, writing and level design by Iva, music by Daniel, and programming by Luke and me. Every cooking step is played with one key, in time with the music. Playable in the browser.',
+    status: 'Released, playable in the browser',
+    track: ['game'],
+    tags: ['Game Jam', 'Rhythm', 'Team of 5'],
+    techStack: ['Unity', 'C#', 'HTML5'],
+    role: 'Programmer',
+    year: '2025',
+    links: [{ label: 'Play on itch.io', url: 'https://lemmons135.itch.io/one-tap-cook' }],
+    media: [
+      /*
+        `15575469` is the HTML5 upload id from the itch page's Run-game iframe.
+        Same Unity template as Shellscape (960 x 600 canvas), so the same
+        962 x 659 frame.
+      */
+      {
+        type: 'embed',
+        src: 'https://itch.io/embed-upload/15575469?color=12101c',
+        poster: '/assets/one-tap-cook-cover.webp',
+        alt: 'One Tap Cook, playable in the browser',
+        action: 'Play One Tap Cook',
+        embedWidth: 962,
+        embedHeight: 659,
+      },
+      { type: 'image', src: '/assets/one-tap-cook-cover.webp', alt: 'One Tap Cook title screen' },
+    ],
+    featured: false,
+  },
+]
+
+/** The order featured projects appear in on the home page. */
+export const featuredOrder: string[] = [
+  'jump-the-gun',
+  'cloudy-critters',
+  'shellscape',
+  'robinhood-bot',
+  'dailycodeforce',
 ]
