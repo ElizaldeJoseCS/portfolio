@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { profile } from '@/data'
 import { pageFor } from '@/lib/nav'
-import { XpMenuBar, XpPanel, XpTaskbar, XpVisitorCounter, XpWindow } from './xp'
+import { XpMenuBar, XpPanel, XpTaskbar, XpWindow } from './xp'
 import { SocialIcon } from './ui'
 import { Footer } from './Footer'
 
@@ -67,7 +67,7 @@ export function SiteShell() {
         className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(rgb(var(--c-accent-alt))_1px,transparent_1px),linear-gradient(90deg,rgb(var(--c-accent-alt))_1px,transparent_1px)] bg-[size:48px_48px] opacity-[0.07]"
       />
 
-      <div className="mx-auto w-full max-w-6xl px-2 pt-3 sm:px-5 sm:pt-6">
+      <div className="w-full px-2 pt-3 sm:px-5 sm:pt-6">
         <XpWindow
           title="jose.elizalde"
           subtitle={page ? `${page.label.toLowerCase()}` : undefined}
@@ -162,9 +162,6 @@ function Sidebar() {
             </li>
           ))}
         </ul>
-      </XpPanel>
-       <XpPanel title="Counter">
-        <XpVisitorCounter />
       </XpPanel>
     </div>
   )

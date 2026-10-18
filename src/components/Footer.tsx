@@ -21,7 +21,7 @@ export function Footer() {
   return (
     <footer className="xp-bevel border-x-0 border-b-0 bg-surface/60">
       {/* Taskbar clearance is applied by `SiteShell`, which owns the layout. */}
-      <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8">
+      <div className="w-full px-5 py-10 sm:px-8">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="font-display text-lg font-bold tracking-[0.2em] text-fg">
