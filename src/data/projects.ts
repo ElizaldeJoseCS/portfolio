@@ -20,7 +20,7 @@ export const projects: Project[] = [
     details: [
       {
         heading: 'The problem it solves',
-        body: "Codeforces has thousands of problems and no daily rhythm, so practice either stops completely or turns into aimless scrolling. Picking a problem is its own chore, and some problems don't even have public editorials out there. Therefore I wanted to create a webservice that provides that same experience as the LeetCode daily, which was a fixed set of problems each morning, at a difficulty you can actually clear.",
+        body: "Codeforces has thousands of problems but no way to practice these problems in routine way, so practice either stops completely or turns into aimless scrolling. Picking a problem is its own chore, and some problems don't even have public editorials out there. Therefore I wanted to create a webservice that provides that same experience as the LeetCode daily, which was a fixed set of problems each morning, at a difficulty you can actually clear.",
       },
       {
         heading: 'How it works',
@@ -276,7 +276,7 @@ export const projects: Project[] = [
     title: 'Jump the Gun',
     tagline: 'A first-person action shooter about a father going after his old mob boss.',
     description:
-      "A single-player first-person action shooter in development at UCLA ACM Studio SRS, the student-run studio, where I am Game Director. The narrative follows a father tearing through his former mob boss’s organisation to get his kidnapped daughter back, and the combat is built to match that. It's adrenaline inducing close and fast combat. I lead the design and coordinate implementation across the team, and I wrote the custom physics-based movement controller in C#, replacing Unity’s built-in character controller with hand-written movement and collision logic so the feel is ours rather than the engine’s default. The team works through Git branching and pull requests so several people can land gameplay features in parallel. Still in active development.",
+      "A single-player first-person action shooter in development at UCLA ACM Studio SRS, where I am Game Director. The narrative follows a father tearing through his former mob boss’s organisation to get his kidnapped daughter back, and the combat is built to match that. It's adrenaline inducing close and fast combat. I lead the design and coordinate implementation across the team, and I wrote the custom physics-based movement controller in C#, replacing Unity’s built-in character controller with hand-written movement and collision logic so the movement felt more unique and smooth. The team works through Git branching and pull requests so several people can land gameplay features in parallel. Still in active development.",
     status: 'In active development at UCLA ACM Studio SRS',
     track: ['game'],
     tags: ['Unity', 'FPS', 'Game Direction', 'In development'],
@@ -309,7 +309,7 @@ export const projects: Project[] = [
         type: 'video',
         src: '/assets/jtg-walljump-shockwave.mp4',
         poster: '/assets/jtg-walljump-shockwave.jpg',
-        alt: 'Wall jumping around a derelict factory while a boss enemy fires shockwaves',
+        alt: 'Showing off the Wall jumping while a boss enemy fires shockwaves',
         aspect: '50 / 23',
       },
       {
