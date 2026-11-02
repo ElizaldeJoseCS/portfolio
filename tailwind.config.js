@@ -32,11 +32,9 @@ export default {
       },
       keyframes: {
         blink: { '0%,49%': { opacity: '1' }, '50%,100%': { opacity: '0' } },
-        marquee: { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
       },
       animation: {
         blink: 'blink 1.06s steps(1) infinite',
-        marquee: 'marquee 32s linear infinite',
       },
     },
   },

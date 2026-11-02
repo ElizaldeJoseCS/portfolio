@@ -6,9 +6,9 @@ export const profile: Profile = {
   tagline:
     'Computer Science & Engineering at UCLA. I am interested systems, graphics, and video game programming',
   bio: [
-    "My computer science journey began simply because I wanted to make my own video games and now my interest have expanded to not only developing and shipping amazing games. but also building low-level systems like my own custom game engine",
-    'My work spans a lot of software, ranging from web services like a Codeforces practice site and a Robinhood portfolio bot all the way to a published game, Shellscape, and two currently in development: Cloudy Critters and Jump the Gun.',
-    'My game developer itch is satisfied with projects built with my club UCLA ACM Studio, where I am Game Director on Jump the Gun. I have participated in game jams where my team has publsihed a working product on itch.io on multiple occasions.',
+    "My computer science journey began simply because I wanted to make my own video games and now my interest have expanded to not only developing and shipping fun and challenging games, but also learning how to build low-level systems like a game engine",
+    'My work spans a lot of software, ranging from web services like a Codeforces practice site and a Robinhood portfolio bot, all the way to a published game, Shellscape, and two currently in development, Cloudy Critters and Jump the Gun.',
+    'I have worked on the development of many games as a member of UCLA ACM Studio. I am still working on Jump the Gun on my own time. I have participated in many game jams where my teams have published working games on itch.io on multiple occasions.',
     'Before this I spent two summers on research: combinatorics on posets at UCLA, and human-computer interaction at Carnegie Mellon, both of which produced papers with even the CMU paper being accepted to CHI 2026.',
   ],
   roles: ['Software Engineer', 'Game Developer'],
@@ -41,5 +41,5 @@ export const profile: Profile = {
     'Graphics',
   ],
   today:
-    'I am currently in my 4th year at UCLA and looking for Summer 2027 internship opportunities and New Grad roles. I\'m keeping busy with coursework and also maintaining my daily Codeforce problem website, continuing development on Jump the Gun, working on a new game called Cloudy Critters with UCLA\'s ACM Studio that is planned to be released on Steam in January.',
+    'I am currently a 2nd year transfer at UCLA (Senior) and looking for Summer 2027 internship opportunities and New Grad roles. I\'m keeping busy with coursework and also maintaining my daily Codeforce problem website, continuing development on Jump the Gun, and working on a new game called Cloudy Critters with UCLA\'s ACM Studio that is planned to be released on Steam in January.',
 }

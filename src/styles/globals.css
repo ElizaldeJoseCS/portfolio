@@ -168,24 +168,6 @@
   }
 
   /*
-    CRT scanlines over the window body. Deliberately faint: this sits behind
-    body copy, and the contrast floor (spec §8) is not negotiable for a
-    texture. A static gradient, not an animation, so reduced motion has nothing
-    to switch off.
-  */
-  .xp-scanlines::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-image: repeating-linear-gradient(
-      180deg,
-      rgb(var(--c-accent-alt) / 0.035) 0 1px,
-      transparent 1px 3px
-    );
-  }
-
-  /*
     The menu bar's access-key underline. Done with ::first-letter rather than by
     splitting the label into a marked span plus an sr-only copy: that version
     put three text nodes in every menu item and left the DOM reading
@@ -203,32 +185,6 @@
   */
   .xp-notch {
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
-  }
-}
-
-/*
-  The title bar's glitch. Two offset colour ghosts on a rare cycle — long
-  enough between passes that it reads as interference rather than as a broken
-  element. The blanket reduced-motion rule below neutralises it.
-*/
-@keyframes xp-glitch {
-  0%,
-  92%,
-  100% {
-    transform: translate(0);
-    opacity: 0;
-  }
-  93% {
-    transform: translate(-2px, 1px);
-    opacity: 0.75;
-  }
-  95% {
-    transform: translate(2px, -1px);
-    opacity: 0.6;
-  }
-  97% {
-    transform: translate(-1px, 0);
-    opacity: 0.5;
   }
 }
 
@@ -256,8 +212,8 @@
 
 /*
   Global reduced-motion kill switch. Components branch on the preference where
-  behaviour differs; this catches everything CSS-driven — smooth scroll, the
-  marquee, the glitch, the page fade — without a second code path.
+  behaviour differs; this catches everything CSS-driven — smooth scroll and the
+  page fade — without a second code path.
 */
 @media (prefers-reduced-motion: reduce) {
   html {
