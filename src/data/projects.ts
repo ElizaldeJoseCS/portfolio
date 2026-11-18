@@ -421,8 +421,8 @@ export const projects: Project[] = [
     media: [
       {
         type: 'image',
-        src: '/assets/sunshine-cover.webp',
-        alt: 'The axolotl plushie swinging a lollipop at a pink piñata, which bursts into confetti',
+        src: '/assets/sunshine-thumbnail.webp',
+        alt: 'Sunshine and Rainbows title art: the axolotl plushie with a lollipop, a turtle, a smiling sun and a rainbow',
       },
       /*
         Gameplay captures, re-encoded to 960 wide (the five went from 100MB to
