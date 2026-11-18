@@ -389,6 +389,79 @@ export const projects: Project[] = [
     ],
     featured: false,
   },
+  {
+    id: 'sunshine-and-rainbows',
+    title: 'Sunshine and Rainbows',
+    tagline: 'Play as a cute axolotl plushie, bonk piñatas and find your way through hedge mazes.',
+    description:
+      'A 3D game made for the ACM Studio Jam 2026 with a team of five. You play as an axolotl plushie bouncing through a sunny world full of rainbows, smashing piñatas and booping other plushies to get through a series of mazes. The day is beautiful and nothing is wrong at all. Download it for Windows on itch.io.',
+    status: 'Released, Windows download on itch.io',
+    details: [
+      {
+        heading: 'Controls',
+        bullets: ['WASD: move', 'Left click: attack'],
+      },
+      {
+        heading: 'My Part',
+        bullets: [
+          'Made 3D models and textures in Blender.',
+          'Did the sound design and put the sound effects into the game.',
+          'Built some of the gameplay logic with Blueprints.',
+        ],
+      },
+    ],
+    track: ['game'],
+    tags: ['Game Jam', '3D', 'Team of 5'],
+    techStack: ['Unreal Engine 5', 'Blueprints', 'Blender'],
+    role: '3D Artist, Sound Design',
+    year: '2026',
+    links: [
+      { label: 'Download on itch.io', url: 'https://destroh3.itch.io/sunshine-and-rainbows' },
+    ],
+    media: [
+      {
+        type: 'image',
+        src: '/assets/sunshine-cover.webp',
+        alt: 'The axolotl plushie swinging a lollipop at a pink piñata, which bursts into confetti',
+      },
+      /*
+        Gameplay captures, re-encoded to 960 wide (the five went from 100MB to
+        20MB). The bonk clip had an AMD driver popup in the top-right for
+        2.3 to 6.1 seconds; it was painted out with ffmpeg's delogo.
+      */
+      {
+        type: 'video',
+        src: '/assets/sunshine-bonk.mp4',
+        poster: '/assets/sunshine-bonk.jpg',
+        alt: 'Bonking piñatas, which burst into confetti',
+      },
+      {
+        type: 'video',
+        src: '/assets/sunshine-boop.mp4',
+        poster: '/assets/sunshine-boop.jpg',
+        alt: 'Running through a hedge maze to boop a plushie',
+      },
+      {
+        type: 'video',
+        src: '/assets/sunshine-rainbows.mp4',
+        poster: '/assets/sunshine-rainbows.jpg',
+        alt: 'Dodging rainbows in a hedge corridor',
+      },
+      {
+        type: 'video',
+        src: '/assets/sunshine-smash.mp4',
+        poster: '/assets/sunshine-smash.jpg',
+        alt: 'Smashing a field full of piñatas',
+      },
+      {
+        type: 'video',
+        src: '/assets/sunshine-cutscene.mp4',
+        poster: '/assets/sunshine-cutscene.jpg',
+        alt: 'The ending cutscene, where the cheerful world turns out not to be what it seemed',
+      },
+    ],
+    featured: true,
+  },
 ]
 
 /** The order featured projects appear in on the home page. */
@@ -398,4 +471,5 @@ export const featuredOrder: string[] = [
   'shellscape',
   'robinhood-bot',
   'dailycodeforce',
+  'sunshine-and-rainbows',
 ]
